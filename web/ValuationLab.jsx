@@ -5,10 +5,10 @@ import {comparablePrice} from './currency.mjs';
 import {decimalInput} from './presentation.mjs';
 import {useState} from 'react';
 import {finite,cagr} from './finance.mjs';
-import {multipleValuation} from './models.mjs';
+import {multipleValuation,historicalCashFlowGrowth} from './models.mjs';
 import {sensitivity,impliedGrowth,scenariosFrom} from './research.mjs';
 export default function ValuationLab({report,inputs,onInputs,scenarios,onScenarios,t,number,percent}){
- const history=report.years.slice().sort((a,b)=>a.end.localeCompare(b.end)),fcfeGrowth=cagr(history,report.schema==='yahoo39-v1'?'fcfe':'fcf'),revenueGrowth=cagr(history,'revenue');
+ const history=report.years.slice().sort((a,b)=>a.end.localeCompare(b.end)),fcfeGrowth=historicalCashFlowGrowth(report),revenueGrowth=cagr(history,'revenue');
  const [margin,setMargin]=useState('25');
  const grid=sensitivity(report,inputs),base=multipleValuation(report,inputs),values=scenarios.map(s=>multipleValuation(report,s));
  const quote=comparablePrice(report);

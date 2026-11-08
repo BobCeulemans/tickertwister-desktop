@@ -36,7 +36,7 @@
           ],
           [
             "Modèle FCFE",
-            "FCFE = flux de trésorerie d’exploitation - dépenses d’investissement + emprunts nets. Le modèle actualise dix années et une valeur terminale. Les valeurs initiales sont un taux de 12 %, un multiple de 15 et la croissance du chiffre d’affaires Yahoo, sans plafond, même négative (absente : 0 %). Elles sont modifiables. Taux = taux d’actualisation = rendement exigé. Si les emprunts nets manquent, le FCF sert de proxy explicitement signalé, avec emprunts nets supposés nuls."
+            "FCFE = flux de trésorerie d’exploitation - investissements + emprunts nets. Le modèle actualise dix années et une valeur terminale. Départ : taux de 12 %, multiple de 15 et CAGR historique du FCFE sur tout l’historique annuel disponible, comme au laboratoire, sans plafond. Si le CAGR est incalculable, 0 % est une hypothèse modifiable. Une analyse enregistrée conserve ses paramètres ; restaurez les valeurs initiales pour adopter la nouvelle croissance. Si les emprunts nets manquent, le FCF sert de proxy signalé, avec emprunts nets supposés nuls."
           ],
           [
             "Scénarios et devises",
@@ -131,7 +131,7 @@
           ],
           [
             "FCFE-Modell",
-            "FCFE = operativer Cashflow - Investitionsausgaben + Nettokreditaufnahme. Das Modell diskontiert zehn Jahre und einen Endwert. Ausgangswerte sind 12 % Zins, ein Multiplikator von 15 und das gemeldete Yahoo-Umsatzwachstum ohne Obergrenze, auch negativ (fehlend: 0 %). Diese Annahmen sind veränderbar. Zins = Diskontierungssatz = geforderte Rendite. Fehlt die Nettokreditaufnahme, dient der ausdrücklich gekennzeichnete FCF als Näherung bei angenommener Nettokreditaufnahme von null."
+            "FCFE = operativer Cashflow - Investitionen + Nettokreditaufnahme. Das Modell diskontiert zehn Jahre und einen Endwert. Ausgangswerte: 12 % Zins, Multiplikator 15 und historische FCFE-CAGR über die gesamte verfügbare Jahreshistorie, wie im Bewertungslabor, ohne Obergrenze. Ist die CAGR nicht berechenbar, dienen 0 % als veränderbare Annahme. Gespeicherte Analysen behalten ihre Einstellungen; stellen Sie die Ausgangswerte wieder her, um das neue Wachstum zu übernehmen. Fehlt die Nettokreditaufnahme, dient FCF als gekennzeichnete Näherung bei angenommener Nettokreditaufnahme von null."
           ],
           [
             "Szenarien und Währungen",
@@ -226,7 +226,7 @@
           ],
           [
             "Modelo FCFE",
-            "FCFE = flujo de caja operativo - inversiones de capital + endeudamiento neto. El modelo descuenta diez años y un valor terminal. Los valores iniciales son un tipo del 12 %, un múltiplo de 15 y el crecimiento de ingresos de Yahoo sin límite superior, incluso negativo (si falta: 0 %). Puede modificarlos. Tipo = tasa de descuento = rentabilidad exigida. Si falta el endeudamiento neto, se utiliza el FCF como aproximación identificada, suponiendo endeudamiento neto cero."
+            "FCFE = flujo de caja operativo - inversiones + endeudamiento neto. El modelo descuenta diez años y un valor terminal. Valores iniciales: tasa del 12 %, múltiplo de 15 y CAGR histórico del FCFE sobre todo el historial anual disponible, como en el laboratorio, sin límite superior. Si no puede calcularse el CAGR, el 0 % es una hipótesis editable. Los análisis guardados conservan sus parámetros; restablezca los valores iniciales para adoptar el nuevo crecimiento. Si falta el endeudamiento neto, se usa FCF como aproximación indicada, suponiendo endeudamiento neto cero."
           ],
           [
             "Escenarios y monedas",
@@ -321,7 +321,7 @@
           ],
           [
             "Modello FCFE",
-            "FCFE = flusso di cassa operativo - investimenti di capitale + indebitamento netto. Il modello attualizza dieci anni e un valore terminale. I valori iniziali sono un tasso del 12 %, un multiplo di 15 e la crescita dei ricavi Yahoo senza limite superiore, anche negativa (se assente: 0 %). Sono modificabili. Tasso = tasso di attualizzazione = rendimento richiesto. Se manca l’indebitamento netto, il FCF funge da approssimazione dichiarata, assumendo indebitamento netto nullo."
+            "FCFE = flusso di cassa operativo - investimenti + indebitamento netto. Il modello attualizza dieci anni e un valore terminale. Valori iniziali: tasso del 12 %, multiplo 15 e CAGR storico del FCFE sull’intera serie annuale disponibile, come nel laboratorio, senza tetto. Se il CAGR non è calcolabile, lo 0 % è un’ipotesi modificabile. Le analisi salvate conservano i parametri; ripristinare i valori iniziali per adottare la nuova crescita. Se manca l’indebitamento netto, si usa FCF come approssimazione dichiarata, ipotizzando indebitamento netto nullo."
           ],
           [
             "Scenari e valute",
@@ -416,7 +416,7 @@
           ],
           [
             "Modelo FCFE",
-            "FCFE = fluxo de caixa operacional - despesas de investimento + endividamento líquido. O modelo desconta dez anos e um valor terminal. Os valores iniciais são uma taxa de 12 %, um múltiplo de 15 e crescimento das receitas Yahoo sem limite superior, mesmo negativo (se ausente: 0 %). Pode alterá-los. Taxa = taxa de desconto = rendibilidade exigida. Se faltar endividamento líquido, o FCF é usado como aproximação identificada, pressupondo endividamento líquido nulo."
+            "FCFE = fluxo de caixa operacional - investimento + endividamento líquido. O modelo desconta dez anos e um valor terminal. Valores iniciais: taxa de 12 %, múltiplo de 15 e CAGR histórico do FCFE sobre todo o histórico anual disponível, como no laboratório, sem limite superior. Se o CAGR não for calculável, 0 % é uma hipótese editável. As análises guardadas mantêm os parâmetros; reponha os valores iniciais para adotar o novo crescimento. Se faltar o endividamento líquido, usa-se FCF como aproximação identificada, assumindo endividamento líquido nulo."
           ],
           [
             "Cenários e moedas",

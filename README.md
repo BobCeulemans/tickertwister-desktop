@@ -2,7 +2,7 @@
 
 # Tickertwister Desktop - Financial Research Studio
 
-**The Value Investor’s Notebook · v1.0.1**
+**The Value Investor’s Notebook · v1.0.3**
 
 A macOS desktop app for a first, evidence-based look at a listed company. Explore financial statements, 39 transparent analysis criteria, valuation scenarios and your own investment thesis in a private research workspace.
 
@@ -29,7 +29,7 @@ A score is a screening model, not a probability of investment success. Missing d
 
 The supported desktop build is for **Apple Silicon Macs, macOS 14 or later**. Download the DMG from this repository’s Releases, open it and drag **Tickertwister Desktop.app** into **Applications**. The disk image also contains a Documentation folder with licenses, source and all seven guides. Python and Node are bundled or build-time tools; end users do not install them.
 
-The initial community build is **ad-hoc signed, not Apple Developer ID signed or notarized**. macOS may block it. Verify the download origin and checksum before choosing the per-app **Open Anyway** option in System Settings > Privacy & Security. Do not disable Gatekeeper globally. Building locally is an alternative. Intel, Windows and Linux desktop binaries are not provided.
+The initial community build is **ad-hoc signed, not Apple Developer ID signed or notarized**. macOS may block it. Verify the download origin and checksum before choosing the per-app **Open Anyway** option in System Settings > Privacy & Security. Do not disable Gatekeeper globally. Building locally is an alternative. The maintainer workflow for Developer ID signing and Apple notarization is documented in [NOTARIZATION.md](docs/NOTARIZATION.md); those checks must actually pass before a binary is described as notarized. Intel, Windows and Linux desktop binaries are not provided.
 
 Yahoo access needs an internet connection. Saved dossiers and local calculations can be used offline. AI is optional, requires a separate API account/key and may incur charges; a ChatGPT subscription does not supply API credit. Nothing requests AI automatically when you change a language or model.
 

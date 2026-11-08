@@ -105,20 +105,35 @@ def test_currency_snapshot_and_missing_fx():
     assert 'fx' not in stale
 
 
-def test_reported_growth_remains_uncapped_in_valuation_and_report():
-    for growth in (.271, -.074, 1.2, 0, None):
-        a = analysis(); a.data['revenueGrowth'] = growth
-        result = a.valuation()
-        assert result['growth'] == (growth if growth is not None else 0)
-        assert result['per_share'] > 0
-        assert convert(a)['revenueGrowth'] == growth
-    a = analysis(); a.data['revenueGrowth'] = .271
-    a.data['financialCurrency'] = 'EUR'
-    mapped = convert(a)
-    assert 'error' in mapped['originalValuation']
-    assert mapped['revenueGrowth'] == .271  # Available even when the legacy valuation cannot run.
+def test_valuation_defaults_to_fcfe_cagr_without_changing_the_score():
+    import math
+    expected=(15/9)**(365.25/(DATES[0]-DATES[-1]).days)-1
+    for revenue_growth in (.271, -.074, 1.2, None):
+        a=analysis();a.data['revenueGrowth']=revenue_growth
+        result=a.valuation()
+        assert math.isclose(result['growth'],expected)
+        assert result['growthSource']=='historical-fcfe-cagr'
+        assert not a.points_list and not a.weights_list
+        mapped=convert(a)
+        assert mapped['revenueGrowth']==revenue_growth
+        first,last=mapped['years'][0],mapped['years'][-1]
+        assert math.isclose(result['growth'],(last['fcfe']/first['fcfe'])**(365.25/(DATES[0]-DATES[-1]).days)-1)
+    for last_cash in (100, 16):
+        a=analysis();a.cfs_t.iloc[0,a.cfs_t.columns.get_loc('Total Cash From Operating Activities')]=last_cash
+        growth=a.valuation()['growth']
+        assert growth > .15 if last_cash==100 else growth < 0
+
+
+def test_invalid_fcfe_history_uses_zero_assumption_and_manual_growth_is_preserved():
+    for old_cash in (None, 0, 10):
+        a=analysis();a.cfs_t.iloc[-1,a.cfs_t.columns.get_loc('Total Cash From Operating Activities')]=old_cash
+        result=a.valuation()
+        assert result['growth']==0 and result['growthSource']=='unavailable-zero-assumption'
+    a=analysis(CAGR=.37)
+    assert a.valuation()['growth']==.37 and a.valuation()['growthSource']=='manual'
+    a=analysis();a.data['financialCurrency']='EUR'
+    assert 'error' in a.valuation()
 
 
 def test_extreme_growth_does_not_produce_infinite_model_values():
-    a = analysis(); a.data['revenueGrowth'] = 1e50
-    assert 'error' in a.valuation()
+    assert 'error' in analysis(CAGR=1e50).valuation()

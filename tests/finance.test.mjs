@@ -19,7 +19,7 @@ test('Gordon rejects dividend currency mismatch',()=>{assert.equal(valuation({sc
 import {multipleValuation,multipleDefaults,scenarioDefaults,businessExcerpt} from '../web/models.mjs';
 test('FCFE multiple model matches original ten-year formula and responds to assumptions',()=>{
  const r={currency:'EUR',valuationShares:10,quote:{price:90,currency:'EUR'},years:[{fcfe:100}],originalValuation:{fcfe:100,rate:.12,growth:.05,multiple:15}};
- const defaults=multipleDefaults(r),v=multipleValuation(r,defaults);
+ const defaults={...multipleDefaults(r),growth:'5'},v=multipleValuation(r,defaults);
  const expected=Array.from({length:10},(_,i)=>100*1.05**(i+1)/1.12**(i+1)).reduce((a,b)=>a+b,0)+100*1.05**10/1.12**10*15;
  assert.ok(Math.abs(v.perShare-expected/10)<1e-9);assert.equal(v.margin,1-90/v.perShare);
  assert.ok(multipleValuation(r,{...defaults,rate:'20'}).perShare<v.perShare);
@@ -31,7 +31,7 @@ test('scenario defaults use historical growth without inventing missing FCFE',()
  assert.equal(scenarioDefaults(r).growth,'10.00');assert.equal(scenarioDefaults(r).rate,'12');assert.equal(scenarioDefaults({...r,years:[{end:'2025-01-01',fcfe:null}]}).cashFlow,'');
  assert.ok(businessExcerpt('A long description. '.repeat(100)).length<=620);
 });
-import {cashFlowBasis} from '../web/models.mjs';
+import {cashFlowBasis,historicalCashFlowGrowth} from '../web/models.mjs';
 test('missing borrowing yields an explicitly identified FCF scenario, without changing source data',()=>{
  const r={schema:'yahoo39-v1',currency:'EUR',valuationShares:10,years:[{end:'2025-12-31',fcfe:null,fcf:60e6,netBorrowings:null}]};
  assert.equal(cashFlowBasis(r).kind,'fcf-proxy');assert.equal(multipleDefaults(r).cashFlow,'60');
@@ -41,14 +41,19 @@ test('missing borrowing yields an explicitly identified FCF scenario, without ch
  assert.equal(cashFlowBasis({...r,years:[{fcfe:null,fcf:null}]}).kind,'missing');
 });
 
-test('reported Yahoo growth is neither capped nor floored in FCFE defaults',()=>{
- const r={currency:'USD',valuationShares:10,years:[{fcfe:100}],originalValuation:{growth:.15}};
- for(const [growth,expected] of [[.271,'27.10'],[-.074,'-7.40'],[1.2,'120.00'],[0,'0.00']]){
-  const inputs=multipleDefaults({...r,revenueGrowth:growth});assert.equal(inputs.growth,expected);
-  assert.ok(multipleValuation(r,inputs).perShare>0);
+test('main model uses the same uncapped FCFE CAGR as the lab, not Yahoo revenue growth',()=>{
+ for(const [end,expected] of [[285.61,'30.00'],[40.96,'-20.00'],[100,'0.00']]){
+  const r={schema:'yahoo39-v1',revenueGrowth:1.2,originalValuation:{growth:.9},years:[{end:'2025-01-01',fcfe:end},{end:'2021-01-01',fcfe:100}]};
+  assert.equal(multipleDefaults(r).growth,expected);
+  assert.equal(multipleDefaults(r).growth,(historicalCashFlowGrowth(r)*100).toFixed(2));
+  assert.equal(r.years[0].end,'2025-01-01'); // No mutation of source ordering.
  }
- assert.equal(multipleDefaults({...r,originalValuation:{error:'missing'}}).growth,'0.00');
- assert.equal(multipleDefaults(r).growth,'15.00'); // Older snapshots keep their available assumption.
+});
+test('missing or invalid FCFE CAGR starts at an explicit zero assumption, never revenue growth',()=>{
+ for(const years of [[],[{end:'2025-01-01',fcfe:100}], ...[null,0,-100,Infinity,'100'].map(fcfe=>[{end:'2021-01-01',fcfe},{end:'2025-01-01',fcfe:100}]),[{end:'2025-01-01',fcfe:10},{end:'2025-01-01',fcfe:100}]]){
+  const r={schema:'yahoo39-v1',years,revenueGrowth:.98,originalValuation:{growth:.9}};
+  assert.equal(historicalCashFlowGrowth(r),null);assert.equal(multipleDefaults(r).growth,'0.00');
+ }
 });
 test('DCF starting CAGR keeps large positive and negative growth; financial limits remain enforced',()=>{
  for(const [end,expected] of [[285.61,'30.00'],[40.96,'-20.00']]){

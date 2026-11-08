@@ -18,7 +18,7 @@ lock = json.loads((root / 'package-lock.json').read_text())
 assert lock['version'] == version and lock['packages']['']['version'] == version, 'Lockfile version mismatch'
 for name in ['Handleiding.pdf'] + [f'User-Guide-{lang}.pdf' for lang in ('EN','FR','DE','ES','IT','PT')]:
     assert (root / name).read_bytes().startswith(b'%PDF-'), f'Missing/invalid guide: {name}'
-for name in ('README.md','RELEASE-NOTES.md','NOTICE'):
+for name in ('README.md','README.nl.md','RELEASE-NOTES.md','NOTICE','Handleiding.html','TRANSLATING.md'):
     assert version in (root/name).read_text(), f'Missing version in {name}'
 patterns = [
     re.compile(r'[/]Users/[^\s"\']+'),

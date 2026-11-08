@@ -1,22 +1,21 @@
-# Tickertwister Desktop - Financial Research Studio v1.0.1
+# Tickertwister Desktop - Financial Research Studio v1.0.3
 
-First public community release. The version number starts at **1.0.1** after private development versions up to 6.0.3. This is a numbering reset, not a rollback. The application identity and saved-data formats are unchanged.
+## Changes
 
-## Included
+- Bundled yfinance upgraded from 0.2.66 to 1.8.0, with lxml 6.1.3 pinned and its notices included.
+- Added regression checks for all 56 statement bindings and 31 legacy aliases. Values are matched to item names and fiscal dates, never statement row positions.
+- Fixed a pre-existing EPS date-order dependency exposed by shuffled-column tests. Duplicate statement names/dates are now excluded as unavailable rather than chosen arbitrarily.
+- All 39 scoring criteria, original weights, financial formulas and valuation models are retained. Historical FCFE CAGR remains the editable starting growth introduced in v1.0.2. Saved analyses and personal weights are preserved.
+- Seven illustrated guides and corresponding source are included.
 
-- Apple Silicon macOS desktop app; Yahoo/yfinance data and 39 transparent criteria with editable weights.
-- FCFE multiple, DCF, Gordon Growth and sensitivity tools; historical statements, ratios and charts.
-- Private research profiles, investment theses, company comparison and printable reports.
-- Optional paid AI interpretation, explicit requests, independent output language and retained local archives.
-- Seven app languages and seven PDF guides; financial terminology preference and locale-aware presentation.
-- Complete source, AGPLv3-only license, original Apache notices and third-party licenses.
+## Validation
 
-## Release assets
+AAPL, MSFT, ASML.AS and SONY were fetched with both yfinance versions on 8 November 2026. Annual and quarterly mapped values, original annual tables and all criterion contributions matched exactly in those snapshots. Independently replaying identical captured inputs and a synthetic fixture also produced identical scores, histories and valuations. See [the data migration report](docs/YFINANCE-1.8.0.md) for scope and limitations.
 
-`Tickertwister-Desktop-1.0.1-macOS-arm64.dmg`, `Tickertwister-1.0.1-source.zip`, seven PDF guides and `SHA256SUMS.txt`.
+Existing snapshots remain unchanged. Use a fresh analysis or refresh a dossier company to retrieve new data. Yahoo can revise figures or omit data at any time; unchanged formulas do not guarantee unchanged future scores.
 
-## Requirements and known limits
+## Distribution status
 
-macOS 14+, Apple Silicon. The community binary is ad-hoc signed, **not notarized**. Intel/Windows/Linux binaries are not included. Yahoo availability and data history vary. External data/service rights are separate from the code license. API models require availability on the user’s account and generate charges only on request. Translation catalogs have structural tests; independent native-speaker financial review remains pending.
+Apple Silicon, macOS 14+. This local community build is ad-hoc signed and **NOT notarized by Apple**. Developer enrollment is pending; no Developer ID signing identity is installed yet. The signing/notarization workflow is prepared; see [NOTARIZATION.md](docs/NOTARIZATION.md).
 
-Back up your dossiers before installing any update. A password cannot be recovered by a server: accounts are local. Keep your own exported backups securely.
+The bundle ID and saved-data schemas are unchanged. API calls remain optional and paid only on explicit request. No AI requests are made by these upgrade tests. Financial data/service rights remain separate from the AGPLv3 source license.

@@ -22,3 +22,5 @@ research-backup*.json
 ai-archive*.json
 *.tickertwister
 *.log
+*.p8
+*-notary-logs/

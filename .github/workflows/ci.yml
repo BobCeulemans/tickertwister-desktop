@@ -27,7 +27,7 @@ jobs:
       - run: npm run check:locales
       - run: npm run check:release
       - run: python -m pip install -r requirements-engine.txt
-      - run: python -m pytest engine/test_engine.py tests/test_source.py
+      - run: python -m pytest engine/test_engine.py engine/test_data_contract.py tests/test_source.py tests/test_notarize.py
       - name: Native encrypted-profile regression tests
         run: |
           swiftc -swift-version 5 Sources/ProfileStore.swift tests/ProfileStoreTests.swift -o /tmp/tickertwister-profile-tests

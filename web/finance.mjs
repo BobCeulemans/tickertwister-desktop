@@ -57,7 +57,9 @@ export function normalizeFacts(raw,symbol){
 }
 export function cagr(years,key){
  if(years.length<2)return null;const a=years[0],b=years.at(-1),elapsed=(Date.parse(b.end)-Date.parse(a.end))/86400000/365.25;
- return a[key]>0&&b[key]>0&&elapsed>0?Math.pow(b[key]/a[key],1/elapsed)-1:null;
+ if(!finite(a[key])||!finite(b[key])||a[key]<=0||b[key]<=0||!finite(elapsed)||elapsed<=0)return null;
+ const growth=Math.pow(b[key]/a[key],1/elapsed)-1;
+ return finite(growth)?growth:null;
 }
 export function qualityScore(years){
  const r=years.at(-1)||{};

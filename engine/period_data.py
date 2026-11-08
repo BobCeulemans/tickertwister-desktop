@@ -1,12 +1,12 @@
 """Additional comparison periods; original FinAnalysis score remains unchanged."""
 from concurrent.futures import ThreadPoolExecutor
 from datetime import date,timedelta
-from market_data import number
+from market_data import number, unambiguous_statement
 import pandas as pd
 
 def matrix(frame):
     if not isinstance(frame,pd.DataFrame) or frame.empty:return {}
-    frame=frame.loc[~frame.index.duplicated(keep=False)]
+    frame=unambiguous_statement(frame)
     return {str(key):{str(d.date()):number(frame.loc[key,d]) for d in frame.columns} for key in frame.index}
 
 def quarter_key(end):
@@ -23,7 +23,7 @@ def supplement(analysis,result,build_rows):
         try:return getattr(analysis.stock,method)(freq='quarterly',pretty=False)
         except Exception:return pd.DataFrame()
     with ThreadPoolExecutor(max_workers=3) as pool:frames=list(pool.map(fetch,['get_income_stmt','get_balance_sheet','get_cashflow']))
-    matrices=[matrix(f) for f in frames]
+    matrices=[matrix(unambiguous_statement(f,result['periodWarnings'],'Quarterly statement')) for f in frames]
     # Require a real income-statement period, never fabricate a quarter from annual data.
     dates=sorted({d for row in matrices[0].values() for d,v in row.items() if v is not None})[-8:]
     rows=build_rows(matrices,dates)

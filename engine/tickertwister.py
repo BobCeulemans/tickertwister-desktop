@@ -133,7 +133,8 @@ class FinAnalysis(OriginalAnalysisRules):
             raise ValueError(f'Ontbrekende jaarwaarde: {key}')
 
     def earningsPerShareHistory(self):
-        values = [self._cell(self.source.income.T, 'DilutedEPS', n) for n in range(len(self.dates))]
+        # Use the fiscal-date-aligned frame, just like the other 38 criteria.
+        values = [self._cell(self.pal_t, 'DilutedEPS', n) for n in range(len(self.dates))]
         if len(values) < 2: raise ValueError('Need history')
         self.fundamentals['earningsPerShareHistory'] = [self.y3,self.y2,self.y1,self.y0][-len(values):], values[::-1]
         self.weights_list.append(Score.w_EPS)
@@ -174,7 +175,8 @@ class FinAnalysis(OriginalAnalysisRules):
             self.points_list.append(weight*factor)
         return 'Dividendbetaling beoordeeld; de dividendtrend gebruikt uitsluitend afgesloten kalenderjaren.'
 
-    def _cash_cagr(self, kind):
+    def _cash_growth(self, kind):
+        """Pure historical growth calculation, without changing score contributions."""
         if len(self.dates) < 2: raise ValueError('Insufficient dates')
         values=[]
         for n in (0,len(self.dates)-1):
@@ -190,7 +192,13 @@ class FinAnalysis(OriginalAnalysisRules):
         if min(values) <= 0: raise ValueError('CAGR requires positive endpoints')
         years=(self.dates[0]-self.dates[-1]).days/365.25
         if years <= 0: raise ValueError('Invalid fiscal dates')
-        growth=((values[0]/values[1])**(1/years)-1)*100
+        growth=(values[0]/values[1])**(1/years)-1
+        if not math.isfinite(growth): raise ValueError('Non-finite growth')
+        return growth, years
+
+    def _cash_cagr(self, kind):
+        fraction, years = self._cash_growth(kind)
+        growth = fraction * 100
         key={'FCF':'freeCashFlowCAGR','FCFE':'freeCashFlowToEquityCAGR','FCFF':'freeCashFlowToFirmCAGR'}[kind]
         self.fundamentals[key]=growth
         weight=getattr(Score,'w_'+kind+'_growth_2000bp')
@@ -209,7 +217,14 @@ class FinAnalysis(OriginalAnalysisRules):
             currency = self.data.get('financialCurrency')
             if currency is None or currency != self.data.get('currency'):
                 return {'error': 'Waardering overgeslagen: jaarrekening- en koersvaluta verschillen of zijn onbekend.'}
-            growth = self.growth_FCF if self.growth_FCF is not None else (number(self.data.get('revenueGrowth')) or 0)
+            if self.growth_FCF is not None:
+                growth, growth_source = self.growth_FCF, 'manual'
+            else:
+                try:
+                    growth, _ = self._cash_growth('FCFE')
+                    growth_source = 'historical-fcfe-cagr'
+                except (ValueError, TypeError, IndexError, KeyError, OverflowError):
+                    growth, growth_source = 0, 'unavailable-zero-assumption'
             rate, multiple = self.discount_rate, self.multiple_PFCF
             if not all(math.isfinite(v) for v in (fcfe, growth, rate, multiple)) or fcfe <= 0 or shares is None or shares <= 0 or not (-1 < growth and 0 <= rate <= 1 and 0 < multiple <= 100):
                 raise ValueError('Invalid valuation inputs')
@@ -217,7 +232,7 @@ class FinAnalysis(OriginalAnalysisRules):
             per_share = (sum(flows)+flows[-1]*multiple)/shares
             if not math.isfinite(per_share) or per_share <= 0:
                 raise ValueError('Non-finite valuation')
-            return dict(fcfe=fcfe, growth=growth, rate=rate, multiple=multiple, per_share=per_share,
+            return dict(fcfe=fcfe, growth=growth, growthSource=growth_source, rate=rate, multiple=multiple, per_share=per_share,
                 price=price, currency=currency, margin=100*(1-price/per_share) if price is not None else None)
         except (ValueError, TypeError, IndexError, KeyError, OverflowError):
             return {'error': 'Geen waardering: positieve FCFE, aandelenaantal en volledige kasstroomgegevens vereist.'}

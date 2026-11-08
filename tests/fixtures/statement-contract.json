@@ -1,0 +1,335 @@
+{
+  "note": "Frozen v1.0.2 field bindings: review semantic changes explicitly. Financial values in tests are synthetic.",
+  "appFields": {
+    "revenue": [
+      0,
+      "TotalRevenue"
+    ],
+    "income": [
+      0,
+      "NetIncome"
+    ],
+    "gross": [
+      0,
+      "GrossProfit"
+    ],
+    "cost": [
+      0,
+      "CostOfRevenue"
+    ],
+    "operating": [
+      0,
+      "OperatingIncome"
+    ],
+    "interest": [
+      0,
+      "InterestExpense",
+      "InterestExpenseNonOperating"
+    ],
+    "assets": [
+      1,
+      "TotalAssets"
+    ],
+    "equity": [
+      1,
+      "StockholdersEquity"
+    ],
+    "liabilities": [
+      1,
+      "TotalLiabilitiesNetMinorityInterest"
+    ],
+    "currentAssets": [
+      1,
+      "CurrentAssets"
+    ],
+    "currentLiabilities": [
+      1,
+      "CurrentLiabilities"
+    ],
+    "cash": [
+      1,
+      "CashAndCashEquivalents"
+    ],
+    "investments": [
+      1,
+      "OtherShortTermInvestments"
+    ],
+    "receivables": [
+      1,
+      "Receivables",
+      "AccountsReceivable"
+    ],
+    "inventory": [
+      1,
+      "Inventory"
+    ],
+    "payables": [
+      1,
+      "AccountsPayable"
+    ],
+    "retained": [
+      1,
+      "RetainedEarnings"
+    ],
+    "cfo": [
+      2,
+      "OperatingCashFlow"
+    ],
+    "capex": [
+      2,
+      "CapitalExpenditure"
+    ],
+    "debt": [
+      1,
+      "TotalDebt"
+    ],
+    "dividends": [
+      2,
+      "CashDividendsPaid",
+      "CommonStockDividendPaid"
+    ],
+    "buybacks": [
+      2,
+      "RepurchaseOfCapitalStock"
+    ],
+    "eps": [
+      0,
+      "DilutedEPS"
+    ],
+    "shares": [
+      1,
+      "OrdinarySharesNumber",
+      "ShareIssued"
+    ],
+    "netBorrowings": [
+      2,
+      "NetIssuancePaymentsOfDebt"
+    ],
+    "sga": [
+      0,
+      "SellingGeneralAndAdministration"
+    ],
+    "rd": [
+      0,
+      "ResearchAndDevelopment"
+    ],
+    "opex": [
+      0,
+      "OperatingExpense"
+    ],
+    "pretax": [
+      0,
+      "PretaxIncome"
+    ],
+    "tax": [
+      0,
+      "TaxProvision"
+    ],
+    "assetSalesGain": [
+      0,
+      "GainOnSaleOfPPE",
+      "GainOnSaleOfBusiness"
+    ],
+    "otherIncome": [
+      0,
+      "OtherNonOperatingIncomeExpenses"
+    ],
+    "da": [
+      2,
+      "DepreciationAndAmortization",
+      "DepreciationAmortizationDepletion"
+    ],
+    "taxPaid": [
+      2,
+      "IncomeTaxPaidSupplementalData"
+    ],
+    "ppe": [
+      1,
+      "NetPPE"
+    ],
+    "goodwill": [
+      1,
+      "Goodwill"
+    ],
+    "intangibles": [
+      1,
+      "OtherIntangibleAssets"
+    ],
+    "longInvestments": [
+      1,
+      "InvestmentsAndAdvances",
+      "LongTermEquityInvestment"
+    ],
+    "otherLongAssets": [
+      1,
+      "OtherNonCurrentAssets"
+    ],
+    "prepaid": [
+      1,
+      "PrepaidAssets"
+    ],
+    "otherCurrentAssets": [
+      1,
+      "OtherCurrentAssets"
+    ],
+    "accrued": [
+      1,
+      "CurrentAccruedExpenses"
+    ],
+    "otherCurrentLiabilities": [
+      1,
+      "OtherCurrentLiabilities"
+    ],
+    "longDebt": [
+      1,
+      "LongTermDebt"
+    ],
+    "currentDebt": [
+      1,
+      "CurrentDebt"
+    ],
+    "longDebtCurrent": [
+      1,
+      "LongTermDebtCurrent"
+    ],
+    "deferredTax": [
+      1,
+      "NonCurrentDeferredTaxesLiabilities"
+    ],
+    "minorityInterest": [
+      1,
+      "MinorityInterest"
+    ],
+    "otherLiabilities": [
+      1,
+      "OtherNonCurrentLiabilities"
+    ],
+    "preferredStock": [
+      1,
+      "PreferredStock"
+    ],
+    "commonStock": [
+      1,
+      "CommonStock"
+    ],
+    "paidInCapital": [
+      1,
+      "AdditionalPaidInCapital"
+    ],
+    "treasuryStock": [
+      1,
+      "TreasuryStock"
+    ],
+    "cfi": [
+      2,
+      "InvestingCashFlow"
+    ],
+    "cff": [
+      2,
+      "FinancingCashFlow"
+    ],
+    "stockIssued": [
+      2,
+      "IssuanceOfCapitalStock"
+    ]
+  },
+  "legacyAliases": {
+    "Net Income": [
+      "NetIncome"
+    ],
+    "Total Revenue": [
+      "TotalRevenue"
+    ],
+    "Gross Profit": [
+      "GrossProfit"
+    ],
+    "Cost Of Revenue": [
+      "CostOfRevenue"
+    ],
+    "Income Before Tax": [
+      "PretaxIncome"
+    ],
+    "Income Tax Expense": [
+      "TaxProvision"
+    ],
+    "Interest Expense": [
+      "InterestExpense",
+      "InterestExpenseNonOperating"
+    ],
+    "Operating Income": [
+      "OperatingIncome"
+    ],
+    "Research Development": [
+      "ResearchAndDevelopment"
+    ],
+    "Selling General Administrative": [
+      "SellingGeneralAndAdministration"
+    ],
+    "Total Operating Expenses": [
+      "TotalExpenses"
+    ],
+    "Net Income Applicable To Common Shares": [
+      "NetIncomeCommonStockholders"
+    ],
+    "Total Stockholder Equity": [
+      "StockholdersEquity"
+    ],
+    "Total Assets": [
+      "TotalAssets"
+    ],
+    "Net Tangible Assets": [
+      "NetTangibleAssets"
+    ],
+    "Inventory": [
+      "Inventory"
+    ],
+    "Net Receivables": [
+      "Receivables",
+      "AccountsReceivable"
+    ],
+    "Accounts Payable": [
+      "AccountsPayable"
+    ],
+    "Retained Earnings": [
+      "RetainedEarnings"
+    ],
+    "Cash": [
+      "CashAndCashEquivalents"
+    ],
+    "Short Term Investments": [
+      "OtherShortTermInvestments"
+    ],
+    "Total Current Assets": [
+      "CurrentAssets"
+    ],
+    "Total Current Liabilities": [
+      "CurrentLiabilities"
+    ],
+    "Long Term Debt": [
+      "TotalDebt"
+    ],
+    "Total Liab": [
+      "TotalLiabilitiesNetMinorityInterest"
+    ],
+    "Total Cash From Operating Activities": [
+      "OperatingCashFlow"
+    ],
+    "Capital Expenditures": [
+      "CapitalExpenditure"
+    ],
+    "Depreciation": [
+      "DepreciationAndAmortization",
+      "DepreciationAmortizationDepletion"
+    ],
+    "Net Borrowings": [
+      "NetIssuancePaymentsOfDebt"
+    ],
+    "Repurchase Of Stock": [
+      "RepurchaseOfCapitalStock"
+    ],
+    "Dividends Paid": [
+      "CashDividendsPaid",
+      "CommonStockDividendPaid"
+    ]
+  }
+}

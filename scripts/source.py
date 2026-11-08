@@ -34,7 +34,7 @@ def source_files(root):
                 rel = path.relative_to(root)
                 if any(part in EXCLUDED for part in rel.parts):
                     continue
-                if path.name.startswith('.env') or path.suffix in {'.pyc', '.pyo', '.pem', '.key', '.p12'}:
+                if path.name.startswith('.env') or path.suffix in {'.pyc', '.pyo', '.pem', '.key', '.p12', '.p8', '.pfx'}:
                     raise ValueError(f'Private/build file refused in source: {rel}')
                 if path.is_symlink():
                     raise ValueError(f'Symlink refused in source: {rel}')

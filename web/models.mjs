@@ -12,9 +12,15 @@ export function cashFlowBasis(report){
  return {value:null,kind:'missing',end:y.end};
 }
 export function cashFlowExplanation(report,t){const b=cashFlowBasis(report);return b.kind==='fcf-proxy'?t("Starting value: FCF (CFO − capex) as an FCFE proxy, assuming zero net borrowing. Debt cash flows are missing; check this assumption. Source data and quality score are unchanged."):b.kind==='missing'?t("No usable cash flow available. Enter your own normalised cash flow."):t("Starting value: calculated FCFE for the latest fiscal year.");}
+// Shared by the main model and Valuation Lab. Do not substitute revenue growth
+// or silently shorten the displayed history when cash-flow endpoints are absent.
+export function historicalCashFlowGrowth(report){
+ const history=report.years.slice().sort((a,b)=>a.end.localeCompare(b.end));
+ return cagr(history,report.schema==='yahoo39-v1'?'fcfe':'fcf');
+}
 export function multipleDefaults(report){
- const v=report.originalValuation||{},latest=report.years.at(-1);
- return {rate:decimalInput((v.rate??.12)*100),growth:decimalInput((finite(report.revenueGrowth)?report.revenueGrowth:v.growth??0)*100),multiple:String(v.multiple??15),cashFlow:finite(cashFlowBasis(report).value)?String(cashFlowBasis(report).value/1e6):''};
+ const v=report.originalValuation||{},historical=historicalCashFlowGrowth(report);
+ return {rate:decimalInput((v.rate??.12)*100),growth:decimalInput((finite(historical)?historical:0)*100),multiple:String(v.multiple??15),cashFlow:finite(cashFlowBasis(report).value)?String(cashFlowBasis(report).value/1e6):''};
 }
 export function scenarioDefaults(report){
  const latest=report.years.at(-1),historical=cagr(report.years,report.schema==='yahoo39-v1'?'fcfe':'fcf');

@@ -21,7 +21,8 @@ def test_export_is_allowlisted(tmp_path):
     with zipfile.ZipFile(archive) as z:
         assert sorted(z.namelist()) == ['Tickertwister/.gitignore','Tickertwister/web/App.jsx']
 
-def test_export_refuses_links_and_credentials(tmp_path):
+@pytest.mark.parametrize('credential', ['.env', 'AuthKey.p8', 'identity.p12', 'identity.pfx'])
+def test_export_refuses_links_and_credentials(tmp_path, credential):
     (tmp_path/'web').mkdir()
     outside = tmp_path/'private.txt'
     outside.write_text('private')
@@ -30,6 +31,6 @@ def test_export_refuses_links_and_credentials(tmp_path):
     with pytest.raises(ValueError, match='Symlink'):
         package(tmp_path, tmp_path/'source.zip')
     link.unlink()
-    (tmp_path/'web'/'.env').write_text('key')
+    (tmp_path/'web'/credential).write_text('key')
     with pytest.raises(ValueError, match='Private/build'):
         package(tmp_path, tmp_path/'source.zip')

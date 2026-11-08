@@ -25,6 +25,19 @@ class DataUnavailable(RuntimeError):
     pass
 
 
+def unambiguous_statement(frame, warnings=None, label='Statement'):
+    """Never choose one of two values bearing the same item name/fiscal date."""
+    if not isinstance(frame, pd.DataFrame):
+        if warnings is not None:
+            warnings.append(f'{label}: invalid statement response; data unavailable.')
+        return pd.DataFrame()
+    rows = frame.index.duplicated(keep=False)
+    columns = frame.columns.duplicated(keep=False)
+    if (rows.any() or columns.any()) and warnings is not None:
+        warnings.append(f'{label}: duplicate item names or fiscal dates excluded; affected data unavailable.')
+    return frame.loc[~rows, ~columns].copy()
+
+
 class MarketData:
     def __init__(self, ticker, provider=None):
         self.ticker = ticker.strip().upper()
@@ -36,6 +49,8 @@ class MarketData:
         self.income = self._fetch('get_income_stmt', pd.DataFrame(), freq='yearly', pretty=False)
         self.balance = self._fetch('get_balance_sheet', pd.DataFrame(), freq='yearly', pretty=False)
         self.cashflow = self._fetch('get_cashflow', pd.DataFrame(), freq='yearly', pretty=False)
+        for name in ('income', 'balance', 'cashflow'):
+            setattr(self, name, unambiguous_statement(getattr(self, name), self.warnings, name))
         if not self.info and all(f.empty for f in (self.income, self.balance, self.cashflow)):
             raise DataUnavailable('Geen gegevens beschikbaar. Controleer de ticker of probeer later opnieuw; Yahoo kan tijdelijk onbereikbaar zijn.')
         self.fetched_at = datetime.now(timezone.utc).isoformat(timespec='seconds')

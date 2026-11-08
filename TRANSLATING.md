@@ -1,4 +1,4 @@
-# International release · 1.0.1
+# International release · 1.0.3
 
 Supported locales: `nl` (Belgium), `en` (US), `fr` (France), `de` (Germany), `es` (Spain), `it` (Italy), `pt` (Portugal). These locales control presentation, not the currency or jurisdiction of a company.
 
@@ -33,10 +33,10 @@ All seven catalogs have structural coverage checks; the seven-language financial
 
 | Language | Native financial reviewer | Revision/date | Status |
 |---|---|---|---|
-| nl | Pending | 1.0.1 | Review requested |
-| en | Pending | 1.0.1 | Review requested |
-| fr | Pending | 1.0.1 | Review requested |
-| de | Pending | 1.0.1 | Review requested |
-| es | Pending | 1.0.1 | Review requested |
-| it | Pending | 1.0.1 | Review requested |
-| pt-PT | Pending | 1.0.1 | Review requested |
+| nl | Pending | 1.0.3 | Review requested |
+| en | Pending | 1.0.3 | Review requested |
+| fr | Pending | 1.0.3 | Review requested |
+| de | Pending | 1.0.3 | Review requested |
+| es | Pending | 1.0.3 | Review requested |
+| it | Pending | 1.0.3 | Review requested |
+| pt-PT | Pending | 1.0.3 | Review requested |
