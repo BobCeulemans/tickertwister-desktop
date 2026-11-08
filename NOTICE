@@ -1,0 +1,32 @@
+Tickertwister Desktop - Financial Research Studio 1.0.1
+Copyright ©2026 Bob Ceulemans
+All Rights Reserved.
+
+This application is free software under the GNU Affero General Public
+License, version 3 only (AGPL-3.0-only). See LICENSE. “All Rights Reserved”
+does not limit any rights granted under that license.
+NO WARRANTY, to the extent permitted by applicable law.
+
+Original Tickertwister analysis: Copyright ©2022 Bob Ceulemans, MD,
+Apache License 2.0. Original attribution and Apache license are retained.
+The adapted application adds a desktop host, financial-data normalization,
+research dossiers, valuation tools, internationalization and optional AI.
+Third-party components retain their own licenses; they are not relicensed.
+See licenses/, LICENSE-Apache-2.0.txt and LICENSE-React.txt.
+
+Financial data and external services are not covered by the app license.
+Yahoo data permissions are separate from the yfinance software license.
+Company icons are fetched from company websites at runtime and retain their
+owners’ rights. No endorsement or trademark/personality rights are implied.
+
+Hero illustration: original AI-generated caricature of Warren Buffett and
+Charlie Munger, generated 2026-11-05 without a source photograph.
+See IMAGE-PROVENANCE.md. App logo: original Tickertwister vector design.
+Quotes: short attributed excerpts from Berkshire Hathaway shareholder
+letters, 1987–1997, with individual source links. They are not relicensed
+as application code.
+
+Corresponding source and build instructions are bundled under Help > License
+and source and in the installation image. Keep license/notices and provide
+corresponding source when redistributing binaries. Modified versions offered
+for remote network interaction must comply with AGPL section 13.

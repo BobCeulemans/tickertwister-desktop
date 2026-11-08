@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {comparablePrice,quotedModelValue,dividendInStatementCurrency} from '../web/currency.mjs';
+import {multipleValuation} from '../web/models.mjs';
+import {valuation} from '../web/finance.mjs';
+import {marketValue} from '../web/presentation.mjs';
+const r={schema:'yahoo39-v1',symbol:'SONY',currency:'JPY',fetchedAt:'2026-11-06T18:00:00Z',quote:{price:20,currency:'USD'},valuationShares:100,years:[{fcfe:1000}],fx:{from:'USD',to:'JPY',rate:150,at:'2026-11-06T00:00:00Z'},quoteBasis:{verified:true,ordinaryPerQuote:1},dividendCurrency:'USD',dividendPerShare:1};
+test('SONY FX comparison preserves the statement model and converts only the quote',()=>{assert.equal(comparablePrice(r),3000);assert.equal(quotedModelValue(r,4500),30);const opts={rate:'12',growth:'5',multiple:'15',cashFlow:'.001'};const a=multipleValuation(r,opts),b=multipleValuation({...r,quote:{price:3000,currency:'JPY'}},opts);assert.equal(a.perShare,b.perShare);assert.equal(a.margin,b.margin);assert.equal(valuation(r).price,3000);assert.equal(dividendInStatementCurrency(r,1),150);assert.equal(valuation(r,{method:'gordon'}).base,150);});
+test('FX refuses missing, stale and mismatched rates or an unconfirmed share basis',()=>{for(const x of [{...r,fx:null},{...r,fx:{...r.fx,at:'2026-10-01'}},{...r,fx:{...r.fx,to:'EUR'}},{...r,fx:{...r.fx,rate:0}},{...r,quoteBasis:undefined}]){assert.equal(comparablePrice(x),null);assert.equal(multipleValuation(x,{rate:'12',growth:'5',multiple:'15',cashFlow:'.001'}).margin,null);}});
+test('ADR ratio applies to quote and market capitalisation, not total company cash flow',()=>{const x={...r,quoteBasis:{verified:true,ordinaryPerQuote:2}};assert.equal(comparablePrice(x),1500);assert.equal(quotedModelValue(x,4500),60);assert.equal(marketValue(x),1000);assert.equal(marketValue({...r,quoteBasis:undefined}),null);assert.equal(marketValue({...r,quote:{...r.quote,marketCap:1234}}),1234);});

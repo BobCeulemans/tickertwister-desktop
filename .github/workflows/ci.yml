@@ -1,0 +1,43 @@
+name: Build and checks
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  macos:
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+          cache: pip
+          cache-dependency-path: requirements-engine.txt
+      - run: npm ci
+      - run: npm test
+      - run: npm run check:locales
+      - run: npm run check:release
+      - run: python -m pip install -r requirements-engine.txt
+      - run: python -m pytest engine/test_engine.py tests/test_source.py
+      - name: Native encrypted-profile regression tests
+        run: |
+          swiftc -swift-version 5 Sources/ProfileStore.swift tests/ProfileStoreTests.swift -o /tmp/tickertwister-profile-tests
+          /tmp/tickertwister-profile-tests
+      - name: Build self-contained app
+        run: BUILD_PYTHON="$(command -v python)" npm run build
+      - name: Archive app artifact
+        run: ditto -c -k --sequesterRsrc --keepParent 'dist/Tickertwister Desktop.app' dist/Tickertwister-macOS-arm64.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Tickertwister-macOS-arm64
+          path: dist/Tickertwister-macOS-arm64.zip
+          retention-days: 7

@@ -1,0 +1,2 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+export default function BrandMark(){return <svg className="app-mark tornado-mark" viewBox="0 0 100 100" aria-hidden="true"><g fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="7"><path d="M17 23C30 9 76 9 86 24C93 36 42 40 26 31"/><path d="M24 45C38 51 69 50 78 44"/><path d="M33 60C44 65 61 63 67 58"/><path d="M42 75C49 78 55 75 58 71L48 90"/></g><path d="M16 56L34 44L47 48L67 28L80 29" fill="none" stroke="var(--logo-accent,#fff)" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round"/></svg>}

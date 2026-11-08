@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {evidenceLines} from '../web/criterionEvidence.mjs';
+test('structured history replaces only dated number lines and keeps original pass/fail and exceptions',()=>{const text='⛔ Not consistently decreasing\n\t↳ 2023-06-30-2026-06-30: 83.86 days, 82.92 days\n↳ although: first > last';const result=evidenceLines(text,true);assert.equal(result.length,2);assert.equal(result[0].status,'fail');assert.equal(result[1].text,'although: first > last');assert.equal(evidenceLines(text,false).length,3);});
+test('multiple subrules keep their own outcome rather than infer it from overall points',()=>{const r=evidenceLines('✅ Threshold met\n⛔ Trend failed');assert.deepEqual(r.map(x=>x.status),['pass','fail']);});

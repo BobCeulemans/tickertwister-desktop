@@ -1,0 +1,8 @@
+import {dateLabel} from './presentation.mjs';
+// SPDX-License-Identifier: AGPL-3.0-only
+// Copyright ©2026 Bob Ceulemans
+import {diagnostics} from './research.mjs';
+export default function QualityReview({report,t,number,percent}){
+ const checks=diagnostics(report),count=status=>checks.filter(c=>c.status===status).length;
+ return <section className="card quality-review" id="quality-review"><div className="eyebrow">RESEARCH STUDIO / 02</div><div className="studio-title"><div><h2>{t("Look behind the earnings.")}</h2><p className="muted">{t("Eight transparent research signals. No new overall score, but better follow-up questions.")}</p></div><span className="studio-badge">EARNINGS & CAPITAL</span></div><div className="review-counts"><span className="count-review">{count('review')} {t("to investigate")}</span><span className="count-clear">{count('clear')} {t("no signal on this rule")}</span><span className="count-missing">{count('missing')} {t("not assessable")}</span></div><p className="method-note">{t("Annual figures for")} {dateLabel(report.years.at(-1).end,t.language)}. {t("Thresholds are visible heuristics, not sector-specific standards. A signal is not proof of a problem; no signal is not a guarantee.")}</p><div className="quality-grid">{checks.map(c=><article key={c.key} className={'quality-item '+c.status}><span className="pill">{c.status==='missing'?t("No data"):c.status==='review'?t("Investigate"):t("No signal")}</span><h3>{t(c.nl,c.en)}</h3><strong>{c.unit==='percent'?percent(c.value):c.unit==='pp'?c.value===null?'—':number(c.value*100)+' pp':number(c.value)+(c.value===null?'':' ×')}</strong><p>{t(c.ruleNl,c.ruleEn)}</p></article>)}</div></section>;
+}

@@ -1,0 +1,477 @@
+{
+  "fr": {
+    "title": "Guide d’utilisation",
+    "tagline": "Comprendre l’entreprise. Puis évaluer son prix.",
+    "cover": "Votre carnet personnel de recherche financière.",
+    "pages": [
+      [
+        "Premiers pas",
+        "Installation et langues",
+        [
+          [
+            "Installer sur Mac",
+            "Sur un Mac Apple Silicon avec macOS 14 ou ultérieur, ouvrez le DMG et glissez Tickertwister Desktop.app dans Applications. Lancez ensuite l’application depuis Applications et éjectez le disque. Le dossier Documentatie contient les guides, les licences et le code source. Cette distribution est signée localement, mais non notariée par Apple. Vérifiez son origine avant d’autoriser son ouverture dans les réglages de sécurité."
+          ],
+          [
+            "Choisir une entreprise",
+            "Saisissez un symbole Yahoo, par exemple AAPL, MSFT ou ASML.AS, puis lancez l’analyse. Les données récentes nécessitent une connexion. Une analyse enregistrée peut être ouverte sans télécharger de nouvelles données. Vérifiez l’activité, les exercices, la couverture et les devises avant d’interpréter les résultats."
+          ],
+          [
+            "Sept langues, deux préférences",
+            "Choisissez le néerlandais, l’anglais, le français, l’allemand, l’espagnol, l’italien ou le portugais. La langue de sortie de l’IA suit initialement celle de l’application, mais vous pouvez la choisir séparément. Une option conserve les termes financiers en anglais. ROE, ROA, FCFE et CAGR restent reconnaissables. Le changement de langue adapte les nombres et dates sans changer les montants ni convertir USD en EUR."
+          ],
+          [
+            "Se repérer",
+            "Les liens de section, la recherche Command-F et le bouton de déploiement global facilitent la navigation. Le dossier de recherche est une vue distincte. Fermez-le pour revenir à l’analyse ou choisissez une nouvelle analyse pour revenir à l’accueil. La version apparaît en pied de page. Les thèmes changent uniquement la présentation. Sans case de comparaison cochée, les boutons d’analyse utilisent l’entreprise active. Le menu des réglages contient la préférence des termes financiers anglais."
+          ]
+        ]
+      ],
+      [
+        "Qualité et valeur",
+        "Interpréter les résultats",
+        [
+          [
+            "39 critères",
+            "La note utilise les pondérations actives. Les critères manquants sont exclus du poids disponible : un tiret n’est pas un zéro. Examinez la couverture et les règles détaillées. Dans l’éditeur des poids, 1 conserve le poids initial, 2 le double et 0 exclut le critère. La restauration rétablit les poids initiaux. La note standard reste une référence ; chaque analyse enregistrée conserve sa pondération."
+          ],
+          [
+            "Modèle FCFE",
+            "FCFE = flux de trésorerie d’exploitation - dépenses d’investissement + emprunts nets. Le modèle actualise dix années et une valeur terminale. Les valeurs initiales sont un taux de 12 %, un multiple de 15 et la croissance du chiffre d’affaires Yahoo, sans plafond, même négative (absente : 0 %). Elles sont modifiables. Taux = taux d’actualisation = rendement exigé. Si les emprunts nets manquent, le FCF sert de proxy explicitement signalé, avec emprunts nets supposés nuls."
+          ],
+          [
+            "Scénarios et devises",
+            "La marge de sécurité vaut 1 - cours / valeur du modèle. Le laboratoire et la matrice de sensibilité permettent d’explorer les hypothèses ; DCF et Gordon Growth proposent d’autres scénarios. La valeur comptable reste dans la devise de publication. Une comparaison avec un cours dans une autre devise exige un taux de change et une base d’actions vérifiés. Sans ces éléments, la marge reste vide. Le changement de langue n’effectue aucune conversion."
+          ],
+          [
+            "Lire les tableaux",
+            "Les périodes récentes apparaissent à gauche ; les graphiques suivent l’ordre chronologique. Lisez l’unité commune affichée au-dessus de chaque tableau. Orange signifie à examiner, vert aucun signal selon la règle, gris non évaluable. Une note élevée ne prouve ni un avantage concurrentiel durable ni la sécurité d’un investissement."
+          ]
+        ]
+      ],
+      [
+        "Votre dossier privé",
+        "Recherche et conservation",
+        [
+          [
+            "Sélection et comparaison",
+            "Ajoutez l’analyse courante au dossier. Les vues en cartes ou en liste présentent les entreprises et leurs statuts. Cliquer sur une entreprise sélectionne ses notes ; les cases choisissent séparément une à quatre entreprises pour l’étude. Sélectionnez une période commune ou l’historique maximal. Les dates et la méthode restent visibles ; les comparaisons longues peuvent tolérer 190 jours d’écart entre clôtures."
+          ],
+          [
+            "Thèse personnelle",
+            "Consignez vos arguments, risques, preuves contraires et prochaine question dans les champs redimensionnables. Les statuts sont : en recherche (gris), à suivre (orange), trop difficile (rouge) et candidat à l’investissement (vert). La date de réexamen est un rappel personnel, sans notification. Enregistrez les modifications avec le bouton proche des notes avant de quitter."
+          ],
+          [
+            "Suppression et fichiers",
+            "La croix demande confirmation avant de retirer une entreprise et ses notes. Enregistrez ensuite le dossier pour rendre la suppression persistante ; avant cela, elle peut être annulée. L’archive IA séparée et les fichiers d’analyse restent conservés. Enregistrer une analyse crée un fichier .tickertwister contenant un instantané des données et hypothèses, pas une surveillance en direct."
+          ],
+          [
+            "Comptes et sécurité",
+            "Un compte local sépare les dossiers et chiffre le dossier interne ainsi que l’archive IA. Il n’existe ni récupération du mot de passe, ni connexion cloud, ni double authentification. Utilisez un gestionnaire de mots de passe et verrouillez le compte avant de partager le Mac. Sauvegardez le dossier Profiles dans Library/Application Support/Tickertwister. Les exports, PDF et anciennes sauvegardes ne bénéficient pas de ce chiffrement."
+          ]
+        ]
+      ],
+      [
+        "Interprétation et rapports",
+        "IA à la demande",
+        [
+          [
+            "Résumé local ou IA",
+            "Le résumé automatique repose sur des règles locales et ne coûte rien. Une analyse IA nécessite votre clé et un compte API payant. Luna est le profil initial économique ; Sol et Astra sont proposés pour des analyses plus approfondies et plus coûteuses. Choisissez l’effort, la limite de jetons et la langue de sortie. La limite initiale de 8192 couvre le raisonnement et la réponse ; le texte demandé reste d’environ 350 à 500 mots en sept parties."
+          ],
+          [
+            "Consentement et clé",
+            "Vérifiez l’avertissement et les données exactes, puis acceptez la transmission et les coûts pour lancer la demande. Aucun appel payant, nouvel essai ou changement de modèle n’est automatique. Les données comprennent les ratios, critères, poids et notes de qualité, sans vos notes personnelles ni vos hypothèses de valorisation. Avec un compte local, la clé peut être conservée chiffrée dans le trousseau macOS ; sinon elle reste en mémoire pour la session."
+          ],
+          [
+            "Conserver et imprimer",
+            "Les réponses IA et leur entrée financière sont archivées automatiquement. Changer de langue ne les efface pas et ne les traduit pas gratuitement. Une traduction API explicite conserve l’original. Dans les analyses enregistrées, cochez les textes à joindre au rapport. Sans sélection, aucune annexe IA n’est imprimée. Le rapport d’entreprise et le rapport du dossier sont distincts et incluent leurs informations, graphiques ou notes pertinentes."
+          ],
+          [
+            "Limites et aide",
+            "En cas de données absentes, vérifiez le symbole, la connexion et les restrictions Yahoo. Un résultat IA incomplet peut déjà avoir occasionné des frais : contrôlez les réglages avant de relancer. Vérifiez les conclusions dans les documents de l’entreprise. Code sous AGPLv3 ; licences des données distinctes. Consultez LICENSE et NOTICE. Les traductions communautaires restent à faire relire par des spécialistes financiers de langue maternelle."
+          ]
+        ]
+      ]
+    ]
+  },
+  "de": {
+    "title": "Benutzerhandbuch",
+    "tagline": "Das Unternehmen verstehen. Dann den Preis beurteilen.",
+    "cover": "Ihr persönliches Notizbuch für die Finanzanalyse.",
+    "pages": [
+      [
+        "Erste Schritte",
+        "Installation und Sprachen",
+        [
+          [
+            "Auf dem Mac installieren",
+            "Öffnen Sie auf einem Apple-Silicon-Mac mit macOS 14 oder neuer die DMG-Datei und ziehen Sie Tickertwister Desktop.app nach Applications. Starten Sie die App dort und werfen Sie das Laufwerk aus. Im Ordner Documentatie finden Sie Handbücher, Lizenzen und Quellcode. Diese Ausgabe ist lokal signiert, jedoch nicht von Apple notarisiert. Prüfen Sie die Herkunft, bevor Sie das Öffnen in den Sicherheitseinstellungen erlauben."
+          ],
+          [
+            "Ein Unternehmen wählen",
+            "Geben Sie ein Yahoo-Symbol wie AAPL, MSFT oder ASML.AS ein und starten Sie die Analyse. Neue Daten benötigen eine Internetverbindung. Eine gespeicherte Analyse lässt sich ohne erneuten Abruf öffnen. Prüfen Sie Geschäftstätigkeit, Geschäftsjahre, Datenabdeckung und Währungen, bevor Sie Ergebnisse beurteilen."
+          ],
+          [
+            "Sieben Sprachen, zwei Einstellungen",
+            "Zur Wahl stehen Niederländisch, Englisch, Französisch, Deutsch, Spanisch, Italienisch und Portugiesisch. Die KI-Ausgabesprache folgt zunächst der App-Sprache, kann aber unabhängig festgelegt werden. Finanzbegriffe lassen sich auf Englisch beibehalten. ROE, ROA, FCFE und CAGR bleiben erkennbar. Ein Sprachwechsel ändert nur Zahlen- und Datumsformate, niemals Beträge oder USD in EUR."
+          ],
+          [
+            "Orientierung",
+            "Abschnittslinks, die Suche mit Command-F und das gemeinsame Aufklappen erleichtern die Navigation. Das Forschungsdossier ist eine getrennte Ansicht. Schließen Sie es, um zur Analyse zurückzukehren, oder beginnen Sie eine neue Analyse auf der Startseite. Die Versionsnummer steht in der Fußzeile. Designs ändern ausschließlich die Darstellung. Ohne Vergleichsauswahl verwenden die Analyseknöpfe das aktive Unternehmen. Die Einstellung für englische Finanzbegriffe befindet sich im Zahnradmenü."
+          ]
+        ]
+      ],
+      [
+        "Qualität und Wert",
+        "Ergebnisse einordnen",
+        [
+          [
+            "39 Kriterien",
+            "Der Wert verwendet die aktiven Gewichtungen. Fehlende Kriterien werden aus dem verfügbaren Gewicht ausgeschlossen; ein Strich bedeutet nicht null. Beachten Sie Datenabdeckung und Einzelregeln. Im Gewichtungseditor erhält Faktor 1 das ursprüngliche Gewicht, 2 verdoppelt es und 0 schließt das Kriterium aus. Die Wiederherstellung setzt die ursprünglichen Gewichte zurück. Der Standardwert bleibt als Vergleich sichtbar; gespeicherte Analysen behalten ihre Gewichtung."
+          ],
+          [
+            "FCFE-Modell",
+            "FCFE = operativer Cashflow - Investitionsausgaben + Nettokreditaufnahme. Das Modell diskontiert zehn Jahre und einen Endwert. Ausgangswerte sind 12 % Zins, ein Multiplikator von 15 und das gemeldete Yahoo-Umsatzwachstum ohne Obergrenze, auch negativ (fehlend: 0 %). Diese Annahmen sind veränderbar. Zins = Diskontierungssatz = geforderte Rendite. Fehlt die Nettokreditaufnahme, dient der ausdrücklich gekennzeichnete FCF als Näherung bei angenommener Nettokreditaufnahme von null."
+          ],
+          [
+            "Szenarien und Währungen",
+            "Die Sicherheitsmarge beträgt 1 - Kurs / Modellwert. Das Bewertungslabor und die Sensitivitätsmatrix zeigen Auswirkungen anderer Annahmen. DCF und Gordon Growth bieten weitere Szenarien. Finanzdaten bleiben in der Berichtswährung. Für Vergleiche mit einem Kurs in anderer Währung sind ein Wechselkurs und eine bestätigte Aktienbasis erforderlich. Fehlen sie, bleibt die Marge leer. Ein Sprachwechsel rechnet keine Währung um."
+          ],
+          [
+            "Tabellen lesen",
+            "Die neuesten Perioden stehen links; Diagramme laufen chronologisch. Beachten Sie die gemeinsame Einheit über der Tabelle. Orange bedeutet prüfen, Grün kein Signal nach dieser Regel und Grau nicht beurteilbar. Ein hoher Wert beweist weder einen dauerhaften Wettbewerbsvorteil noch die Sicherheit einer Anlage."
+          ]
+        ]
+      ],
+      [
+        "Ihr privates Dossier",
+        "Recherchieren und speichern",
+        [
+          [
+            "Auswahl und Vergleich",
+            "Nehmen Sie die aktuelle Analyse ins Dossier auf. Karten- und Listenansicht zeigen Unternehmen und Status. Ein Klick wählt die Notizen des Unternehmens; die Kontrollkästchen wählen unabhängig davon ein bis vier Unternehmen zur Untersuchung. Wählen Sie einen gemeinsamen Zeitraum oder die maximale Historie. Daten und Methode bleiben sichtbar; langfristige Vergleiche können bis zu 190 Tage Unterschied zwischen Geschäftsjahresenden zulassen."
+          ],
+          [
+            "Eigene Anlagethese",
+            "Notieren Sie Argumente, Risiken, Gegenbelege und nächste Fragen in den vergrößerbaren Feldern. Statusfarben: in Prüfung (grau), beobachten (orange), zu schwierig (rot), Anlagekandidat (grün). Der Wiedervorlagetermin ist eine persönliche Gedächtnisstütze ohne Benachrichtigung. Speichern Sie Änderungen vor dem Beenden mit der Schaltfläche bei den Notizen."
+          ],
+          [
+            "Entfernen und Dateien",
+            "Das Kreuz verlangt eine Bestätigung, bevor Unternehmen und Notizen entfernt werden. Speichern Sie danach das Dossier, damit die Änderung dauerhaft wird; vorher ist sie rückgängig zu machen. Das getrennte KI-Archiv und einzelne Analysedateien bleiben erhalten. Eine .tickertwister-Datei enthält einen gespeicherten Stand der Zahlen und Annahmen, keine laufende Kursüberwachung."
+          ],
+          [
+            "Konten und Sicherheit",
+            "Lokale Konten trennen Dossiers und verschlüsseln das interne Dossier sowie das KI-Archiv. Es gibt keine Passwortwiederherstellung, Cloud-Anmeldung oder Zwei-Faktor-Anmeldung. Verwenden Sie einen Passwortmanager und sperren Sie das Konto vor gemeinsamer Mac-Nutzung. Sichern Sie Profiles unter Library/Application Support/Tickertwister. Exporte, PDFs und alte Sicherungen sind von dieser Verschlüsselung nicht erfasst."
+          ]
+        ]
+      ],
+      [
+        "Interpretation und Berichte",
+        "KI auf Anfrage",
+        [
+          [
+            "Lokale Regeln oder KI",
+            "Die automatische Zusammenfassung arbeitet lokal und kostenlos. KI benötigt Ihren Schlüssel und ein kostenpflichtiges API-Konto. Luna ist das günstige Ausgangsprofil; Sol und Astra bieten vertiefte Analyseprofile zu höheren Kosten. Wählen Sie Denkaufwand, Tokenlimit und Ausgabesprache. Das anfängliche Limit von 8192 umfasst Denken und Antwort; der angeforderte Bericht bleibt etwa 350 bis 500 Wörter lang und hat sieben Abschnitte."
+          ],
+          [
+            "Einwilligung und Schlüssel",
+            "Prüfen Sie Hinweise und genaue Eingabedaten, stimmen Sie Übertragung und Kosten zu und starten Sie die Anfrage. Es gibt keine automatischen kostenpflichtigen Aufrufe, Wiederholungen oder Modellwechsel. Übertragen werden Kennzahlen, Kriterien, Gewichte und Qualitätswerte, nicht Ihre Notizen oder Bewertungsannahmen. Mit lokalem Konto kann der Schlüssel verschlüsselt im macOS-Schlüsselbund gespeichert werden; sonst bleibt er nur für die Sitzung im Speicher."
+          ],
+          [
+            "Aufbewahren und drucken",
+            "KI-Antworten und Finanzdaten der Anfrage werden automatisch archiviert. Ein Sprachwechsel löscht sie nicht und übersetzt sie nicht kostenlos. Eine ausdrücklich angeforderte API-Übersetzung erhält das Original. Wählen Sie im Archiv die Texte für den Druck aus. Ohne Auswahl werden keine KI-Anhänge gedruckt. Unternehmensbericht und Dossierbericht sind getrennt und enthalten die jeweiligen Daten, Diagramme und Notizen."
+          ],
+          [
+            "Grenzen und Hilfe",
+            "Fehlen Daten, prüfen Sie Symbol, Verbindung und Yahoo-Beschränkungen. Eine unvollständige KI-Antwort kann bereits Kosten verursacht haben; prüfen Sie Einstellungen vor einer neuen Anfrage. Überprüfen Sie Aussagen anhand der Unternehmensberichte. Der Code steht unter AGPLv3; Datenlizenzen sind davon getrennt. Siehe LICENSE und NOTICE. Eine finanzfachliche Prüfung der Übersetzungen durch Muttersprachler steht noch aus."
+          ]
+        ]
+      ]
+    ]
+  },
+  "es": {
+    "title": "Manual de usuario",
+    "tagline": "Comprender la empresa. Después, evaluar su precio.",
+    "cover": "Su cuaderno personal de investigación financiera.",
+    "pages": [
+      [
+        "Primeros pasos",
+        "Instalación e idiomas",
+        [
+          [
+            "Instalar en Mac",
+            "En un Mac Apple Silicon con macOS 14 o posterior, abra el DMG y arrastre Tickertwister Desktop.app a Applications. Inicie la aplicación desde allí y expulse la imagen de disco. La carpeta Documentatie contiene manuales, licencias y código fuente. Esta distribución está firmada localmente, pero no notarizada por Apple. Compruebe su procedencia antes de permitir su apertura en los ajustes de seguridad."
+          ],
+          [
+            "Elegir una empresa",
+            "Introduzca un símbolo Yahoo como AAPL, MSFT o ASML.AS e inicie el análisis. Los datos nuevos requieren conexión. Un análisis guardado se puede abrir sin descargar datos de nuevo. Compruebe la actividad, los ejercicios, la cobertura y las monedas antes de interpretar los resultados."
+          ],
+          [
+            "Siete idiomas, dos preferencias",
+            "Puede elegir neerlandés, inglés, francés, alemán, español, italiano o portugués. La salida de IA sigue inicialmente el idioma de la aplicación, pero se configura de forma independiente. Una opción mantiene los términos financieros en inglés. ROE, ROA, FCFE y CAGR siguen siendo reconocibles. Cambiar de idioma adapta números y fechas sin alterar importes ni convertir USD en EUR."
+          ],
+          [
+            "Orientarse",
+            "Los enlaces de sección, la búsqueda con Command-F y la apertura global facilitan la navegación. El expediente es una vista separada. Ciérrelo para volver al análisis o inicie uno nuevo para regresar a la portada. La versión aparece en el pie de página. Los temas solo modifican la presentación. Sin casillas de comparación marcadas, los botones de análisis usan la empresa activa. La preferencia de términos financieros en inglés está en el menú de ajustes."
+          ]
+        ]
+      ],
+      [
+        "Calidad y valor",
+        "Interpretar los resultados",
+        [
+          [
+            "39 criterios",
+            "La puntuación utiliza las ponderaciones activas. Los criterios ausentes se excluyen del peso disponible: un guion no es un cero. Examine la cobertura y las reglas individuales. En el editor, 1 conserva el peso original, 2 lo duplica y 0 excluye el criterio. Restaurar recupera los pesos originales. La puntuación estándar sigue visible como referencia; cada análisis guardado conserva su ponderación."
+          ],
+          [
+            "Modelo FCFE",
+            "FCFE = flujo de caja operativo - inversiones de capital + endeudamiento neto. El modelo descuenta diez años y un valor terminal. Los valores iniciales son un tipo del 12 %, un múltiplo de 15 y el crecimiento de ingresos de Yahoo sin límite superior, incluso negativo (si falta: 0 %). Puede modificarlos. Tipo = tasa de descuento = rentabilidad exigida. Si falta el endeudamiento neto, se utiliza el FCF como aproximación identificada, suponiendo endeudamiento neto cero."
+          ],
+          [
+            "Escenarios y monedas",
+            "El margen de seguridad es 1 - cotización / valor del modelo. El laboratorio y la matriz de sensibilidad muestran el efecto de las hipótesis. DCF y Gordon Growth ofrecen otros escenarios. Las cuentas permanecen en su moneda de presentación. Comparar con una cotización en otra moneda exige un cambio y una base de acciones verificados. Si faltan, el margen queda vacío. Cambiar el idioma nunca convierte monedas."
+          ],
+          [
+            "Leer las tablas",
+            "Los periodos recientes aparecen a la izquierda; los gráficos siguen el orden cronológico. Lea la unidad común indicada encima de cada tabla. Naranja significa investigar, verde ninguna señal según esa regla y gris no evaluable. Una puntuación alta no demuestra una ventaja competitiva duradera ni garantiza una inversión segura."
+          ]
+        ]
+      ],
+      [
+        "Su expediente privado",
+        "Investigar y conservar",
+        [
+          [
+            "Selección y comparación",
+            "Añada el análisis actual al expediente. Las tarjetas y la lista muestran empresas y estados. Pulsar una empresa selecciona sus notas; las casillas seleccionan por separado de una a cuatro empresas para estudiar. Elija un periodo común o el historial máximo. Se muestran las fechas y el método; los análisis largos pueden admitir hasta 190 días de diferencia entre cierres de ejercicio."
+          ],
+          [
+            "Tesis personal",
+            "Anote argumentos, riesgos, pruebas contrarias y la siguiente pregunta en los campos ampliables. Estados: en investigación (gris), seguimiento (naranja), demasiado difícil (rojo) y candidato de inversión (verde). La fecha de revisión es un recordatorio personal sin notificaciones. Guarde los cambios con el botón junto a las notas antes de salir."
+          ],
+          [
+            "Eliminar y guardar archivos",
+            "La cruz solicita confirmación para retirar una empresa y sus notas. Guarde después el expediente para hacer persistente el cambio; antes puede deshacerlo. El archivo independiente de IA y los archivos de análisis se conservan. Un archivo .tickertwister contiene una instantánea de cifras e hipótesis, no una vigilancia continua de cotizaciones."
+          ],
+          [
+            "Cuentas y seguridad",
+            "Las cuentas locales separan expedientes y cifran el expediente interno y el archivo de IA. No hay recuperación de contraseña, registro en la nube ni autenticación de dos factores. Use un gestor de contraseñas y bloquee la cuenta antes de compartir el Mac. Haga copias de Profiles en Library/Application Support/Tickertwister. Las exportaciones, PDF y copias antiguas no están cubiertos por ese cifrado."
+          ]
+        ]
+      ],
+      [
+        "Interpretación e informes",
+        "IA bajo petición",
+        [
+          [
+            "Reglas locales o IA",
+            "El resumen automático utiliza reglas locales y es gratuito. La IA requiere su clave y una cuenta API de pago. Luna es el perfil económico inicial; Sol y Astra ofrecen perfiles más profundos con mayor coste. Elija esfuerzo, límite de tokens e idioma de salida. El límite inicial de 8192 incluye razonamiento y respuesta; se solicita un texto de unas 350 a 500 palabras en siete apartados."
+          ],
+          [
+            "Consentimiento y clave",
+            "Revise el aviso y los datos exactos, acepte la transmisión y los costes e inicie la solicitud. No hay llamadas de pago, reintentos ni cambios de modelo automáticos. Se envían ratios, criterios, pesos y puntuaciones, sin sus notas ni hipótesis de valoración. Con una cuenta local puede guardar la clave cifrada en el llavero de macOS; si no, permanece en memoria solo durante la sesión."
+          ],
+          [
+            "Conservar e imprimir",
+            "Las respuestas de IA y sus datos financieros se archivan automáticamente. Cambiar el idioma no las borra ni las traduce gratuitamente. Una traducción API solicitada expresamente conserva el original. Seleccione los textos que desee adjuntar al imprimir. Sin casillas seleccionadas no se imprimen anexos de IA. El informe de empresa y el del expediente son distintos e incluyen los datos, gráficos o notas correspondientes."
+          ],
+          [
+            "Límites y ayuda",
+            "Si faltan datos, revise el símbolo, la conexión y las restricciones de Yahoo. Una respuesta incompleta puede haber generado costes; revise los ajustes antes de repetir. Contraste las conclusiones con documentos de la empresa. Código bajo AGPLv3; las licencias de datos son independientes. Consulte LICENSE y NOTICE. Las traducciones aún requieren revisión de hablantes nativos con conocimientos financieros."
+          ]
+        ]
+      ]
+    ]
+  },
+  "it": {
+    "title": "Manuale utente",
+    "tagline": "Comprendere l’impresa. Poi valutarne il prezzo.",
+    "cover": "Il tuo taccuino personale di ricerca finanziaria.",
+    "pages": [
+      [
+        "Primi passi",
+        "Installazione e lingue",
+        [
+          [
+            "Installare sul Mac",
+            "Su un Mac Apple Silicon con macOS 14 o successivo, apri il DMG e trascina Tickertwister Desktop.app in Applications. Avvia l’app da lì ed espelli l’immagine disco. La cartella Documentatie contiene manuali, licenze e codice sorgente. Questa distribuzione è firmata localmente, ma non autenticata da Apple tramite notarizzazione. Verificane la provenienza prima di consentire l’apertura nelle impostazioni di sicurezza."
+          ],
+          [
+            "Scegliere un’impresa",
+            "Inserisci un simbolo Yahoo come AAPL, MSFT o ASML.AS e avvia l’analisi. Per nuovi dati serve una connessione. Un’analisi salvata si apre senza scaricare nuovamente i dati. Controlla attività, esercizi, copertura e valute prima di interpretare i risultati."
+          ],
+          [
+            "Sette lingue, due preferenze",
+            "Puoi scegliere neerlandese, inglese, francese, tedesco, spagnolo, italiano o portoghese. La lingua dell’IA segue inizialmente quella dell’app, ma può essere impostata separatamente. Un’opzione mantiene i termini finanziari in inglese. ROE, ROA, FCFE e CAGR rimangono riconoscibili. Cambiare lingua adatta numeri e date senza modificare importi o convertire USD in EUR."
+          ],
+          [
+            "Orientarsi",
+            "I collegamenti alle sezioni, la ricerca Command-F e l’apertura globale aiutano a navigare. Il dossier è una vista separata. Chiudilo per tornare all’analisi oppure avvia una nuova analisi per tornare alla pagina iniziale. La versione compare nel piè di pagina. I temi cambiano solo l’aspetto. Senza caselle di confronto selezionate, i pulsanti di analisi usano l’azienda attiva. La preferenza dei termini finanziari inglesi è nel menu delle impostazioni."
+          ]
+        ]
+      ],
+      [
+        "Qualità e valore",
+        "Interpretare i risultati",
+        [
+          [
+            "39 criteri",
+            "Il punteggio utilizza i pesi attivi. I criteri mancanti sono esclusi dal peso disponibile: un trattino non equivale a zero. Esamina copertura e regole dettagliate. Nell’editor, 1 conserva il peso iniziale, 2 lo raddoppia e 0 esclude il criterio. Il ripristino recupera i pesi iniziali. Il punteggio standard resta visibile come riferimento; ogni analisi salvata conserva i propri pesi."
+          ],
+          [
+            "Modello FCFE",
+            "FCFE = flusso di cassa operativo - investimenti di capitale + indebitamento netto. Il modello attualizza dieci anni e un valore terminale. I valori iniziali sono un tasso del 12 %, un multiplo di 15 e la crescita dei ricavi Yahoo senza limite superiore, anche negativa (se assente: 0 %). Sono modificabili. Tasso = tasso di attualizzazione = rendimento richiesto. Se manca l’indebitamento netto, il FCF funge da approssimazione dichiarata, assumendo indebitamento netto nullo."
+          ],
+          [
+            "Scenari e valute",
+            "Il margine di sicurezza è 1 - quotazione / valore del modello. Il laboratorio e la matrice di sensibilità mostrano gli effetti delle ipotesi. DCF e Gordon Growth offrono altri scenari. I bilanci restano nella valuta di presentazione. Il confronto con quotazioni in altre valute richiede un cambio e una base azionaria verificati. Se mancano, il margine resta vuoto. Cambiare lingua non converte valute."
+          ],
+          [
+            "Leggere le tabelle",
+            "I periodi recenti sono a sinistra; i grafici seguono l’ordine cronologico. Leggi l’unità comune sopra ogni tabella. Arancione significa da approfondire, verde nessun segnale secondo la regola e grigio non valutabile. Un punteggio alto non dimostra un vantaggio competitivo duraturo né garantisce un investimento sicuro."
+          ]
+        ]
+      ],
+      [
+        "Il dossier privato",
+        "Ricercare e conservare",
+        [
+          [
+            "Selezione e confronto",
+            "Aggiungi l’analisi corrente al dossier. Schede ed elenco mostrano imprese e stati. Cliccare su un’impresa ne seleziona le note; le caselle selezionano separatamente da una a quattro imprese da studiare. Scegli un periodo comune o la massima storia disponibile. Date e metodo restano visibili; i confronti lunghi possono ammettere 190 giorni di differenza tra chiusure degli esercizi."
+          ],
+          [
+            "Tesi personale",
+            "Annota argomenti, rischi, prove contrarie e prossima domanda nei campi ridimensionabili. Stati: in ricerca (grigio), da seguire (arancione), troppo difficile (rosso), candidato all’investimento (verde). La data di revisione è un promemoria personale senza notifiche. Salva le modifiche con il pulsante vicino alle note prima di uscire."
+          ],
+          [
+            "Rimuovere e salvare file",
+            "La croce chiede conferma prima di rimuovere impresa e note. Salva poi il dossier per rendere persistente la modifica; prima puoi annullarla. L’archivio IA separato e i singoli file di analisi restano conservati. Un file .tickertwister contiene un’istantanea di cifre e ipotesi, non un monitoraggio continuo dei prezzi."
+          ],
+          [
+            "Account e sicurezza",
+            "Gli account locali separano i dossier e cifrano il dossier interno e l’archivio IA. Non esistono recupero password, registrazione cloud o autenticazione a due fattori. Usa un gestore di password e blocca l’account prima di condividere il Mac. Esegui copie di Profiles in Library/Application Support/Tickertwister. Esportazioni, PDF e vecchie copie non sono coperti da questa cifratura."
+          ]
+        ]
+      ],
+      [
+        "Interpretazione e rapporti",
+        "IA su richiesta",
+        [
+          [
+            "Regole locali o IA",
+            "Il riepilogo automatico usa regole locali ed è gratuito. L’IA richiede la tua chiave e un account API a pagamento. Luna è il profilo iniziale economico; Sol e Astra offrono profili più approfonditi a costo maggiore. Scegli impegno di ragionamento, limite di token e lingua di uscita. Il limite iniziale di 8192 comprende ragionamento e risposta; il testo richiesto resta di circa 350-500 parole in sette sezioni."
+          ],
+          [
+            "Consenso e chiave",
+            "Leggi le avvertenze e i dati esatti, accetta trasmissione e costi, poi avvia la richiesta. Non ci sono chiamate a pagamento, nuovi tentativi o cambi di modello automatici. Vengono inviati indici, criteri, pesi e punteggi, senza note personali o ipotesi di valutazione. Con un account locale puoi conservare la chiave cifrata nel portachiavi macOS; altrimenti resta in memoria solo durante la sessione."
+          ],
+          [
+            "Conservare e stampare",
+            "Risposte IA e dati finanziari usati sono archiviati automaticamente. Cambiare lingua non li elimina né li traduce gratuitamente. Una traduzione API esplicita conserva l’originale. Seleziona nell’archivio i testi da allegare alla stampa. Senza selezione non vengono stampati allegati IA. Il rapporto d’impresa e quello del dossier sono distinti e includono dati, grafici o note pertinenti."
+          ],
+          [
+            "Limiti e assistenza",
+            "Se mancano dati, controlla simbolo, connessione e restrizioni Yahoo. Una risposta incompleta può aver già generato costi: verifica i parametri prima di riprovare. Controlla le conclusioni nei documenti dell’impresa. Codice sotto AGPLv3; licenze dei dati separate. Consulta LICENSE e NOTICE. Le traduzioni attendono una revisione di madrelingua con competenze finanziarie."
+          ]
+        ]
+      ]
+    ]
+  },
+  "pt": {
+    "title": "Manual do utilizador",
+    "tagline": "Compreender a empresa. Depois, avaliar o preço.",
+    "cover": "O seu caderno pessoal de investigação financeira.",
+    "pages": [
+      [
+        "Primeiros passos",
+        "Instalação e idiomas",
+        [
+          [
+            "Instalar no Mac",
+            "Num Mac Apple Silicon com macOS 14 ou posterior, abra o DMG e arraste Tickertwister Desktop.app para Applications. Inicie a aplicação a partir daí e ejete a imagem de disco. A pasta Documentatie contém manuais, licenças e código-fonte. Esta distribuição tem assinatura local, mas não foi notarizada pela Apple. Verifique a origem antes de permitir a abertura nas definições de segurança."
+          ],
+          [
+            "Escolher uma empresa",
+            "Introduza um símbolo Yahoo como AAPL, MSFT ou ASML.AS e inicie a análise. Os dados novos exigem ligação à Internet. Uma análise guardada pode ser aberta sem novo descarregamento. Verifique atividade, exercícios, cobertura e moedas antes de interpretar os resultados."
+          ],
+          [
+            "Sete idiomas, duas preferências",
+            "Pode escolher neerlandês, inglês, francês, alemão, espanhol, italiano ou português. O idioma de saída da IA segue inicialmente o da aplicação, mas pode ser definido separadamente. Uma opção mantém os termos financeiros em inglês. ROE, ROA, FCFE e CAGR continuam reconhecíveis. Mudar o idioma adapta números e datas sem alterar montantes nem converter USD em EUR."
+          ],
+          [
+            "Orientar-se",
+            "As ligações de secção, a pesquisa Command-F e a abertura global facilitam a navegação. O dossiê é uma vista separada. Feche-o para regressar à análise ou inicie uma nova análise para voltar ao início. A versão aparece no rodapé. Os temas alteram apenas a apresentação. Sem caixas de comparação assinaladas, os botões de análise usam a empresa ativa. A preferência de termos financeiros em inglês está no menu de definições."
+          ]
+        ]
+      ],
+      [
+        "Qualidade e valor",
+        "Interpretar os resultados",
+        [
+          [
+            "39 critérios",
+            "A pontuação usa as ponderações ativas. Os critérios em falta são excluídos do peso disponível: um travessão não é um zero. Examine a cobertura e as regras individuais. No editor, 1 mantém o peso original, 2 duplica-o e 0 exclui o critério. Repor recupera os pesos originais. A pontuação padrão mantém-se como referência; cada análise guardada conserva a sua ponderação."
+          ],
+          [
+            "Modelo FCFE",
+            "FCFE = fluxo de caixa operacional - despesas de investimento + endividamento líquido. O modelo desconta dez anos e um valor terminal. Os valores iniciais são uma taxa de 12 %, um múltiplo de 15 e crescimento das receitas Yahoo sem limite superior, mesmo negativo (se ausente: 0 %). Pode alterá-los. Taxa = taxa de desconto = rendibilidade exigida. Se faltar endividamento líquido, o FCF é usado como aproximação identificada, pressupondo endividamento líquido nulo."
+          ],
+          [
+            "Cenários e moedas",
+            "A margem de segurança é 1 - cotação / valor do modelo. O laboratório e a matriz de sensibilidade mostram o efeito dos pressupostos. DCF e Gordon Growth oferecem outros cenários. As contas mantêm a moeda de apresentação. Comparar com uma cotação noutra moeda exige câmbio e base de ações verificados. Sem esses elementos, a margem fica vazia. Mudar o idioma não converte moedas."
+          ],
+          [
+            "Ler as tabelas",
+            "Os períodos recentes surgem à esquerda; os gráficos seguem a ordem cronológica. Leia a unidade comum indicada acima de cada tabela. Laranja significa investigar, verde nenhum sinal segundo a regra e cinzento não avaliável. Uma pontuação elevada não prova uma vantagem competitiva duradoura nem garante um investimento seguro."
+          ]
+        ]
+      ],
+      [
+        "O dossiê privado",
+        "Investigar e conservar",
+        [
+          [
+            "Seleção e comparação",
+            "Adicione a análise atual ao dossiê. Cartões e lista apresentam empresas e estados. Clicar numa empresa seleciona as suas notas; as caixas selecionam separadamente uma a quatro empresas para estudar. Escolha um período comum ou o histórico máximo. Datas e método ficam visíveis; comparações longas podem aceitar 190 dias de diferença entre encerramentos de exercícios."
+          ],
+          [
+            "Tese pessoal",
+            "Registe argumentos, riscos, provas contrárias e a próxima pergunta nos campos redimensionáveis. Estados: em investigação (cinzento), acompanhar (laranja), demasiado difícil (vermelho) e candidato a investimento (verde). A data de revisão é um lembrete pessoal sem notificações. Guarde as alterações com o botão junto às notas antes de sair."
+          ],
+          [
+            "Remover e guardar ficheiros",
+            "A cruz pede confirmação antes de remover a empresa e as notas. Guarde depois o dossiê para tornar a alteração persistente; antes disso pode anulá-la. O arquivo IA separado e os ficheiros de análise são conservados. Um ficheiro .tickertwister contém um retrato de números e pressupostos, não uma monitorização contínua das cotações."
+          ],
+          [
+            "Contas e segurança",
+            "As contas locais separam dossiês e cifram o dossiê interno e o arquivo IA. Não existe recuperação da palavra-passe, registo na nuvem ou autenticação de dois fatores. Use um gestor de palavras-passe e bloqueie a conta antes de partilhar o Mac. Faça cópias de Profiles em Library/Application Support/Tickertwister. Exportações, PDF e cópias antigas não estão abrangidos por esta cifragem."
+          ]
+        ]
+      ],
+      [
+        "Interpretação e relatórios",
+        "IA a pedido",
+        [
+          [
+            "Regras locais ou IA",
+            "O resumo automático usa regras locais e é gratuito. A IA exige a sua chave e uma conta API paga. Luna é o perfil inicial económico; Sol e Astra oferecem perfis mais aprofundados com maior custo. Escolha esforço de raciocínio, limite de tokens e idioma de saída. O limite inicial de 8192 inclui raciocínio e resposta; o texto pedido mantém cerca de 350 a 500 palavras em sete secções."
+          ],
+          [
+            "Consentimento e chave",
+            "Leia o aviso e os dados exatos, aceite a transmissão e os custos e inicie o pedido. Não existem chamadas pagas, repetições ou mudanças de modelo automáticas. São enviados rácios, critérios, pesos e pontuações, sem notas pessoais nem pressupostos de avaliação. Com uma conta local pode guardar a chave cifrada no Porta-chaves do macOS; caso contrário, fica apenas na memória durante a sessão."
+          ],
+          [
+            "Conservar e imprimir",
+            "As respostas IA e os dados financeiros usados são arquivados automaticamente. Mudar o idioma não os apaga nem os traduz gratuitamente. Uma tradução API explícita conserva o original. Selecione no arquivo os textos a anexar à impressão. Sem seleção não são impressos anexos IA. O relatório da empresa e o do dossiê são distintos e incluem os dados, gráficos ou notas pertinentes."
+          ],
+          [
+            "Limites e ajuda",
+            "Se faltarem dados, verifique símbolo, ligação e restrições Yahoo. Uma resposta incompleta pode já ter gerado custos: reveja as definições antes de repetir. Confirme as conclusões nos documentos da empresa. Código sob AGPLv3; as licenças dos dados são separadas. Consulte LICENSE e NOTICE. As traduções aguardam revisão de falantes nativos com conhecimentos financeiros."
+          ]
+        ]
+      ]
+    ]
+  }
+}

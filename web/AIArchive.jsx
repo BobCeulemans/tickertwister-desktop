@@ -1,0 +1,8 @@
+import {archiveDateTime} from './presentation.mjs';
+// SPDX-License-Identifier: AGPL-3.0-only
+import {useAIArchive,relevantRecords,retrySave,selectAIPrint} from './aiArchive.mjs';
+import {recordText} from './aic.mjs';
+export default function AIArchive({symbols,t}){
+ const {records,error,selectedIds}=useAIArchive(),items=relevantRecords(records,symbols);
+ return <details className="ai-archive"><summary>{t("Saved AI analyses")} · {items.length}</summary><p>{t("Saved automatically on this Mac, independently of your notes. These are dated comparisons, not updated recommendations. They remain when a company is removed from the study list. Select which AI texts to print. With no checkmarks, no AI appendices are printed.")}</p>{error&&<p role="alert">{t("Check AI storage: ")}{error}</p>}{items.map(r=><article key={r.id}><label className="ai-print-choice" title={t("Include in print report")}><input type="checkbox" checked={selectedIds.includes(r.id)} onChange={e=>selectAIPrint(r.id,e.target.checked)} aria-label={t("Include in print report")}/></label><details><summary>{r.input.companies.map(c=>c.symbol).join(' / ')} · {r.input.period} · {r.language.toUpperCase()} · {archiveDateTime(r.createdAt)} · {r.result.model}</summary><p>{r.result.model} · {r.settings?.effort||'—'} · {r.settings?.limit||'—'} tokens · {r.translationOf?t("Translation of saved analysis"):t("Original AI analysis")}</p><pre>{recordText(r)}</pre><details><summary>{t("Saved source data and assumptions")}</summary><pre>{JSON.stringify(r.input,null,2)}</pre></details>{!r.persisted&&<button onClick={()=>retrySave(r).catch(()=>{})}>{t("Retry saving without API costs")}</button>}</details></article>)}</details>;
+}

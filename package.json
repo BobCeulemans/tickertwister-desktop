@@ -1,0 +1,26 @@
+{
+  "name": "tickertwister-desktop",
+  "version": "1.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "build": "bash scripts/build.sh",
+    "check:locales": "node scripts/check-locales.mjs",
+    "check:release": "python3 scripts/check-release.py",
+    "build:web": "node scripts/build.mjs"
+  },
+  "dependencies": {
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  },
+  "license": "AGPL-3.0-only",
+  "description": "A private macOS research notebook for value investors",
+  "author": "Bob Ceulemans",
+  "engines": {
+    "node": ">=22"
+  }
+}
