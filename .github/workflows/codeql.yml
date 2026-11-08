@@ -1,0 +1,57 @@
+name: CodeQL security analysis
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '23 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: CodeQL (${{ matrix.language }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: python
+            runner: ubuntu-latest
+            build-mode: none
+          - language: javascript-typescript
+            runner: ubuntu-latest
+            build-mode: none
+          - language: swift
+            runner: macos-15
+            build-mode: manual
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1 (Node.js 24)
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3 (Node.js 24)
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          queries: security-extended
+      - name: Build native Swift sources for analysis
+        if: matrix.language == 'swift'
+        # Match the native compilation in scripts/build.sh. Compile all Swift
+        # sources after CodeQL init, without packaging, signing or credentials.
+        run: |
+          swiftc -swift-version 5 -O -target arm64-apple-macos14.0 \
+            -module-cache-path "$RUNNER_TEMP/codeql-module-cache" \
+            Sources/*.swift -o "$RUNNER_TEMP/Tickertwister-codeql" \
+            -framework AppKit -framework WebKit -framework PDFKit
+      - name: Analyze and upload results
+        uses: github/codeql-action/analyze@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3 (Node.js 24)
+        with:
+          category: /language:${{ matrix.language }}
