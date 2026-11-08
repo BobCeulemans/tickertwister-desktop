@@ -12,12 +12,12 @@ jobs:
     runs-on: macos-15
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1 (Node.js 24)
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0 (Node.js 24)
         with:
           node-version: '22'
           cache: npm
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0 (Node.js 24)
         with:
           python-version: '3.14'
           cache: pip
@@ -36,7 +36,7 @@ jobs:
         run: BUILD_PYTHON="$(command -v python)" npm run build
       - name: Archive app artifact
         run: ditto -c -k --sequesterRsrc --keepParent 'dist/Tickertwister Desktop.app' dist/Tickertwister-macOS-arm64.zip
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2 (Node.js 24)
         with:
           name: Tickertwister-macOS-arm64
           path: dist/Tickertwister-macOS-arm64.zip
