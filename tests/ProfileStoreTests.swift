@@ -3,6 +3,13 @@ import Foundation
 @main struct ProfileStoreTests {
  static func check(_ value: @autoclosure () throws -> Bool) throws { let result=try value();precondition(result) }
  static func main() throws {
+  let validID="12345678-1234-1234-1234-123456789abc"
+  precondition(ProfileStore.isValidID(validID) && ProfileStore.isValidID(validID.uppercased()))
+  for id in ["", "../research", "/tmp/escape", "..\\escape", "%2e%2e%2fescape",
+             validID+"/../../escape", "../"+validID, validID+".json", validID+"\n",
+             validID+"\0", validID+"\0/../../escape", validID+"/"] {
+   precondition(!ProfileStore.isValidID(id), "Malformed path identifier accepted")
+  }
   let root=URL(fileURLWithPath:NSTemporaryDirectory()).appendingPathComponent("tt-profile-tests-"+UUID().uuidString)
   defer{try? FileManager.default.removeItem(at:root)}
   let store=ProfileStore(root:root.appendingPathComponent("Profiles"))
@@ -45,12 +52,18 @@ import Foundation
   precondition(changed.active?.id==previous);try check(changed.accounts().count==2)
   let index=try String(contentsOf:store.index,encoding:.utf8)
   precondition(!index.contains("password"));precondition(!index.contains("TEST-API-SECRET"))
+  var invalidAccounts=try JSONSerialization.jsonObject(with:Data(index.utf8)) as! [[String:Any]]
+  invalidAccounts[0]["id"]=alice.id+"\0/../escape"
+  try JSONSerialization.data(withJSONObject:invalidAccounts).write(to:store.index,options:.atomic)
+  do{_ = try changed.accounts();fatalError("malformed account path accepted")}catch{}
+  try Data(index.utf8).write(to:store.index,options:.atomic)
+  try check(changed.accounts().count==2)
   // Optional isolated Keychain integration. Only this random account item is touched.
   if CommandLine.arguments.contains("--keychain") {
    try changed.saveAPIKey("sk-test-not-a-real-api-key")
    try check(changed.loadAPIKey()=="sk-test-not-a-real-api-key")
    try changed.forgetAPIKey();try check(changed.loadAPIKey()==nil)
   }
-  print("PASS: encryption, locked access, wrong password, relaunch, password change, profile isolation, tamper detection, associated context, atomic migration rollback, legacy preservation" )
+  print("PASS: strict path identifiers, account-index validation, encryption, locked access, wrong password, relaunch, password change, profile isolation, tamper detection, associated context, atomic migration rollback, legacy preservation" )
  }
 }

@@ -14,7 +14,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
         return dir
     }
     func saveAIRecord(_ record:[String:Any]) throws {
-        guard let id=record["id"] as? String,UUID(uuidString:id) != nil,
+        guard let id=record["id"] as? String,ProfileStore.isValidID(id),
               let input=record["input"] as? [String:Any],let companies=input["companies"] as? [[String:Any]],(1...4).contains(companies.count),
               let language=record["language"] as? String,Localization.languages.contains(language),
               let response=record["response"] as? [String:Any],response["status"] as? String=="completed",

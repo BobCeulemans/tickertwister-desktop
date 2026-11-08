@@ -23,13 +23,19 @@ final class ProfileStore {
     static let magic=Data("TTVAULT1".utf8)
     init(root: URL) { self.root=root }
     var index: URL { root.appendingPathComponent("accounts.json") }
+    static func isValidID(_ value:String) -> Bool {
+        // Foundation may accept a UUID prefix before a NUL. Require the entire
+        // identifier to match its canonical spelling before using it in a path.
+        guard value.utf8.count==36,let id=UUID(uuidString:value) else{return false}
+        return id.uuidString.lowercased()==value.lowercased()
+    }
     func accounts() throws -> [Account] {
         guard FileManager.default.fileExists(atPath:index.path) else { return [] }
         let data=try Data(contentsOf:index)
         guard data.count<100000 else { throw failure("ACCOUNT_INDEX_INVALID") }
         let accounts=try JSONDecoder().decode([Account].self,from:data)
         guard accounts.count<=30,Set(accounts.map(\.id)).count==accounts.count,
-              accounts.allSatisfy({UUID(uuidString:$0.id) != nil && $0.salt.count==32 && $0.rounds==600000}) else {throw failure("ACCOUNT_INDEX_INVALID")}
+              accounts.allSatisfy({Self.isValidID($0.id) && $0.salt.count==32 && $0.rounds==600000}) else {throw failure("ACCOUNT_INDEX_INVALID")}
         return accounts
     }
     func failure(_ message:String)->NSError { NSError(domain:"Profile",code:1,userInfo:[NSLocalizedDescriptionKey:message]) }

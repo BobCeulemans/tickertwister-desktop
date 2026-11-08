@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Enable Dependabot vulnerability alerts and security-update pull requests; keep automatic merging disabled.
+- Add CodeQL security analysis for Python, JavaScript/TypeScript and the native Swift app on main, version tags, pull requests and a weekly schedule.
+- Harden archive and profile identifier validation to require a complete UUID, with regression checks for malformed identifiers. Existing valid IDs and saved-data formats are preserved.
+
 ## 1.0.3 — 2026-11-08
 
 - Upgrade the bundled Yahoo adapter to yfinance 1.8.0; pin its new lxml dependency to 6.1.3.
