@@ -36,8 +36,8 @@ This rebuilds all seven guides using local assets and the Arial/Georgia fonts su
 ```sh
 python3.14 -m venv .venv-dmg
 .venv-dmg/bin/python -m pip install -r requirements-dmg.txt
-bash scripts/package-dmg.sh 'dist/Tickertwister Desktop.app' 'dist/Tickertwister-Desktop-1.0.3-macOS-arm64.dmg' "$PWD/.venv-dmg/bin/python"
-python3 scripts/source.py dist/Tickertwister-1.0.3-source.zip
+bash scripts/package-dmg.sh 'dist/Tickertwister Desktop.app' 'dist/Tickertwister-Desktop-1.0.4-macOS-arm64.dmg' "$PWD/.venv-dmg/bin/python"
+python3 scripts/source.py dist/Tickertwister-1.0.4-source.zip
 ```
 
 The source exporter uses an explicit allowlist, refuses symlinks in source directories and excludes caches, dependencies, local profiles and developer working files. The archive includes all build scripts, editable source, dependency pins, guides and notices. Check the contents before distribution; pattern scanning is not a guarantee that a file contains no private information.

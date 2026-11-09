@@ -1,10 +1,15 @@
 # Changelog
 
-## Unreleased
+## 1.0.4 — 2026-11-09
+
+- Seal embedded Python framework resources before signing the outer app; verify every embedded executable before Apple submission.
 
 - Enable Dependabot vulnerability alerts and security-update pull requests; keep automatic merging disabled.
 - Add CodeQL security analysis for Python, JavaScript/TypeScript and the native Swift app on main, version tags, pull requests and a weekly schedule.
 - Harden archive and profile identifier validation to require a complete UUID, with regression checks for malformed identifiers. Existing valid IDs and saved-data formats are preserved.
+
+- Prepare Developer ID signed distribution with Apple acceptance, stapled app and DMG tickets, and Gatekeeper checks required before publishing the notarized installer. Earlier public installers remain unchanged.
+- Update all seven illustrated guides and installation documentation. Keep the 39 financial criteria, weights, formulas, yfinance 1.8.0 and saved-data formats unchanged.
 
 ## 1.0.3 — 2026-11-08
 

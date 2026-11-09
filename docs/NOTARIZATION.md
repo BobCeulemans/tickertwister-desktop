@@ -1,8 +1,8 @@
 # Apple signing and notarization
 
-Current v1.0.3 local package: **ad-hoc signed, not notarized**. The workflow below is prepared but has not yet been exercised with a live Developer ID identity. Do not describe a package as notarized until its own checks succeed. Signing the source or an earlier build does not notarize a later build.
+Release v1.0.4 introduces Developer ID distribution. The official DMG may be published as notarized only after every check below passes for that exact artifact. Earlier v1.0.1/v1.0.3 packages remain ad-hoc signed and not notarized. Signing the source or an earlier build does not notarize a later build.
 
-## Wat Bob eerst moet doen
+## Prerequisites
 
 1. Schrijf je in voor het [Apple Developer Program](https://developer.apple.com/help/account/membership/program-enrollment/) met je eigen Apple Account en tweefactorauthenticatie. Apple vermeldt 99 USD per jaar of de lokale prijs bij inschrijving. Een gewoon GitHub-account of gratis Apple Account volstaat niet.
 2. Maak na activering een **Developer ID Application**-certificaat aan via Xcode of Certificates, Identifiers & Profiles. Bewaar certificaat én privésleutel in de macOS-sleutelhanger. Voor deze DMG is geen Developer ID Installer-certificaat nodig; dat laatste is voor ondertekende installatiepakketten (.pkg).
@@ -19,6 +19,8 @@ Use the tools and pinned environments in [BUILDING.md](BUILDING.md). After creat
 security find-identity -v -p codesigning
 xcrun notarytool store-credentials "tickertwister-notary"
 ```
+
+If the identity is present but not valid, check its expiry, private key and Apple certificate chain. For a G2 Developer ID certificate, the official [Developer ID G2 intermediate](https://www.apple.com/certificateauthority/) may need to be installed in the login Keychain. Use Apple’s normal trust chain; do not override certificate trust.
 
 The second command prompts for credentials and validates them with Apple. Use the Developer Program Team ID and an app-specific password, not the normal Apple Account password. The script only receives the Keychain profile name. Do not pass passwords on the command line or commit credential files. Back up the signing identity securely outside this repository.
 
@@ -40,7 +42,7 @@ Run the built app and smoke tests before submitting. The release uses no permiss
 ```sh
 python3 scripts/notarize.py \
   --app 'dist-signed/Tickertwister Desktop.app' \
-  --output 'dist-signed/Tickertwister-Desktop-1.0.3-macOS-arm64-notarized.dmg' \
+  --output 'dist-signed/Tickertwister-Desktop-1.0.4-macOS-arm64-notarized.dmg' \
   --keychain-profile 'tickertwister-notary' \
   --dmg-python "$PWD/.venv-dmg/bin/python"
 ```

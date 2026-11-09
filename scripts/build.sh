@@ -49,8 +49,12 @@ mkdir -p "$APP_TMP/Contents/Resources/Source"
 cp "$PROJECT_DIR/LICENSE" "$PROJECT_DIR/NOTICE" "$PROJECT_DIR/README.md" "$APP_TMP/Contents/Resources/Source/"
 python3 "$PROJECT_DIR/scripts/source.py" "$APP_TMP/Contents/Resources/Source/Tickertwister-source.zip"
 if [ -n "${DEVELOPER_ID_APPLICATION:-}" ]; then
-  # PyInstaller signs its collected binaries/frameworks first, with hardened
-  # runtime and timestamps. Seal the outer bundle last; do not deep-sign it.
+  # PyInstaller onedir signs Mach-O files but does not seal framework resources.
+  # Sign framework bundles inside out after collection, then the outer app last.
+  # Do not use --deep for signing: every embedded executable is already signed.
+  while IFS= read -r -d '' framework; do
+    codesign --force --options runtime --timestamp --sign "$DEVELOPER_ID_APPLICATION" "$framework"
+  done < <(find "$APP_TMP/Contents/Resources/Engine" -depth -type d -name '*.framework' -print0)
   codesign --force --options runtime --timestamp --sign "$DEVELOPER_ID_APPLICATION" "$APP_TMP"
   python3 "$PROJECT_DIR/scripts/notarize.py" --check-app "$APP_TMP"
 else

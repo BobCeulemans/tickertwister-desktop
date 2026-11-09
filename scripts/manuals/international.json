@@ -10,7 +10,7 @@
         [
           [
             "Installer sur Mac",
-            "Sur un Mac Apple Silicon avec macOS 14 ou ultérieur, ouvrez le DMG et glissez Tickertwister Desktop.app dans Applications. Lancez ensuite l’application depuis Applications et éjectez le disque. Le dossier Documentatie contient les guides, les licences et le code source. Cette distribution est signée localement, mais non notariée par Apple. Vérifiez son origine avant d’autoriser son ouverture dans les réglages de sécurité."
+            "Sur un Mac Apple Silicon avec macOS 14 ou ultérieur, ouvrez le DMG et glissez Tickertwister Desktop.app dans Applications. Lancez ensuite l’application depuis Applications et éjectez le disque. Le dossier Documentatie contient les guides, les licences et le code source. Pour les versions officielles, choisissez le DMG marqué notarized : sa publication exige une signature Developer ID, l’acceptation d’Apple et les tickets de notarisation. Vérifiez l’origine et la somme de contrôle. Une confirmation normale au premier lancement reste possible. Les anciennes versions et compilations locales peuvent ne pas être notariées ; ne désactivez pas la sécurité du système."
           ],
           [
             "Choisir une entreprise",
@@ -105,7 +105,7 @@
         [
           [
             "Auf dem Mac installieren",
-            "Öffnen Sie auf einem Apple-Silicon-Mac mit macOS 14 oder neuer die DMG-Datei und ziehen Sie Tickertwister Desktop.app nach Applications. Starten Sie die App dort und werfen Sie das Laufwerk aus. Im Ordner Documentatie finden Sie Handbücher, Lizenzen und Quellcode. Diese Ausgabe ist lokal signiert, jedoch nicht von Apple notarisiert. Prüfen Sie die Herkunft, bevor Sie das Öffnen in den Sicherheitseinstellungen erlauben."
+            "Öffnen Sie auf einem Apple-Silicon-Mac mit macOS 14 oder neuer die DMG-Datei und ziehen Sie Tickertwister Desktop.app nach Applications. Starten Sie die App dort und werfen Sie das Laufwerk aus. Im Ordner Documentatie finden Sie Handbücher, Lizenzen und Quellcode. Wählen Sie bei offiziellen Versionen die DMG-Datei mit dem Zusatz notarized: Vor der Veröffentlichung sind Developer-ID-Signatur, Apple-Freigabe im Notarisierungsverfahren und angeheftete Tickets erforderlich. Prüfen Sie Herkunft und Prüfsumme. Eine normale Bestätigung beim ersten Start kann weiterhin erscheinen. Ältere und lokale Builds können nicht notarisiert sein; deaktivieren Sie die Systemsicherheit nicht."
           ],
           [
             "Ein Unternehmen wählen",
@@ -200,7 +200,7 @@
         [
           [
             "Instalar en Mac",
-            "En un Mac Apple Silicon con macOS 14 o posterior, abra el DMG y arrastre Tickertwister Desktop.app a Applications. Inicie la aplicación desde allí y expulse la imagen de disco. La carpeta Documentatie contiene manuales, licencias y código fuente. Esta distribución está firmada localmente, pero no notarizada por Apple. Compruebe su procedencia antes de permitir su apertura en los ajustes de seguridad."
+            "En un Mac Apple Silicon con macOS 14 o posterior, abra el DMG y arrastre Tickertwister Desktop.app a Applications. Inicie la aplicación desde allí y expulse la imagen de disco. La carpeta Documentatie contiene manuales, licencias y código fuente. En las versiones oficiales, elija el DMG marcado notarized: su publicación exige firma Developer ID, aceptación de Apple y comprobantes de notarización adjuntos. Verifique el origen y la suma de comprobación. Puede aparecer una confirmación normal al abrirlo por primera vez. Las versiones anteriores y locales pueden no estar notarizadas; no desactive la seguridad del sistema."
           ],
           [
             "Elegir una empresa",
@@ -295,7 +295,7 @@
         [
           [
             "Installare sul Mac",
-            "Su un Mac Apple Silicon con macOS 14 o successivo, apri il DMG e trascina Tickertwister Desktop.app in Applications. Avvia l’app da lì ed espelli l’immagine disco. La cartella Documentatie contiene manuali, licenze e codice sorgente. Questa distribuzione è firmata localmente, ma non autenticata da Apple tramite notarizzazione. Verificane la provenienza prima di consentire l’apertura nelle impostazioni di sicurezza."
+            "Su un Mac Apple Silicon con macOS 14 o successivo, apri il DMG e trascina Tickertwister Desktop.app in Applications. Avvia l’app da lì ed espelli l’immagine disco. La cartella Documentatie contiene manuali, licenze e codice sorgente. Per le versioni ufficiali, scegli il DMG contrassegnato notarized: la pubblicazione richiede firma Developer ID, accettazione da parte di Apple e ticket di notarizzazione allegati. Verifica provenienza e checksum. Al primo avvio può comparire una normale conferma. Le versioni precedenti e locali possono non essere notarizzate; non disattivare la sicurezza del sistema."
           ],
           [
             "Scegliere un’impresa",
@@ -390,7 +390,7 @@
         [
           [
             "Instalar no Mac",
-            "Num Mac Apple Silicon com macOS 14 ou posterior, abra o DMG e arraste Tickertwister Desktop.app para Applications. Inicie a aplicação a partir daí e ejete a imagem de disco. A pasta Documentatie contém manuais, licenças e código-fonte. Esta distribuição tem assinatura local, mas não foi notarizada pela Apple. Verifique a origem antes de permitir a abertura nas definições de segurança."
+            "Num Mac Apple Silicon com macOS 14 ou posterior, abra o DMG e arraste Tickertwister Desktop.app para Applications. Inicie a aplicação a partir daí e ejete a imagem de disco. A pasta Documentatie contém manuais, licenças e código-fonte. Nas versões oficiais, escolha o DMG identificado como notarized: a publicação exige assinatura Developer ID, aceitação pela Apple e comprovativos de notarização anexados. Verifique a origem e a soma de verificação. Pode surgir uma confirmação normal na primeira abertura. As versões anteriores e locais podem não estar notarizadas; não desative a segurança do sistema."
           ],
           [
             "Escolher uma empresa",
