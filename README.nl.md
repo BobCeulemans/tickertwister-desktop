@@ -10,5 +10,15 @@ Download voor v1.0.4 het installatiepakket met de aanduiding **notarized** bij R
 
 Vrije software onder [AGPLv3-only](LICENSE). Externe bibliotheken en financiële gegevens behouden hun eigen licenties en gebruiksvoorwaarden. Een eerste screening is geen beleggingsadvies.
 
+## Steun dit project
+
+Vind je Tickertwister nuttig? Met een vrijwillige bijdrage help je Bob Ceulemans bij het onderhoud en de ontwikkeling van toekomstige open-sourceprojecten.
+
+**Eenmalige steun via PayPal:** [€5](https://paypal.me/BobCeulemans/5EUR) · [€10](https://paypal.me/BobCeulemans/10EUR) · [€25](https://paypal.me/BobCeulemans/25EUR) · [Vrij bedrag](https://paypal.me/BobCeulemans)
+
+Je bijdrage koopt geen functies, beleggingsadvies of voorrang bij ondersteuning. Deze links zijn voor eenmalige betalingen, niet voor maandelijkse abonnementen.
+
+**Veilig betalen:** de officiële bestemming is `https://paypal.me/BobCeulemans`. Controleer het PayPal-domein en de ontvanger Bob Ceulemans vóór je bevestigt. Deel nooit wachtwoorden, verificatiecodes of kaartgegevens in GitHub-issues of berichten.
+
 Copyright ©2026 Bob Ceulemans  
 All Rights Reserved.

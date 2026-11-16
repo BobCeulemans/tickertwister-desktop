@@ -8,7 +8,7 @@ A macOS desktop app for a first, evidence-based look at a listed company. Explor
 
 Built by **Bob Ceulemans**. Free software under **AGPL-3.0-only**.
 
-[User guides](#user-guides) · [Build from source](docs/BUILDING.md) · [Contribute](CONTRIBUTING.md) · [Privacy](docs/PRIVACY.md) · [Release notes](RELEASE-NOTES.md) · [Nederlands](README.nl.md)
+[User guides](#user-guides) · [Build from source](docs/BUILDING.md) · [Contribute](CONTRIBUTING.md) · [Privacy](docs/PRIVACY.md) · [Release notes](RELEASE-NOTES.md) · [Support](#support-this-project) · [Nederlands](README.nl.md)
 
 <p align="center"><img src="web/buffett-munger.png" width="440" alt="Original illustrated caricature of Warren Buffett and Charlie Munger at a research desk"></p>
 
@@ -72,6 +72,16 @@ The build creates `dist/Tickertwister Desktop.app`, including the Python engine,
 | `scripts/` | Build, manual generation, source export and DMG packaging |
 | `licenses/` | Third-party license texts |
 | `docs/` | Build, financial-method, privacy and publication documentation |
+
+## Support this project
+
+If Tickertwister is useful to you, you can help Bob Ceulemans maintain it and develop future open-source projects.
+
+**One-time support via PayPal:** [€5](https://paypal.me/BobCeulemans/5EUR) · [€10](https://paypal.me/BobCeulemans/10EUR) · [€25](https://paypal.me/BobCeulemans/25EUR) · [Choose an amount](https://paypal.me/BobCeulemans)
+
+Support is voluntary and does not purchase features, investment advice or priority support. These links make one-time payments, not monthly subscriptions.
+
+**Pay safely:** the official destination is `https://paypal.me/BobCeulemans`. Check the PayPal domain and recipient Bob Ceulemans before confirming. Never share passwords, authentication codes or card details in GitHub issues or messages.
 
 ## License and data rights
 
