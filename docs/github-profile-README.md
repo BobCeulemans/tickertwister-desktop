@@ -4,11 +4,8 @@ I build software for financial research, including [Tickertwister Desktop](https
 
 ## Support this project
 
-If Tickertwister is useful to you, you can help Bob Ceulemans maintain it and develop future open-source projects.
+If Tickertwister is useful to you, [support Bob Ceulemans on GitHub Sponsors](https://github.com/sponsors/BobCeulemans) to help maintain it and develop future open-source projects.
 
-**One-time support via PayPal:** [€5](https://paypal.me/BobCeulemans/5EUR) · [€10](https://paypal.me/BobCeulemans/10EUR) · [€25](https://paypal.me/BobCeulemans/25EUR) · [Choose an amount](https://paypal.me/BobCeulemans)
+Suggested support: **$5, $10 or $25**, one-time or monthly. Choose your amount and frequency on GitHub Sponsors.
 
-Support is voluntary and does not purchase features, investment advice or priority support. These links make one-time payments, not monthly subscriptions.
-
-**Pay safely:** the official destination is `https://paypal.me/BobCeulemans`. Check the PayPal domain and recipient Bob Ceulemans before confirming. Never share passwords, authentication codes or card details in GitHub issues or messages.
-
+Sponsorship is entirely voluntary. The apps remain available to everyone; contributions do not purchase exclusive features, investment advice or priority support.
