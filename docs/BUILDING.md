@@ -14,7 +14,7 @@ python3.14 -m venv .venv
 .venv/bin/python -m pytest engine tests
 swiftc -swift-version 5 Sources/ProfileStore.swift tests/ProfileStoreTests.swift -o /tmp/tickertwister-profile-tests
 /tmp/tickertwister-profile-tests
-swiftc -swift-version 5 Sources/ProfileStore.swift Sources/DossierTransfer.swift Sources/ResearchTransfer.swift tests/ResearchTransferTests.swift -o /tmp/tickertwister-transfer-tests
+swiftc -swift-version 5 Sources/ProfileStore.swift Sources/DossierTransfer.swift tests/ResearchTransferTests.swift -o /tmp/tickertwister-transfer-tests
 /tmp/tickertwister-transfer-tests
 BUILD_PYTHON="$PWD/.venv/bin/python" npm run build
 ```
