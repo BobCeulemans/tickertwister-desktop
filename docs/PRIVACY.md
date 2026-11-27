@@ -6,11 +6,14 @@ Tickertwister is a local desktop app. It has no hosted user-account service, ema
 
 Password-protected profile dossiers and AI archives are encrypted. Optional API-key persistence uses macOS Keychain; the key is not part of exported source or the financial prompt. Session-only use is also possible. There is no server password reset. Keep secure backups and remember your password.
 
+An encrypted .ttdossier transfer can include saved analyses, financial assumptions, quick notes, investment theses and selected AI records. The export has its own password and excludes the OpenAI key.
+
 Guest/legacy storage, exported analyses, printed PDFs and earlier backups may be unencrypted. Protect those separately. Encryption does not protect an unlocked session against someone using your Mac or malware. Removing a company from the study list does not automatically remove archived paid AI responses; review your archive separately.
 
 ## Network access
 
 - **Yahoo Finance / yfinance:** requested ticker data and related market/currency information. The provider can observe requests and your network address. Notes are not sent.
+- **Government bond yields:** US and foreign reference series used for valuation are retrieved from the relevant public market-data and government sources. These lookups use a currency or series identifier.
 - **Company websites:** logo retrieval can contact a company’s website. External links open separately and have their own privacy policies.
 - **OpenAI API:** only on explicit user request and consent. The input preview shows the financial payload. Personal notes and complete dossier files are excluded. The key authenticates the API request; it is not inserted into the model prompt. Responses use `store:false`; OpenAI’s applicable API data policy still governs processing/retention.
 

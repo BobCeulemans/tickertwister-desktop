@@ -1,6 +1,6 @@
 # Apple signing and notarization
 
-Release v1.0.4 introduces Developer ID distribution. The official DMG may be published as notarized only after every check below passes for that exact artifact. Earlier v1.0.1/v1.0.3 packages remain ad-hoc signed and not notarized. Signing the source or an earlier build does not notarize a later build.
+The direct v1.1.0 release uses Developer ID distribution. The official DMG may be published as notarized only after every check below passes for that exact artifact. Earlier v1.0.1/v1.0.3 packages remain ad-hoc signed and not notarized. Signing the source or an earlier build does not notarize a later build.
 
 ## Prerequisites
 
@@ -42,7 +42,7 @@ Run the built app and smoke tests before submitting. The release uses no permiss
 ```sh
 python3 scripts/notarize.py \
   --app 'dist-signed/Tickertwister Desktop.app' \
-  --output 'dist-signed/Tickertwister-Desktop-1.0.4-macOS-arm64-notarized.dmg' \
+  --output 'dist-signed/Tickertwister-Desktop-1.1.0-macOS-arm64-notarized.dmg' \
   --keychain-profile 'tickertwister-notary' \
   --dmg-python "$PWD/.venv-dmg/bin/python"
 ```

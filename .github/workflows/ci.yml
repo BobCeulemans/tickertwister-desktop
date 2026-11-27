@@ -27,11 +27,13 @@ jobs:
       - run: npm run check:locales
       - run: npm run check:release
       - run: python -m pip install -r requirements-engine.txt
-      - run: python -m pytest engine/test_engine.py engine/test_data_contract.py tests/test_source.py tests/test_notarize.py
+      - run: python -m pytest engine tests
       - name: Native encrypted-profile regression tests
         run: |
           swiftc -swift-version 5 Sources/ProfileStore.swift tests/ProfileStoreTests.swift -o /tmp/tickertwister-profile-tests
           /tmp/tickertwister-profile-tests
+          swiftc -swift-version 5 Sources/ProfileStore.swift Sources/DossierTransfer.swift Sources/ResearchTransfer.swift tests/ResearchTransferTests.swift -o /tmp/tickertwister-transfer-tests
+          /tmp/tickertwister-transfer-tests
       - name: Build self-contained app
         run: BUILD_PYTHON="$(command -v python)" npm run build
       - name: Archive app artifact

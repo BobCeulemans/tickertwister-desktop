@@ -38,19 +38,21 @@ def signature(path):
     return result.stdout + result.stderr
 
 
-def signature_team(metadata):
+def signature_team(metadata, expected_identity=None):
+    if expected_identity and 'Authority=' + expected_identity not in metadata.splitlines():
+        raise ValueError('The signing certificate does not match the selected Developer ID Application identity.')
     team = re.search(r'^TeamIdentifier=([A-Z0-9]+)$', metadata, re.M)
     if not team or 'Authority=Developer ID Application: ' not in metadata or not re.search(r'^Timestamp=', metadata, re.M):
         raise ValueError('Developer ID Application signature, Team ID and secure timestamp required.')
     return team.group(1)
 
 
-def check_app(app):
+def check_app(app, expected_identity=None):
     if not app.is_dir() or app.suffix != '.app':
         raise ValueError('Expected an existing .app bundle.')
     run(['/usr/bin/codesign', '--verify', '--deep', '--strict', app])
     outer = signature(app)
-    team = signature_team(outer)
+    team = signature_team(outer, expected_identity)
     if 'runtime' not in outer:
         raise ValueError('The main app must enable hardened runtime.')
     count = 0
@@ -64,7 +66,7 @@ def check_app(app):
         if magic not in MACH_MAGICS:
             continue
         metadata = signature(path)
-        if signature_team(metadata) != team:
+        if signature_team(metadata, expected_identity) != team:
             raise ValueError(f'Embedded code signed by a different team: {path.name}')
         if 'runtime' not in metadata:
             raise ValueError(f'Hardened runtime missing: {path.name}')
@@ -101,7 +103,7 @@ def submit(path, profile, logs, name, staple_target=None):
 
 def notarize(app, output, identity, profile, dmg_python):
     check_identity(identity)
-    team = check_app(app)
+    team = check_app(app, identity)
     if not identity.endswith('(' + team + ')'):
         raise ValueError('The app and DMG signing identity must have the same Team ID.')
     if output.exists():
@@ -123,6 +125,7 @@ def notarize(app, output, identity, profile, dmg_python):
         dmg = temp / 'release.dmg'
         run(['/bin/bash', ROOT / 'scripts/package-dmg.sh', staged_app, dmg, dmg_python])
         run(['/usr/bin/codesign', '--force', '--timestamp', '--sign', identity, dmg])
+        signature_team(signature(dmg), identity)
         submit(dmg, profile, logs, 'dmg')
         run(['/usr/bin/codesign', '--verify', '--strict', dmg])
         run(['/usr/sbin/spctl', '--assess', '--type', 'execute', '--verbose=2', staged_app])
@@ -145,7 +148,7 @@ def main():
         check_identity(args.check_identity)
         print('PASS: Developer ID Application identity available.')
     elif args.check_app:
-        check_app(args.check_app.resolve())
+        check_app(args.check_app.resolve(), args.identity)
     else:
         if not all((args.app, args.output, args.identity, args.keychain_profile)):
             parser.error('--app, --output, --identity (or DEVELOPER_ID_APPLICATION) and --keychain-profile are required')

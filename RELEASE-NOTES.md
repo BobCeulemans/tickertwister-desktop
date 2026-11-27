@@ -1,22 +1,29 @@
-# Tickertwister Desktop - Financial Research Studio v1.0.4
+# Tickertwister Desktop v1.1.0 - Financial Research Studio
 
-## Security and distribution
+27 November 2026 · build 31 · Apple Silicon · macOS 14 or newer.
 
-- Profile and AI-archive identifiers must match a complete UUID. Malformed identifiers are rejected before use; regression tests cover suffixes, separators, newlines and null characters. Existing valid identifiers and saved-data formats remain compatible.
-- Dependabot alerts and security updates are enabled, with automatic merging disabled. CodeQL checks Python, JavaScript/TypeScript and Swift. Build checks retain both main and version-tag triggers, using GitHub Actions with Node.js 24 support.
-- The official installer is published only after Developer ID signing, Apple acceptance for both the app and disk image, ticket stapling and successful Gatekeeper verification. See the GitHub release for the verified status of its exact download. Locally built and CI artifacts are ad-hoc signed unless explicitly built with Developer ID; they do not inherit notarization.
-- All seven illustrated guides and the complete corresponding source are included in the app, disk image and release downloads.
+## What’s new
 
-## Financial continuity
+- Banks and insurers use equity cash flow and the cost of equity. Payment processors exclude settlement working capital. Financial companies start with revenue CAGR when available. Operating companies use the historical growth blend. A large one-year deviation can trigger a three-year starting average.
+- Currency-specific ten-year yields support USD, EUR, GBP, CHF, CAD and JPY. Cost-of-debt inputs use a trailing year aligned to the balance sheet and the calculation explains its tax and interest assumptions.
+- The neutral dark appearance includes light editable fields. Cash flow projections and sensitivity tables span the analysis window. Quick notes, formulas, sponsor placement and the research selection controls have been revised.
 
-The 39 scoring criteria, original weights, financial formulas and valuation models are unchanged. yfinance remains pinned to 1.8.0. Historical FCFE CAGR remains the editable starting growth; saved assumptions, personal weights and research dossiers are preserved.
+- Payment networks start with the available WACC for their cash-flow currency. Banks and insurers start with their CAPM cost of equity. Enter a personal equity rate to explore a different assumption. Restore initial values returns to the model defaults.
+- The opening quotation from Buffett or Munger is centered above ticker entry. The Sponsors link sits above Workspace in the sidebar. The dossier search is compact and the export and comparison controls have dedicated space.
 
-The v1.0.3 [data migration report](docs/YFINANCE-1.8.0.md) remains available. Live financial figures can change when Yahoo revises or refreshes its data.
+## Research workspace
 
-## Installation
+- Remove companies consecutively in list or card view, undo them in reverse order and save the dossier once.
+- Save a company from its analysis screen. Use the sidebar to revisit open analyses, including results from a pasted or imported list of tickers. Record quick notes alongside the financial snapshot.
+- View Yahoo price history by period or open the ticker in Apple Stocks. On macOS 15 or newer, company descriptions can be translated on the Mac using Apple language packs.
+- New DCFs use 2% perpetual growth. Existing saved assumptions can be reopened. Sources and assumptions includes the WACC inputs and formulas. The value card shows upside and margin of safety. The projection and historical growth figures are available alongside the result.
+- Selected missing Owner Earnings components can be treated as zero in an explicitly labelled estimate. Reported source cells keep their missing status.
+- Export and import companies, assumptions, theses, scratchpads and associated AI records in one password-encrypted .ttdossier file. Use Select all to include standalone AI records. Review matching tickers before importing.
+- Delete individual saved AI analyses after confirmation. AI-AIC uses the user’s OpenAI API account and requires explicit consent for each paid request.
+- The bundled financial engine uses Python 3.14.10.
 
-Apple Silicon, macOS 14 or newer. Download the DMG marked notarized from this repository’s Releases, open it and drag Tickertwister Desktop.app into Applications. Launch it from Applications, then eject the disk image. A normal first-open confirmation may still appear. Do not disable Gatekeeper.
+## Installation and moving to another Mac
 
-Earlier v1.0.1 and v1.0.3 downloads are not notarized and are not replaced silently. A new signature or ticket applies only to the corresponding v1.0.4 download. Compare the downloaded file with SHA256SUMS.txt.
+Save edits and quit the app before updating. Open the disk image and drag **Tickertwister Desktop.app** into Applications. When moving research to a second Mac, export the dossier first and follow the illustrated guide. Enter the OpenAI key separately on the second Mac.
 
-API calls remain optional and require an explicit request. No paid AI calls are part of release testing. Data and service rights remain separate from the AGPLv3 source license.
+The direct-distribution signing identity is **Developer ID Application: Bob Ceulemans**. The release assets include the installation image, the matching source, the guides and SHA-256 checksums.

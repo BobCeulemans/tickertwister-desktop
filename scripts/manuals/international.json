@@ -10,7 +10,7 @@
         [
           [
             "Installer sur Mac",
-            "Sur un Mac Apple Silicon avec macOS 14 ou ultérieur, ouvrez le DMG et glissez Tickertwister Desktop.app dans Applications. Lancez ensuite l’application depuis Applications et éjectez le disque. Le dossier Documentatie contient les guides, les licences et le code source. Pour les versions officielles, choisissez le DMG marqué notarized : sa publication exige une signature Developer ID, l’acceptation d’Apple et les tickets de notarisation. Vérifiez l’origine et la somme de contrôle. Une confirmation normale au premier lancement reste possible. Les anciennes versions et compilations locales peuvent ne pas être notariées ; ne désactivez pas la sécurité du système."
+            "Sur un Mac Apple Silicon avec macOS 14 ou ultérieur, ouvrez le DMG et faites glisser Tickertwister Desktop.app dans Applications. Lancez l’application depuis ce dossier, puis éjectez l’image disque. Le dossier Documentatie contient les guides, les licences et le code source. Pour une mise à jour, enregistrez le dossier de recherche et quittez la version précédente."
           ],
           [
             "Choisir une entreprise",
@@ -21,8 +21,8 @@
             "Choisissez le néerlandais, l’anglais, le français, l’allemand, l’espagnol, l’italien ou le portugais. La langue de sortie de l’IA suit initialement celle de l’application, mais vous pouvez la choisir séparément. Une option conserve les termes financiers en anglais. ROE, ROA, FCFE et CAGR restent reconnaissables. Le changement de langue adapte les nombres et dates sans changer les montants ni convertir USD en EUR."
           ],
           [
-            "Se repérer",
-            "Les liens de section, la recherche Command-F et le bouton de déploiement global facilitent la navigation. Le dossier de recherche est une vue distincte. Fermez-le pour revenir à l’analyse ou choisissez une nouvelle analyse pour revenir à l’accueil. La version apparaît en pied de page. Les thèmes changent uniquement la présentation. Sans case de comparaison cochée, les boutons d’analyse utilisent l’entreprise active. Le menu des réglages contient la préférence des termes financiers anglais."
+            "Navigation stable",
+            "Saisissez un symbole dans Analyse. Le dossier de recherche regroupe la liste des sociétés et leur comparaison. Dépliez la liste pour choisir les sociétés. L’aperçu présente la note et la couverture des données."
           ]
         ]
       ],
@@ -32,15 +32,15 @@
         [
           [
             "39 critères",
-            "La note utilise les pondérations actives. Les critères manquants sont exclus du poids disponible : un tiret n’est pas un zéro. Examinez la couverture et les règles détaillées. Dans l’éditeur des poids, 1 conserve le poids initial, 2 le double et 0 exclut le critère. La restauration rétablit les poids initiaux. La note standard reste une référence ; chaque analyse enregistrée conserve sa pondération."
+            "La note utilise les pondérations actives. Les critères manquants sont exclus du poids disponible : un tiret n’est pas un zéro. Examinez la couverture et les règles détaillées. Dans l’éditeur des poids, 1 conserve le poids initial, 2 le double et 0 exclut le critère. La restauration rétablit les poids initiaux. La note standard reste une référence ; chaque analyse enregistrée conserve sa pondération. Les poids personnels actualisent les points obtenus et possibles, les totaux et le score. Cochez un critère partiellement ou entièrement manqué pour lui attribuer ses points dans votre note personnelle. Le résultat initial reste visible."
           ],
           [
-            "Modèle FCFE",
-            "FCFE = flux de trésorerie d’exploitation - investissements + emprunts nets. Le modèle actualise dix années et une valeur terminale. Départ : taux de 12 %, multiple de 15 et CAGR historique du FCFE sur tout l’historique annuel disponible, comme au laboratoire, sans plafond. Si le CAGR est incalculable, 0 % est une hypothèse modifiable. Une analyse enregistrée conserve ses paramètres ; restaurez les valeurs initiales pour adopter la nouvelle croissance. Si les emprunts nets manquent, le FCF sert de proxy signalé, avec emprunts nets supposés nuls."
+            "DCF et trésorerie du propriétaire",
+            "Pour une entreprise industrielle, partez du résultat net, ajoutez les amortissements et l’effet de trésorerie du fonds de roulement, puis retranchez l’investissement de maintien estimé. Pour un prestataire de paiements, excluez le fonds de roulement et déduisez tous les investissements. Pour une banque ou un assureur, le résultat net approche le flux aux actionnaires. La moyenne sur trois ans remplace le dernier exercice si l’écart dépasse 30 %."
           ],
           [
-            "Scénarios et devises",
-            "La marge de sécurité vaut 1 - cours / valeur du modèle. Le laboratoire et la matrice de sensibilité permettent d’explorer les hypothèses ; DCF et Gordon Growth proposent d’autres scénarios. La valeur comptable reste dans la devise de publication. Une comparaison avec un cours dans une autre devise exige un taux de change et une base d’actions vérifiés. Sans ces éléments, la marge reste vide. Le changement de langue n’effectue aucune conversion."
+            "Croissance et valeur terminale",
+            "Les sociétés financières utilisent en priorité la croissance annualisée du chiffre d’affaires. Pour les autres entreprises, le modèle combine les croissances disponibles des ventes, du résultat net et des Owner Earnings. La fourchette applique un plancher de −20 % et des plafonds de 10 % et 12 %. La croissance perpétuelle initiale est de 2 %."
           ],
           [
             "Lire les tableaux",
@@ -54,7 +54,7 @@
         [
           [
             "Sélection et comparaison",
-            "Ajoutez l’analyse courante au dossier. Les vues en cartes ou en liste présentent les entreprises et leurs statuts. Cliquer sur une entreprise sélectionne ses notes ; les cases choisissent séparément une à quatre entreprises pour l’étude. Sélectionnez une période commune ou l’historique maximal. Les dates et la méthode restent visibles ; les comparaisons longues peuvent tolérer 190 jours d’écart entre clôtures."
+            "Depuis l’analyse du titre, enregistrez l’entreprise dans le dossier. Cliquez sur son nom pour lire vos notes. Les cases de comparaison sélectionnent une à quatre entreprises pour l’étude. Les cases d’exportation servent au transfert. Choisissez une période commune ou l’historique maximal. Vérifiez les dates, car les clôtures peuvent différer de 190 jours."
           ],
           [
             "Thèse personnelle",
@@ -62,11 +62,11 @@
           ],
           [
             "Suppression et fichiers",
-            "La croix demande confirmation avant de retirer une entreprise et ses notes. Enregistrez ensuite le dossier pour rendre la suppression persistante ; avant cela, elle peut être annulée. L’archive IA séparée et les fichiers d’analyse restent conservés. Enregistrer une analyse crée un fichier .tickertwister contenant un instantané des données et hypothèses, pas une surveillance en direct."
+            "Cliquez sur × et confirmez la suppression pour chaque société à retirer. Enregistrez toutes les modifications en une fois. Avant l’enregistrement, vous pouvez rétablir les sociétés une par une, de la dernière supprimée à la première, avec leurs notes et leur position initiale. L’archive IA et les fichiers .tickertwister restent disponibles séparément."
           ],
           [
             "Comptes et sécurité",
-            "Un compte local sépare les dossiers et chiffre le dossier interne ainsi que l’archive IA. Il n’existe ni récupération du mot de passe, ni connexion cloud, ni double authentification. Utilisez un gestionnaire de mots de passe et verrouillez le compte avant de partager le Mac. Sauvegardez le dossier Profiles dans Library/Application Support/Tickertwister. Les exports, PDF et anciennes sauvegardes ne bénéficient pas de ce chiffrement."
+            "Un compte local sépare les dossiers et chiffre le dossier interne ainsi que l’archive IA. Il n’existe ni récupération du mot de passe, ni connexion cloud, ni double authentification. Utilisez un gestionnaire de mots de passe et verrouillez le compte avant de partager le Mac. Sauvegardez le dossier Profiles dans Library/Application Support/Tickertwister. Un fichier .tickertwister contient en clair les chiffres et le bloc-notes du titre. Les PDF restent également en clair. Le transfert .ttdossier est chiffré avec son propre mot de passe. Vous pouvez renommer ou supprimer un compte local et changer son mot de passe."
           ]
         ]
       ],
@@ -75,12 +75,12 @@
         "IA à la demande",
         [
           [
-            "Résumé local ou IA",
-            "Le résumé automatique repose sur des règles locales et ne coûte rien. Une analyse IA nécessite votre clé et un compte API payant. Luna est le profil initial économique ; Sol et Astra sont proposés pour des analyses plus approfondies et plus coûteuses. Choisissez l’effort, la limite de jetons et la langue de sortie. La limite initiale de 8192 couvre le raisonnement et la réponse ; le texte demandé reste d’environ 350 à 500 mots en sept parties."
+            "Analyse IA",
+            "Une analyse IA nécessite votre clé et un compte API payant. Luna est le profil initial économique ; Sol et Astra sont proposés pour des analyses plus approfondies et plus coûteuses. Choisissez l’effort, la limite de jetons et la langue de sortie. La limite initiale de 8192 couvre le raisonnement et la réponse ; le texte demandé reste d’environ 350 à 500 mots en sept parties."
           ],
           [
             "Consentement et clé",
-            "Vérifiez l’avertissement et les données exactes, puis acceptez la transmission et les coûts pour lancer la demande. Aucun appel payant, nouvel essai ou changement de modèle n’est automatique. Les données comprennent les ratios, critères, poids et notes de qualité, sans vos notes personnelles ni vos hypothèses de valorisation. Avec un compte local, la clé peut être conservée chiffrée dans le trousseau macOS ; sinon elle reste en mémoire pour la session."
+            "Vérifiez l’avertissement et les données exactes, puis acceptez la transmission et les coûts pour lancer la demande. Aucun appel payant, nouvel essai ou changement de modèle n’est automatique. Les données comprennent les ratios, critères, poids et notes de qualité, sans vos notes personnelles ni vos hypothèses de valorisation. Avec un compte local, la clé peut être conservée chiffrée dans le trousseau macOS ; sinon elle reste en mémoire pour la session. Clé API OpenAI uniquement. A−/A+ redimensionnent tout le texte, y compris les analyses archivées."
           ],
           [
             "Conserver et imprimer",
@@ -105,7 +105,7 @@
         [
           [
             "Auf dem Mac installieren",
-            "Öffnen Sie auf einem Apple-Silicon-Mac mit macOS 14 oder neuer die DMG-Datei und ziehen Sie Tickertwister Desktop.app nach Applications. Starten Sie die App dort und werfen Sie das Laufwerk aus. Im Ordner Documentatie finden Sie Handbücher, Lizenzen und Quellcode. Wählen Sie bei offiziellen Versionen die DMG-Datei mit dem Zusatz notarized: Vor der Veröffentlichung sind Developer-ID-Signatur, Apple-Freigabe im Notarisierungsverfahren und angeheftete Tickets erforderlich. Prüfen Sie Herkunft und Prüfsumme. Eine normale Bestätigung beim ersten Start kann weiterhin erscheinen. Ältere und lokale Builds können nicht notarisiert sein; deaktivieren Sie die Systemsicherheit nicht."
+            "Öffnen Sie die DMG-Datei auf einem Apple-Silicon-Mac mit macOS 14 oder neuer. Ziehen Sie Tickertwister Desktop.app in den Ordner Programme, starten Sie die App dort und werfen Sie das Image aus. Unter Documentatie finden Sie Handbücher, Lizenzen und Quellcode. Speichern Sie vor einem Update Ihr Dossier und beenden Sie die bisherige Version."
           ],
           [
             "Ein Unternehmen wählen",
@@ -116,8 +116,8 @@
             "Zur Wahl stehen Niederländisch, Englisch, Französisch, Deutsch, Spanisch, Italienisch und Portugiesisch. Die KI-Ausgabesprache folgt zunächst der App-Sprache, kann aber unabhängig festgelegt werden. Finanzbegriffe lassen sich auf Englisch beibehalten. ROE, ROA, FCFE und CAGR bleiben erkennbar. Ein Sprachwechsel ändert nur Zahlen- und Datumsformate, niemals Beträge oder USD in EUR."
           ],
           [
-            "Orientierung",
-            "Abschnittslinks, die Suche mit Command-F und das gemeinsame Aufklappen erleichtern die Navigation. Das Forschungsdossier ist eine getrennte Ansicht. Schließen Sie es, um zur Analyse zurückzukehren, oder beginnen Sie eine neue Analyse auf der Startseite. Die Versionsnummer steht in der Fußzeile. Designs ändern ausschließlich die Darstellung. Ohne Vergleichsauswahl verwenden die Analyseknöpfe das aktive Unternehmen. Die Einstellung für englische Finanzbegriffe befindet sich im Zahnradmenü."
+            "Feste Navigation",
+            "Geben Sie unter Analyse ein Kürzel ein. Öffnen Sie das Forschungsdossier und klappen Sie die Unternehmensliste zum Vergleichen aus. Rechts sehen Sie Bewertung und Datenabdeckung des ausgewählten Unternehmens."
           ]
         ]
       ],
@@ -127,15 +127,15 @@
         [
           [
             "39 Kriterien",
-            "Der Wert verwendet die aktiven Gewichtungen. Fehlende Kriterien werden aus dem verfügbaren Gewicht ausgeschlossen; ein Strich bedeutet nicht null. Beachten Sie Datenabdeckung und Einzelregeln. Im Gewichtungseditor erhält Faktor 1 das ursprüngliche Gewicht, 2 verdoppelt es und 0 schließt das Kriterium aus. Die Wiederherstellung setzt die ursprünglichen Gewichte zurück. Der Standardwert bleibt als Vergleich sichtbar; gespeicherte Analysen behalten ihre Gewichtung."
+            "Der Wert verwendet die aktiven Gewichtungen. Fehlende Kriterien werden aus dem verfügbaren Gewicht ausgeschlossen; ein Strich bedeutet nicht null. Beachten Sie Datenabdeckung und Einzelregeln. Im Gewichtungseditor erhält Faktor 1 das ursprüngliche Gewicht, 2 verdoppelt es und 0 schließt das Kriterium aus. Die Wiederherstellung setzt die ursprünglichen Gewichte zurück. Der Standardwert bleibt als Vergleich sichtbar; gespeicherte Analysen behalten ihre Gewichtung. Persönliche Gewichte aktualisieren erreichte und mögliche Punkte, Summen und Qualitätsscore. Markieren Sie ein teilweise oder vollständig verfehltes Kriterium, um ihm in Ihrer persönlichen Bewertung die verfügbaren Punkte zu geben. Das ursprüngliche Ergebnis bleibt sichtbar."
           ],
           [
-            "FCFE-Modell",
-            "FCFE = operativer Cashflow - Investitionen + Nettokreditaufnahme. Das Modell diskontiert zehn Jahre und einen Endwert. Ausgangswerte: 12 % Zins, Multiplikator 15 und historische FCFE-CAGR über die gesamte verfügbare Jahreshistorie, wie im Bewertungslabor, ohne Obergrenze. Ist die CAGR nicht berechenbar, dienen 0 % als veränderbare Annahme. Gespeicherte Analysen behalten ihre Einstellungen; stellen Sie die Ausgangswerte wieder her, um das neue Wachstum zu übernehmen. Fehlt die Nettokreditaufnahme, dient FCF als gekennzeichnete Näherung bei angenommener Nettokreditaufnahme von null."
+            "DCF und Eigentümererträge",
+            "Bei Industrieunternehmen werden zum Nettogewinn die Abschreibungen und der Zahlungsstrom aus dem Betriebskapital addiert, geschätzte Erhaltungsinvestitionen abgezogen. Zahlungsdienstleister verwenden die gesamten Investitionen und lassen das Betriebskapital außen vor. Bei Banken und Versicherern dient der Nettogewinn als Näherung für den Zahlungsstrom an Aktionäre. Weicht das letzte Geschäftsjahr um mehr als 30 % vom Dreijahresmittel ab, wird der Mittelwert zum Startwert."
           ],
           [
-            "Szenarien und Währungen",
-            "Die Sicherheitsmarge beträgt 1 - Kurs / Modellwert. Das Bewertungslabor und die Sensitivitätsmatrix zeigen Auswirkungen anderer Annahmen. DCF und Gordon Growth bieten weitere Szenarien. Finanzdaten bleiben in der Berichtswährung. Für Vergleiche mit einem Kurs in anderer Währung sind ein Wechselkurs und eine bestätigte Aktienbasis erforderlich. Fehlen sie, bleibt die Marge leer. Ein Sprachwechsel rechnet keine Währung um."
+            "Wachstum und Restwert",
+            "Für Finanzunternehmen verwendet das Modell vorrangig das historische Umsatzwachstum. Bei anderen Unternehmen fließen Umsatz-, Gewinn- und Owner-Earnings-Wachstum ein. Die Bandbreite hat eine Untergrenze von −20 % und Obergrenzen von 10 % und 12 %. Das anfängliche ewige Wachstum beträgt 2 %."
           ],
           [
             "Tabellen lesen",
@@ -149,7 +149,7 @@
         [
           [
             "Auswahl und Vergleich",
-            "Nehmen Sie die aktuelle Analyse ins Dossier auf. Karten- und Listenansicht zeigen Unternehmen und Status. Ein Klick wählt die Notizen des Unternehmens; die Kontrollkästchen wählen unabhängig davon ein bis vier Unternehmen zur Untersuchung. Wählen Sie einen gemeinsamen Zeitraum oder die maximale Historie. Daten und Methode bleiben sichtbar; langfristige Vergleiche können bis zu 190 Tage Unterschied zwischen Geschäftsjahresenden zulassen."
+            "Speichern Sie das Unternehmen aus der Tickeranalyse im Dossier. Klicken Sie auf seinen Namen, um die Notizen zu sehen. Wählen Sie zum Vergleich ein bis vier Unternehmen aus. Für den Export gibt es separate Kontrollkästchen. Wählen Sie einen gemeinsamen Zeitraum oder die maximale Historie. Prüfen Sie die Stichtage, da Geschäftsjahresenden bis zu 190 Tage auseinanderliegen können."
           ],
           [
             "Eigene Anlagethese",
@@ -157,11 +157,11 @@
           ],
           [
             "Entfernen und Dateien",
-            "Das Kreuz verlangt eine Bestätigung, bevor Unternehmen und Notizen entfernt werden. Speichern Sie danach das Dossier, damit die Änderung dauerhaft wird; vorher ist sie rückgängig zu machen. Das getrennte KI-Archiv und einzelne Analysedateien bleiben erhalten. Eine .tickertwister-Datei enthält einen gespeicherten Stand der Zahlen und Annahmen, keine laufende Kursüberwachung."
+            "Klicken Sie bei jedem zu entfernenden Unternehmen auf × und bestätigen Sie. Speichern Sie anschließend alle Änderungen auf einmal. Vor dem Speichern können Sie die Unternehmen mit ihren Notizen einzeln an ihrer ursprünglichen Position wiederherstellen, zuletzt entfernte zuerst. Das KI-Archiv und einzelne .tickertwister-Dateien werden separat aufbewahrt."
           ],
           [
             "Konten und Sicherheit",
-            "Lokale Konten trennen Dossiers und verschlüsseln das interne Dossier sowie das KI-Archiv. Es gibt keine Passwortwiederherstellung, Cloud-Anmeldung oder Zwei-Faktor-Anmeldung. Verwenden Sie einen Passwortmanager und sperren Sie das Konto vor gemeinsamer Mac-Nutzung. Sichern Sie Profiles unter Library/Application Support/Tickertwister. Exporte, PDFs und alte Sicherungen sind von dieser Verschlüsselung nicht erfasst."
+            "Lokale Konten trennen Dossiers und verschlüsseln das interne Dossier sowie das KI-Archiv. Es gibt keine Passwortwiederherstellung, Cloud-Anmeldung oder Zwei-Faktor-Anmeldung. Verwenden Sie einen Passwortmanager und sperren Sie das Konto vor gemeinsamer Mac-Nutzung. Sichern Sie Profiles unter Library/Application Support/Tickertwister. Eine .tickertwister-Datei enthält Zahlen und Tickernotizen im Klartext. Auch PDFs sind unverschlüsselt. Eine .ttdossier-Datei wird mit einem eigenen Passwort verschlüsselt. Lokale Konten lassen sich umbenennen oder löschen. Auch das Passwort lässt sich ändern."
           ]
         ]
       ],
@@ -170,12 +170,12 @@
         "KI auf Anfrage",
         [
           [
-            "Lokale Regeln oder KI",
-            "Die automatische Zusammenfassung arbeitet lokal und kostenlos. KI benötigt Ihren Schlüssel und ein kostenpflichtiges API-Konto. Luna ist das günstige Ausgangsprofil; Sol und Astra bieten vertiefte Analyseprofile zu höheren Kosten. Wählen Sie Denkaufwand, Tokenlimit und Ausgabesprache. Das anfängliche Limit von 8192 umfasst Denken und Antwort; der angeforderte Bericht bleibt etwa 350 bis 500 Wörter lang und hat sieben Abschnitte."
+            "KI-Analyse",
+            "KI benötigt Ihren Schlüssel und ein kostenpflichtiges API-Konto. Luna ist das günstige Ausgangsprofil; Sol und Astra bieten vertiefte Analyseprofile zu höheren Kosten. Wählen Sie Denkaufwand, Tokenlimit und Ausgabesprache. Das anfängliche Limit von 8192 umfasst Denken und Antwort; der angeforderte Bericht bleibt etwa 350 bis 500 Wörter lang und hat sieben Abschnitte."
           ],
           [
             "Einwilligung und Schlüssel",
-            "Prüfen Sie Hinweise und genaue Eingabedaten, stimmen Sie Übertragung und Kosten zu und starten Sie die Anfrage. Es gibt keine automatischen kostenpflichtigen Aufrufe, Wiederholungen oder Modellwechsel. Übertragen werden Kennzahlen, Kriterien, Gewichte und Qualitätswerte, nicht Ihre Notizen oder Bewertungsannahmen. Mit lokalem Konto kann der Schlüssel verschlüsselt im macOS-Schlüsselbund gespeichert werden; sonst bleibt er nur für die Sitzung im Speicher."
+            "Prüfen Sie Hinweise und genaue Eingabedaten, stimmen Sie Übertragung und Kosten zu und starten Sie die Anfrage. Es gibt keine automatischen kostenpflichtigen Aufrufe, Wiederholungen oder Modellwechsel. Übertragen werden Kennzahlen, Kriterien, Gewichte und Qualitätswerte, nicht Ihre Notizen oder Bewertungsannahmen. Mit lokalem Konto kann der Schlüssel verschlüsselt im macOS-Schlüsselbund gespeichert werden; sonst bleibt er nur für die Sitzung im Speicher. Nur OpenAI-API-Schlüssel. A−/A+ ändern den gesamten Text, auch bei archivierten Analysen."
           ],
           [
             "Aufbewahren und drucken",
@@ -200,7 +200,7 @@
         [
           [
             "Instalar en Mac",
-            "En un Mac Apple Silicon con macOS 14 o posterior, abra el DMG y arrastre Tickertwister Desktop.app a Applications. Inicie la aplicación desde allí y expulse la imagen de disco. La carpeta Documentatie contiene manuales, licencias y código fuente. En las versiones oficiales, elija el DMG marcado notarized: su publicación exige firma Developer ID, aceptación de Apple y comprobantes de notarización adjuntos. Verifique el origen y la suma de comprobación. Puede aparecer una confirmación normal al abrirlo por primera vez. Las versiones anteriores y locales pueden no estar notarizadas; no desactive la seguridad del sistema."
+            "En un Mac con Apple Silicon y macOS 14 o posterior, abra la imagen DMG y arrastre Tickertwister Desktop.app a Aplicaciones. Abra la aplicación desde esa carpeta y expulse la imagen. La carpeta Documentatie contiene las guías, las licencias y el código fuente. Antes de actualizar, guarde su expediente y cierre la versión anterior."
           ],
           [
             "Elegir una empresa",
@@ -211,8 +211,8 @@
             "Puede elegir neerlandés, inglés, francés, alemán, español, italiano o portugués. La salida de IA sigue inicialmente el idioma de la aplicación, pero se configura de forma independiente. Una opción mantiene los términos financieros en inglés. ROE, ROA, FCFE y CAGR siguen siendo reconocibles. Cambiar de idioma adapta números y fechas sin alterar importes ni convertir USD en EUR."
           ],
           [
-            "Orientarse",
-            "Los enlaces de sección, la búsqueda con Command-F y la apertura global facilitan la navegación. El expediente es una vista separada. Ciérrelo para volver al análisis o inicie uno nuevo para regresar a la portada. La versión aparece en el pie de página. Los temas solo modifican la presentación. Sin casillas de comparación marcadas, los botones de análisis usan la empresa activa. La preferencia de términos financieros en inglés está en el menú de ajustes."
+            "Navegación estable",
+            "Introduzca un símbolo en Análisis. Abra el expediente de investigación y despliegue la lista para seleccionar y comparar empresas. La vista previa muestra la puntuación y la cobertura de los datos."
           ]
         ]
       ],
@@ -222,15 +222,15 @@
         [
           [
             "39 criterios",
-            "La puntuación utiliza las ponderaciones activas. Los criterios ausentes se excluyen del peso disponible: un guion no es un cero. Examine la cobertura y las reglas individuales. En el editor, 1 conserva el peso original, 2 lo duplica y 0 excluye el criterio. Restaurar recupera los pesos originales. La puntuación estándar sigue visible como referencia; cada análisis guardado conserva su ponderación."
+            "La puntuación utiliza las ponderaciones activas. Los criterios ausentes se excluyen del peso disponible: un guion no es un cero. Examine la cobertura y las reglas individuales. En el editor, 1 conserva el peso original, 2 lo duplica y 0 excluye el criterio. Restaurar recupera los pesos originales. La puntuación estándar sigue visible como referencia; cada análisis guardado conserva su ponderación. Los pesos personales actualizan puntos obtenidos y posibles, totales y puntuación. Marque un criterio incumplido total o parcialmente para otorgarle los puntos disponibles en su puntuación personal. El resultado original sigue visible."
           ],
           [
-            "Modelo FCFE",
-            "FCFE = flujo de caja operativo - inversiones + endeudamiento neto. El modelo descuenta diez años y un valor terminal. Valores iniciales: tasa del 12 %, múltiplo de 15 y CAGR histórico del FCFE sobre todo el historial anual disponible, como en el laboratorio, sin límite superior. Si no puede calcularse el CAGR, el 0 % es una hipótesis editable. Los análisis guardados conservan sus parámetros; restablezca los valores iniciales para adoptar el nuevo crecimiento. Si falta el endeudamiento neto, se usa FCF como aproximación indicada, suponiendo endeudamiento neto cero."
+            "DCF y ganancias del propietario",
+            "En una empresa industrial se suman al beneficio neto la amortización y el efecto de caja del circulante y se resta la inversión estimada de mantenimiento. Para un procesador de pagos se excluye el circulante y se restan todas las inversiones de capital. En bancos y aseguradoras el beneficio neto aproxima el flujo para el accionista. Si el último ejercicio se desvía más del 30 % de la media trienal, se usa esa media."
           ],
           [
-            "Escenarios y monedas",
-            "El margen de seguridad es 1 - cotización / valor del modelo. El laboratorio y la matriz de sensibilidad muestran el efecto de las hipótesis. DCF y Gordon Growth ofrecen otros escenarios. Las cuentas permanecen en su moneda de presentación. Comparar con una cotización en otra moneda exige un cambio y una base de acciones verificados. Si faltan, el margen queda vacío. Cambiar el idioma nunca convierte monedas."
+            "Crecimiento y valor terminal",
+            "En las empresas financieras se parte del crecimiento anual compuesto de los ingresos cuando está disponible. Para las demás, el modelo combina el crecimiento de ingresos, beneficio neto y Owner Earnings. El intervalo tiene un mínimo del −20 % y máximos del 10 % y del 12 %. El crecimiento perpetuo inicial es del 2 %."
           ],
           [
             "Leer las tablas",
@@ -244,7 +244,7 @@
         [
           [
             "Selección y comparación",
-            "Añada el análisis actual al expediente. Las tarjetas y la lista muestran empresas y estados. Pulsar una empresa selecciona sus notas; las casillas seleccionan por separado de una a cuatro empresas para estudiar. Elija un periodo común o el historial máximo. Se muestran las fechas y el método; los análisis largos pueden admitir hasta 190 días de diferencia entre cierres de ejercicio."
+            "Desde el análisis del símbolo, guarde la empresa en el expediente. Pulse su nombre para ver sus notas. Seleccione de una a cuatro empresas para comparar. Las casillas de exportación son independientes. Elija un periodo común o el historial máximo. Compruebe las fechas, ya que los cierres pueden diferir hasta 190 días."
           ],
           [
             "Tesis personal",
@@ -252,11 +252,11 @@
           ],
           [
             "Eliminar y guardar archivos",
-            "La cruz solicita confirmación para retirar una empresa y sus notas. Guarde después el expediente para hacer persistente el cambio; antes puede deshacerlo. El archivo independiente de IA y los archivos de análisis se conservan. Un archivo .tickertwister contiene una instantánea de cifras e hipótesis, no una vigilancia continua de cotizaciones."
+            "Pulse × y confirme la eliminación de cada empresa. Guarde todos los cambios una sola vez al terminar. Antes de guardar puede recuperar las empresas una a una, empezando por la última eliminada, con sus notas y en su posición original. El archivo de IA y los archivos .tickertwister se conservan por separado."
           ],
           [
             "Cuentas y seguridad",
-            "Las cuentas locales separan expedientes y cifran el expediente interno y el archivo de IA. No hay recuperación de contraseña, registro en la nube ni autenticación de dos factores. Use un gestor de contraseñas y bloquee la cuenta antes de compartir el Mac. Haga copias de Profiles en Library/Application Support/Tickertwister. Las exportaciones, PDF y copias antiguas no están cubiertos por ese cifrado."
+            "Las cuentas locales separan expedientes y cifran el expediente interno y el archivo de IA. No hay recuperación de contraseña, registro en la nube ni autenticación de dos factores. Use un gestor de contraseñas y bloquee la cuenta antes de compartir el Mac. Haga copias de Profiles en Library/Application Support/Tickertwister. El archivo .tickertwister guarda sin cifrar las cifras y el bloc de notas del símbolo. Los PDF tampoco están cifrados. La transferencia .ttdossier se cifra con su propia contraseña. Puede cambiar el nombre o la contraseña de una cuenta local y eliminarla."
           ]
         ]
       ],
@@ -265,12 +265,12 @@
         "IA bajo petición",
         [
           [
-            "Reglas locales o IA",
-            "El resumen automático utiliza reglas locales y es gratuito. La IA requiere su clave y una cuenta API de pago. Luna es el perfil económico inicial; Sol y Astra ofrecen perfiles más profundos con mayor coste. Elija esfuerzo, límite de tokens e idioma de salida. El límite inicial de 8192 incluye razonamiento y respuesta; se solicita un texto de unas 350 a 500 palabras en siete apartados."
+            "Análisis de IA",
+            "La IA requiere su clave y una cuenta API de pago. Luna es el perfil económico inicial; Sol y Astra ofrecen perfiles más profundos con mayor coste. Elija esfuerzo, límite de tokens e idioma de salida. El límite inicial de 8192 incluye razonamiento y respuesta; se solicita un texto de unas 350 a 500 palabras en siete apartados."
           ],
           [
             "Consentimiento y clave",
-            "Revise el aviso y los datos exactos, acepte la transmisión y los costes e inicie la solicitud. No hay llamadas de pago, reintentos ni cambios de modelo automáticos. Se envían ratios, criterios, pesos y puntuaciones, sin sus notas ni hipótesis de valoración. Con una cuenta local puede guardar la clave cifrada en el llavero de macOS; si no, permanece en memoria solo durante la sesión."
+            "Revise el aviso y los datos exactos, acepte la transmisión y los costes e inicie la solicitud. No hay llamadas de pago, reintentos ni cambios de modelo automáticos. Se envían ratios, criterios, pesos y puntuaciones, sin sus notas ni hipótesis de valoración. Con una cuenta local puede guardar la clave cifrada en el llavero de macOS; si no, permanece en memoria solo durante la sesión. Solo clave API de OpenAI. A−/A+ cambian todo el texto, también en análisis archivados."
           ],
           [
             "Conservar e imprimir",
@@ -295,7 +295,7 @@
         [
           [
             "Installare sul Mac",
-            "Su un Mac Apple Silicon con macOS 14 o successivo, apri il DMG e trascina Tickertwister Desktop.app in Applications. Avvia l’app da lì ed espelli l’immagine disco. La cartella Documentatie contiene manuali, licenze e codice sorgente. Per le versioni ufficiali, scegli il DMG contrassegnato notarized: la pubblicazione richiede firma Developer ID, accettazione da parte di Apple e ticket di notarizzazione allegati. Verifica provenienza e checksum. Al primo avvio può comparire una normale conferma. Le versioni precedenti e locali possono non essere notarizzate; non disattivare la sicurezza del sistema."
+            "Su un Mac con Apple Silicon e macOS 14 o successivo, apri il DMG e trascina Tickertwister Desktop.app nella cartella Applicazioni. Avvia l’app da lì, poi espelli l’immagine disco. La cartella Documentatie contiene le guide, le licenze e il codice sorgente. Prima di un aggiornamento salva il dossier ed esci dalla versione precedente."
           ],
           [
             "Scegliere un’impresa",
@@ -306,8 +306,8 @@
             "Puoi scegliere neerlandese, inglese, francese, tedesco, spagnolo, italiano o portoghese. La lingua dell’IA segue inizialmente quella dell’app, ma può essere impostata separatamente. Un’opzione mantiene i termini finanziari in inglese. ROE, ROA, FCFE e CAGR rimangono riconoscibili. Cambiare lingua adatta numeri e date senza modificare importi o convertire USD in EUR."
           ],
           [
-            "Orientarsi",
-            "I collegamenti alle sezioni, la ricerca Command-F e l’apertura globale aiutano a navigare. Il dossier è una vista separata. Chiudilo per tornare all’analisi oppure avvia una nuova analisi per tornare alla pagina iniziale. La versione compare nel piè di pagina. I temi cambiano solo l’aspetto. Senza caselle di confronto selezionate, i pulsanti di analisi usano l’azienda attiva. La preferenza dei termini finanziari inglesi è nel menu delle impostazioni."
+            "Navigazione stabile",
+            "Inserisci un ticker in Analisi. Apri il dossier di ricerca ed espandi l’elenco per selezionare e confrontare le aziende. L’anteprima mostra il punteggio e la copertura dei dati."
           ]
         ]
       ],
@@ -317,15 +317,15 @@
         [
           [
             "39 criteri",
-            "Il punteggio utilizza i pesi attivi. I criteri mancanti sono esclusi dal peso disponibile: un trattino non equivale a zero. Esamina copertura e regole dettagliate. Nell’editor, 1 conserva il peso iniziale, 2 lo raddoppia e 0 esclude il criterio. Il ripristino recupera i pesi iniziali. Il punteggio standard resta visibile come riferimento; ogni analisi salvata conserva i propri pesi."
+            "Il punteggio utilizza i pesi attivi. I criteri mancanti sono esclusi dal peso disponibile: un trattino non equivale a zero. Esamina copertura e regole dettagliate. Nell’editor, 1 conserva il peso iniziale, 2 lo raddoppia e 0 esclude il criterio. Il ripristino recupera i pesi iniziali. Il punteggio standard resta visibile come riferimento; ogni analisi salvata conserva i propri pesi. I pesi personali aggiornano punti ottenuti e possibili, totali e punteggio. Seleziona un criterio non soddisfatto in tutto o in parte per assegnargli i punti disponibili nel tuo punteggio personale. Il risultato originale resta visibile."
           ],
           [
-            "Modello FCFE",
-            "FCFE = flusso di cassa operativo - investimenti + indebitamento netto. Il modello attualizza dieci anni e un valore terminale. Valori iniziali: tasso del 12 %, multiplo 15 e CAGR storico del FCFE sull’intera serie annuale disponibile, come nel laboratorio, senza tetto. Se il CAGR non è calcolabile, lo 0 % è un’ipotesi modificabile. Le analisi salvate conservano i parametri; ripristinare i valori iniziali per adottare la nuova crescita. Se manca l’indebitamento netto, si usa FCF come approssimazione dichiarata, ipotizzando indebitamento netto nullo."
+            "DCF e utili del proprietario",
+            "Per un’impresa industriale, all’utile netto si sommano gli ammortamenti e l’effetto di cassa del circolante, sottraendo gli investimenti di mantenimento stimati. Per i gestori dei pagamenti si esclude il circolante e si sottraggono tutti gli investimenti. Per banche e assicurazioni l’utile netto approssima il flusso destinato agli azionisti. Se l’ultimo esercizio si discosta di oltre il 30% dalla media triennale, si parte dalla media."
           ],
           [
-            "Scenari e valute",
-            "Il margine di sicurezza è 1 - quotazione / valore del modello. Il laboratorio e la matrice di sensibilità mostrano gli effetti delle ipotesi. DCF e Gordon Growth offrono altri scenari. I bilanci restano nella valuta di presentazione. Il confronto con quotazioni in altre valute richiede un cambio e una base azionaria verificati. Se mancano, il margine resta vuoto. Cambiare lingua non converte valute."
+            "Crescita e valore terminale",
+            "Per le società finanziarie si parte dalla crescita annua composta dei ricavi, se disponibile. Per le altre imprese si combinano le crescite di ricavi, utile netto e Owner Earnings. L’intervallo ha un minimo di −20% e massimi del 10% e 12%. La crescita perpetua iniziale è del 2%."
           ],
           [
             "Leggere le tabelle",
@@ -339,7 +339,7 @@
         [
           [
             "Selezione e confronto",
-            "Aggiungi l’analisi corrente al dossier. Schede ed elenco mostrano imprese e stati. Cliccare su un’impresa ne seleziona le note; le caselle selezionano separatamente da una a quattro imprese da studiare. Scegli un periodo comune o la massima storia disponibile. Date e metodo restano visibili; i confronti lunghi possono ammettere 190 giorni di differenza tra chiusure degli esercizi."
+            "Salva l’impresa nel dossier dall’analisi del titolo. Fai clic sul nome per vedere le note. Seleziona da una a quattro imprese per il confronto. Usa le caselle di esportazione per il trasferimento. Scegli un periodo comune o l’intero storico. Controlla le date perché le chiusure degli esercizi possono differire fino a 190 giorni."
           ],
           [
             "Tesi personale",
@@ -347,11 +347,11 @@
           ],
           [
             "Rimuovere e salvare file",
-            "La croce chiede conferma prima di rimuovere impresa e note. Salva poi il dossier per rendere persistente la modifica; prima puoi annullarla. L’archivio IA separato e i singoli file di analisi restano conservati. Un file .tickertwister contiene un’istantanea di cifre e ipotesi, non un monitoraggio continuo dei prezzi."
+            "Fai clic su × e conferma la rimozione di ogni società. Al termine salva tutte le modifiche una sola volta. Prima di salvare puoi ripristinare una società alla volta, a partire dall’ultima rimossa, nella posizione originale e con le sue note. L’archivio IA e i singoli file .tickertwister sono conservati separatamente."
           ],
           [
             "Account e sicurezza",
-            "Gli account locali separano i dossier e cifrano il dossier interno e l’archivio IA. Non esistono recupero password, registrazione cloud o autenticazione a due fattori. Usa un gestore di password e blocca l’account prima di condividere il Mac. Esegui copie di Profiles in Library/Application Support/Tickertwister. Esportazioni, PDF e vecchie copie non sono coperti da questa cifratura."
+            "Gli account locali separano i dossier e cifrano il dossier interno e l’archivio IA. Non esistono recupero password, registrazione cloud o autenticazione a due fattori. Usa un gestore di password e blocca l’account prima di condividere il Mac. Esegui copie di Profiles in Library/Application Support/Tickertwister. Il file .tickertwister contiene in chiaro i dati e il blocco note del titolo. Anche i PDF sono in chiaro. Il file di trasferimento .ttdossier è cifrato con una password distinta. Puoi rinominare o eliminare un account locale e modificarne la password."
           ]
         ]
       ],
@@ -360,12 +360,12 @@
         "IA su richiesta",
         [
           [
-            "Regole locali o IA",
-            "Il riepilogo automatico usa regole locali ed è gratuito. L’IA richiede la tua chiave e un account API a pagamento. Luna è il profilo iniziale economico; Sol e Astra offrono profili più approfonditi a costo maggiore. Scegli impegno di ragionamento, limite di token e lingua di uscita. Il limite iniziale di 8192 comprende ragionamento e risposta; il testo richiesto resta di circa 350-500 parole in sette sezioni."
+            "Analisi IA",
+            "L’IA richiede la tua chiave e un account API a pagamento. Luna è il profilo iniziale economico; Sol e Astra offrono profili più approfonditi a costo maggiore. Scegli impegno di ragionamento, limite di token e lingua di uscita. Il limite iniziale di 8192 comprende ragionamento e risposta; il testo richiesto resta di circa 350-500 parole in sette sezioni."
           ],
           [
             "Consenso e chiave",
-            "Leggi le avvertenze e i dati esatti, accetta trasmissione e costi, poi avvia la richiesta. Non ci sono chiamate a pagamento, nuovi tentativi o cambi di modello automatici. Vengono inviati indici, criteri, pesi e punteggi, senza note personali o ipotesi di valutazione. Con un account locale puoi conservare la chiave cifrata nel portachiavi macOS; altrimenti resta in memoria solo durante la sessione."
+            "Leggi le avvertenze e i dati esatti, accetta trasmissione e costi, poi avvia la richiesta. Non ci sono chiamate a pagamento, nuovi tentativi o cambi di modello automatici. Vengono inviati indici, criteri, pesi e punteggi, senza note personali o ipotesi di valutazione. Con un account locale puoi conservare la chiave cifrata nel portachiavi macOS; altrimenti resta in memoria solo durante la sessione. Solo chiave API OpenAI. A−/A+ modificano l’intero testo, anche nelle analisi archiviate."
           ],
           [
             "Conservare e stampare",
@@ -390,7 +390,7 @@
         [
           [
             "Instalar no Mac",
-            "Num Mac Apple Silicon com macOS 14 ou posterior, abra o DMG e arraste Tickertwister Desktop.app para Applications. Inicie a aplicação a partir daí e ejete a imagem de disco. A pasta Documentatie contém manuais, licenças e código-fonte. Nas versões oficiais, escolha o DMG identificado como notarized: a publicação exige assinatura Developer ID, aceitação pela Apple e comprovativos de notarização anexados. Verifique a origem e a soma de verificação. Pode surgir uma confirmação normal na primeira abertura. As versões anteriores e locais podem não estar notarizadas; não desative a segurança do sistema."
+            "Num Mac com Apple Silicon e macOS 14 ou posterior, abra o DMG e arraste Tickertwister Desktop.app para a pasta Aplicações. Abra a aplicação a partir dessa pasta e ejete a imagem de disco. A pasta Documentatie contém os guias, as licenças e o código-fonte. Antes de atualizar, guarde o dossiê e feche a versão anterior."
           ],
           [
             "Escolher uma empresa",
@@ -401,8 +401,8 @@
             "Pode escolher neerlandês, inglês, francês, alemão, espanhol, italiano ou português. O idioma de saída da IA segue inicialmente o da aplicação, mas pode ser definido separadamente. Uma opção mantém os termos financeiros em inglês. ROE, ROA, FCFE e CAGR continuam reconhecíveis. Mudar o idioma adapta números e datas sem alterar montantes nem converter USD em EUR."
           ],
           [
-            "Orientar-se",
-            "As ligações de secção, a pesquisa Command-F e a abertura global facilitam a navegação. O dossiê é uma vista separada. Feche-o para regressar à análise ou inicie uma nova análise para voltar ao início. A versão aparece no rodapé. Os temas alteram apenas a apresentação. Sem caixas de comparação assinaladas, os botões de análise usam a empresa ativa. A preferência de termos financeiros em inglês está no menu de definições."
+            "Navegação estável",
+            "Introduza um símbolo em Análise. Abra o dossiê de investigação e expanda a lista para selecionar e comparar empresas. A pré-visualização mostra a pontuação e a cobertura dos dados."
           ]
         ]
       ],
@@ -412,15 +412,15 @@
         [
           [
             "39 critérios",
-            "A pontuação usa as ponderações ativas. Os critérios em falta são excluídos do peso disponível: um travessão não é um zero. Examine a cobertura e as regras individuais. No editor, 1 mantém o peso original, 2 duplica-o e 0 exclui o critério. Repor recupera os pesos originais. A pontuação padrão mantém-se como referência; cada análise guardada conserva a sua ponderação."
+            "A pontuação usa as ponderações ativas. Os critérios em falta são excluídos do peso disponível: um travessão não é um zero. Examine a cobertura e as regras individuais. No editor, 1 mantém o peso original, 2 duplica-o e 0 exclui o critério. Repor recupera os pesos originais. A pontuação padrão mantém-se como referência; cada análise guardada conserva a sua ponderação. Pesos pessoais atualizam pontos obtidos e possíveis, totais e pontuação. Assinale um critério não cumprido ou parcialmente cumprido para lhe atribuir os pontos disponíveis na sua pontuação pessoal. O resultado original permanece visível."
           ],
           [
-            "Modelo FCFE",
-            "FCFE = fluxo de caixa operacional - investimento + endividamento líquido. O modelo desconta dez anos e um valor terminal. Valores iniciais: taxa de 12 %, múltiplo de 15 e CAGR histórico do FCFE sobre todo o histórico anual disponível, como no laboratório, sem limite superior. Se o CAGR não for calculável, 0 % é uma hipótese editável. As análises guardadas mantêm os parâmetros; reponha os valores iniciais para adotar o novo crescimento. Se faltar o endividamento líquido, usa-se FCF como aproximação identificada, assumindo endividamento líquido nulo."
+            "DCF e lucros do proprietário",
+            "Numa empresa industrial somam-se ao lucro líquido as depreciações e o efeito de caixa do fundo de maneio e deduz-se o investimento de manutenção estimado. Nos processadores de pagamentos exclui-se o fundo de maneio e deduz-se o investimento total. Para bancos e seguradoras, o lucro líquido aproxima o fluxo para os acionistas. Se o último exercício se afastar mais de 30% da média de três anos, a avaliação parte dessa média."
           ],
           [
-            "Cenários e moedas",
-            "A margem de segurança é 1 - cotação / valor do modelo. O laboratório e a matriz de sensibilidade mostram o efeito dos pressupostos. DCF e Gordon Growth oferecem outros cenários. As contas mantêm a moeda de apresentação. Comparar com uma cotação noutra moeda exige câmbio e base de ações verificados. Sem esses elementos, a margem fica vazia. Mudar o idioma não converte moedas."
+            "Crescimento e valor terminal",
+            "Nas empresas financeiras parte-se do crescimento anual composto das receitas, quando disponível. Nas outras empresas combinam-se os crescimentos das receitas, do lucro líquido e dos Owner Earnings. O intervalo tem um mínimo de −20% e limites superiores de 10% e 12%. O crescimento perpétuo inicial é de 2%."
           ],
           [
             "Ler as tabelas",
@@ -434,7 +434,7 @@
         [
           [
             "Seleção e comparação",
-            "Adicione a análise atual ao dossiê. Cartões e lista apresentam empresas e estados. Clicar numa empresa seleciona as suas notas; as caixas selecionam separadamente uma a quatro empresas para estudar. Escolha um período comum ou o histórico máximo. Datas e método ficam visíveis; comparações longas podem aceitar 190 dias de diferença entre encerramentos de exercícios."
+            "Guarde a empresa no dossiê a partir da análise do título. Clique no nome para ver as notas. Selecione uma a quatro empresas para comparar. A exportação tem caixas de seleção próprias. Escolha um período comum ou todo o histórico. Confira as datas, pois os fechos dos exercícios podem diferir até 190 dias."
           ],
           [
             "Tese pessoal",
@@ -442,11 +442,11 @@
           ],
           [
             "Remover e guardar ficheiros",
-            "A cruz pede confirmação antes de remover a empresa e as notas. Guarde depois o dossiê para tornar a alteração persistente; antes disso pode anulá-la. O arquivo IA separado e os ficheiros de análise são conservados. Um ficheiro .tickertwister contém um retrato de números e pressupostos, não uma monitorização contínua das cotações."
+            "Clique em × e confirme a remoção de cada empresa. No final, guarde todas as alterações de uma só vez. Antes de guardar pode repor as empresas uma a uma, a começar pela última removida, com as notas e na posição original. O arquivo de IA e os ficheiros .tickertwister são guardados separadamente."
           ],
           [
             "Contas e segurança",
-            "As contas locais separam dossiês e cifram o dossiê interno e o arquivo IA. Não existe recuperação da palavra-passe, registo na nuvem ou autenticação de dois fatores. Use um gestor de palavras-passe e bloqueie a conta antes de partilhar o Mac. Faça cópias de Profiles em Library/Application Support/Tickertwister. Exportações, PDF e cópias antigas não estão abrangidos por esta cifragem."
+            "As contas locais separam dossiês e cifram o dossiê interno e o arquivo IA. Não existe recuperação da palavra-passe, registo na nuvem ou autenticação de dois fatores. Use um gestor de palavras-passe e bloqueie a conta antes de partilhar o Mac. Faça cópias de Profiles em Library/Application Support/Tickertwister. O ficheiro .tickertwister guarda os dados e o bloco de notas do título sem cifragem. Os PDF também não são cifrados. O ficheiro de transferência .ttdossier é cifrado com uma palavra-passe própria. Pode mudar o nome ou a palavra-passe de uma conta local e eliminar a conta."
           ]
         ]
       ],
@@ -455,12 +455,12 @@
         "IA a pedido",
         [
           [
-            "Regras locais ou IA",
-            "O resumo automático usa regras locais e é gratuito. A IA exige a sua chave e uma conta API paga. Luna é o perfil inicial económico; Sol e Astra oferecem perfis mais aprofundados com maior custo. Escolha esforço de raciocínio, limite de tokens e idioma de saída. O limite inicial de 8192 inclui raciocínio e resposta; o texto pedido mantém cerca de 350 a 500 palavras em sete secções."
+            "Análise de IA",
+            "A IA exige a sua chave e uma conta API paga. Luna é o perfil inicial económico; Sol e Astra oferecem perfis mais aprofundados com maior custo. Escolha esforço de raciocínio, limite de tokens e idioma de saída. O limite inicial de 8192 inclui raciocínio e resposta; o texto pedido mantém cerca de 350 a 500 palavras em sete secções."
           ],
           [
             "Consentimento e chave",
-            "Leia o aviso e os dados exatos, aceite a transmissão e os custos e inicie o pedido. Não existem chamadas pagas, repetições ou mudanças de modelo automáticas. São enviados rácios, critérios, pesos e pontuações, sem notas pessoais nem pressupostos de avaliação. Com uma conta local pode guardar a chave cifrada no Porta-chaves do macOS; caso contrário, fica apenas na memória durante a sessão."
+            "Leia o aviso e os dados exatos, aceite a transmissão e os custos e inicie o pedido. Não existem chamadas pagas, repetições ou mudanças de modelo automáticas. São enviados rácios, critérios, pesos e pontuações, sem notas pessoais nem pressupostos de avaliação. Com uma conta local pode guardar a chave cifrada no Porta-chaves do macOS; caso contrário, fica apenas na memória durante a sessão. Apenas chave API OpenAI. A−/A+ alteram todo o texto, incluindo análises arquivadas."
           ],
           [
             "Conservar e imprimir",

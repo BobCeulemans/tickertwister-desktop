@@ -44,7 +44,8 @@ with DSStore.open(str(root/'.DS_Store'),'w+') as ds:
  ds['.']['bwsp']={'ShowStatusBar':False,'ShowToolbar':False,'ShowTabView':False,'ShowPathbar':False,'ShowSidebar':False,'ContainerShowSidebar':False,'WindowBounds':'{{160, 140}, {680, 570}}'}
  ds['.']['icvp']={'viewOptionsVersion':1,'backgroundType':2,'backgroundImageAlias':Alias.for_file(str(root/'.background/installer.tiff')).to_bytes(),'iconSize':64.0,'textSize':12.0,'scrollPositionX':0.0,'scrollPositionY':0.0,'backgroundColorRed':1.0,'backgroundColorGreen':1.0,'backgroundColorBlue':1.0,'gridSpacing':100.0,'gridOffsetX':0.0,'gridOffsetY':0.0,'arrangeBy':'none','labelOnBottom':True,'showItemInfo':False,'showIconPreview':True}
  ds['.']['vSrn']=('long',1);ds['.']['icvl']=('type',b'icnv')
- ds['Tickertwister Desktop.app']['Iloc']=(170,228)
+ app_name = sys.argv[2] if len(sys.argv) > 2 else 'Tickertwister Desktop.app'
+ ds[app_name]['Iloc']=(170,228)
  ds['Applications']['Iloc']=(510,228)
  ds['Documentatie']['Iloc']=(575,445)
 print('Finder layout written:',root)

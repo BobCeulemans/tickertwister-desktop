@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Rebuild the seven illustrated PDF guides using ReportLab and local app assets."""
 from pathlib import Path
-import sys, json, argparse, subprocess
+import sys, json, argparse, subprocess, plistlib
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor, Color
 from reportlab.lib.styles import ParagraphStyle
@@ -19,8 +19,10 @@ if not args.lang and not args.output:
         subprocess.run([sys.executable,__file__,'--lang',language],check=True)
     raise SystemExit(0)
 LANG=args.lang or 'nl'
-TOTAL_PAGES=9 if LANG in ('nl','en') else 5
-VERSION=json.loads((ROOT/'package.json').read_text())['version']
+TOTAL_PAGES=11 if LANG in ('nl','en') else 7
+app_info=plistlib.loads((ROOT/'Info.plist').read_bytes())
+VERSION=app_info['CFBundleShortVersionString']
+BUILD=app_info['CFBundleVersion']
 OUT=Path(args.output) if args.output else ROOT/('Handleiding.pdf' if LANG=='nl' else 'User-Guide-'+LANG.upper()+'.pdf')
 OUT.parent.mkdir(parents=True,exist_ok=True)
 FONT=Path('/System/Library/Fonts/Supplemental')
@@ -60,7 +62,7 @@ def start(title,kicker,subtitle=''):
     page+=1;c.setFillColor(PAPER);c.rect(0,0,W,H,fill=1,stroke=0)
     c.setStrokeColor(LINE);c.setLineWidth(.6);c.line(M,58,W-M,58)
     c.setFillColor(MUTED);c.setFont('Body',7.5);c.drawString(M,43,'Copyright ©2026 Bob Ceulemans');c.drawString(M,32,'All Rights Reserved.')
-    c.drawRightString(W-M,43,f'Tickertwister Desktop · v{VERSION}');c.drawRightString(W-M,32,f'{page:02d} / {TOTAL_PAGES:02d}')
+    c.drawRightString(W-M,43,f'Tickertwister Desktop · v{VERSION} ({BUILD})');c.drawRightString(W-M,32,f'{page:02d} / {TOTAL_PAGES:02d}')
     c.drawImage(str(ROOT/'web/app-icon.png'),M,H-74,28,28,mask='auto')
     c.setFillColor(MUTED);c.setFont('Bold',8);c.drawString(M+34,H-61,'THE VALUE INVESTOR’S NOTEBOOK')
     c.setFillColor(GOLD);c.setFont('Bold',9);c.drawString(M,H-108,kicker.upper())
@@ -86,10 +88,26 @@ else:
     img=ImageReader(str(ROOT/'web/buffett-munger.png'));iw,ih=img.getSize();height=355;width=height*iw/ih
     c.saveState();path=c.beginPath();path.roundRect(M,132,CW,355,10);c.clipPath(path,stroke=0);c.drawImage(img,M+(CW-width)/2,132,width,height,mask='auto');c.restoreState()
     c.setFillColor(GREEN);c.setFont('Body',11);c.drawString(M,111,edition['cover'])
-    c.setFillColor(MUTED);c.setFont('Body',8.5);c.drawString(M,92,'Mac · 39 · ROE · ROA · FCFE · CAGR · AI-AIC')
+    c.setFillColor(MUTED);c.setFont('Body',8.5);c.drawString(M,92,'Mac · 39 · ROE · ROA · DCF · CAGR · AI-AIC')
     for index,(title,kicker,sections) in enumerate(edition['pages'],1):
         start(title,f'{index:02d} / '+kicker)
         for label,text in sections:
             heading(label);para(text)
 
+workspace=json.loads((ROOT/'scripts/manuals/mac-workspace.json').read_text())[LANG]
+start(workspace['title'],workspace['kicker'])
+for label,text in workspace['sections']:
+    heading(label);para(text)
+width=(CW-14)/2;height=width*900/1240
+if y-height-42<76:raise ValueError('Mac workspace screenshots overflow')
+for index,image in enumerate(['mac-focus-light.png','mac-library-dark.png']):
+    x=M+index*(width+14)
+    c.drawImage(str(ROOT/'docs/images'/image),x,y-height,width,height,mask='auto')
+    c.setFillColor(MUTED);c.setFont('Body',8);c.drawString(x,y-height-13,workspace['captions'][index])
+y-=height+29
+para(workspace['note'],small)
+transfer=workspace['transfer']
+start(transfer['title'],f'Tickertwister Desktop · v{VERSION}')
+for label,text in transfer['sections']:
+    heading(label);para(text)
 c.save();print(OUT)

@@ -1,0 +1,310 @@
+{
+  "en": {
+    "title": "The Mac workspace",
+    "kicker": "WORKSPACE",
+    "sections": [
+      [
+        "A stable workspace",
+        "Enter a ticker in Analysis. Open Research dossier to select and compare saved companies. The company list starts collapsed. The dossier preview shows the selected company’s score and data coverage."
+      ],
+      [
+        "Open a saved analysis",
+        "The My companies header shows the selected company and View analysis, even when collapsed. The toolbar arrows return to screens you have visited."
+      ],
+      [
+        "Reading and controls",
+        "Theme-aware contrast, distinct status icons, section links below the toolbar and complete AI text-size controls make the workspace easier to read. Native menus provide the same main actions."
+      ]
+    ],
+    "captions": [
+      "Analysis · light appearance",
+      "Research dossier · dark appearance"
+    ],
+    "note": "Interface examples in English with synthetic demonstration data.",
+    "transfer": {
+      "title": "Research on two Macs",
+      "sections": [
+        [
+          "From ticker list to dossier",
+          "Paste tickers or open a text file. The app fetches each one in turn. Open a result in the sidebar, write in Quick notes and save it to the research dossier. On macOS 15 or later the company description can be translated locally. Choose a time range in Price history or open Apple Stocks."
+        ],
+        [
+          "Checking a valuation",
+          "Sources and assumptions shows the benchmark currency and date. Banks and insurers use the cost of equity. For other companies WACC combines equity and debt. Its calculation aligns the income flows with the latest balance sheet and shows any fallback assumptions."
+        ],
+        [
+          "Transfer the dossier",
+          "Save your edits. In My companies select companies for export, or select all to include standalone AI records. Export a .ttdossier file with a separate password of at least 12 characters. Transfer it using AirDrop or an external drive. Sign in on the other Mac and import in Tickertwister Desktop. Review the counts and matches. Keeping existing destination dossiers is the default."
+        ],
+        [
+          "Where your research lives",
+          "Dossiers are stored on each Mac. Signing in or using iCloud Keychain does not synchronise them. Transfers include selected financial data, assumptions, quick notes, theses and associated AI analyses. Enter your OpenAI key separately on the other Mac. Keep the export password safe."
+        ]
+      ]
+    }
+  },
+  "nl": {
+    "title": "De Mac-werkruimte",
+    "kicker": "WERKRUIMTE",
+    "sections": [
+      [
+        "Een vaste werkruimte",
+        "Voer een ticker in bij Analyse. Kies Onderzoeksdossier om bewaarde bedrijven te openen en vergelijken. De bedrijvenlijst start ingeklapt. Rechts toont de dossiervoorvertoning de score en datadekking van het gekozen bedrijf."
+      ],
+      [
+        "Van dossier naar analyse",
+        "De kop van Mijn bedrijven toont het geselecteerde bedrijf en Bekijk analyse. Ook met de lijst dicht kun je het bedrijf openen. Via de pijlen bovenin keer je terug naar een eerder bezocht scherm."
+      ],
+      [
+        "Leesbaarheid en bediening",
+        "Thema-afhankelijk contrast, duidelijke statusiconen, sectielinks onder de werkbalk en tekstgrootteknoppen voor volledige AI-teksten maken de app leesbaar. De Mac-menu’s bieden dezelfde hoofdacties."
+      ]
+    ],
+    "captions": [
+      "Analyse · lichte weergave",
+      "Mijn onderzoeksdossier · donkere weergave"
+    ],
+    "note": "Engelstalige schermvoorbeelden met fictieve demonstratiegegevens.",
+    "transfer": {
+      "title": "Onderzoek op twee Macs",
+      "sections": [
+        [
+          "Van tickerlijst naar dossier",
+          "Plak tickers of open een tekstbestand. De app haalt ze één voor één op. Open een resultaat in de zijbalk, schrijf in Snelle notities en kies Bewaar in onderzoeksdossier. De bedrijfsbeschrijving kan vanaf macOS 15 lokaal worden vertaald. In Koersverloop kies je de periode of open je de ticker in Aandelen."
+        ],
+        [
+          "De waardering nalezen",
+          "Bij Bronnen en aannames zie je de valuta en datum van de referentierente. Banken en verzekeraars gebruiken het vereiste rendement op eigen vermogen. Voor andere bedrijven combineert de WACC eigen en vreemd vermogen. De app stemt de stroomgegevens af op de balansdatum en toont gebruikte schattingen."
+        ],
+        [
+          "Het dossier overzetten",
+          "Bewaar je wijzigingen. Open Mijn bedrijven, vink de gewenste bedrijven aan bij Export en kies exporteren. Alles selecteren neemt ook losstaande AI-analyses mee. Kies voor het .ttdossier-bestand een afzonderlijk wachtwoord van minstens 12 tekens. Zet het bestand via AirDrop of een externe schijf over. Open Tickertwister Desktop op de tweede Mac, meld je aan en kies importeren. Controleer de aantallen en eventuele overeenkomsten. Standaard blijven bestaande dossiers op de doel-Mac behouden."
+        ],
+        [
+          "Wat je account bewaart",
+          "Dossiers staan lokaal op elke Mac. Een login of iCloud-sleutelhanger synchroniseert ze niet. De overdracht bevat geselecteerde financiële gegevens, aannames, snelle notities, these en bijbehorende AI-analyses. Voer je eigen OpenAI-sleutel op de andere Mac opnieuw in. Bewaar je exportwachtwoord veilig."
+        ]
+      ]
+    }
+  },
+  "fr": {
+    "title": "Votre espace Mac",
+    "kicker": "ESPACE DE TRAVAIL",
+    "sections": [
+      [
+        "Réglages et navigation",
+        "Dès la connexion, choisissez langue, apparence et couleur. Au premier démarrage, la langue suit macOS si elle est prise en charge, sinon l’anglais. Les flèches de la barre d’outils parcourent les écrans visités. Vous pouvez ouvrir la société sélectionnée depuis l’en-tête de la liste, même repliée."
+      ],
+      [
+        "DCF et trésorerie du propriétaire",
+        "KBC utilise le résultat net comme approximation du flux aux actionnaires. Visa exclut les variations des soldes de règlement et déduit tous les investissements. La fiche détaille le calcul retenu."
+      ],
+      [
+        "Croissance et valeur terminale",
+        "Les banques et les assureurs démarrent au coût des fonds propres. Vous pouvez saisir votre propre taux. Les prestataires de paiements utilisent le WACC disponible dans la devise des flux. La commande de réinitialisation rétablit les hypothèses de départ."
+      ]
+    ],
+    "captions": [
+      "Analyse · apparence claire",
+      "Dossier de recherche · apparence sombre"
+    ],
+    "note": "Exemples en anglais avec des données fictives.",
+    "transfer": {
+      "title": "Travailler sur deux Mac",
+      "sections": [
+        [
+          "De la liste au dossier",
+          "Collez des symboles ou ouvrez un fichier texte. Les analyses sont effectuées successivement. Choisissez une société, écrivez dans Notes rapides et enregistrez-la dans le dossier. Dès macOS 15, la description peut être traduite sur le Mac. Consultez les cours par période ou ouvrez Bourse."
+        ],
+        [
+          "Vérifier une valorisation",
+          "Les sources indiquent la devise et la date du taux de référence. Le coût des fonds propres s’applique aux banques et aux assureurs. Pour les autres entreprises, le WACC combine la dette et les fonds propres en alignant les flux sur la date du bilan. Consultez les hypothèses de remplacement."
+        ],
+        [
+          "Transférer un dossier",
+          "Enregistrez les modifications. Sélectionnez les sociétés à exporter ou choisissez tout pour inclure les analyses IA indépendantes. Protégez le fichier .ttdossier par un mot de passe distinct de 12 caractères au minimum. Transférez-le par AirDrop ou sur un disque externe. Sur l’autre Mac, connectez-vous dans Tickertwister Desktop, importez le fichier et vérifiez les correspondances. Les entrées existantes sont conservées par défaut."
+        ],
+        [
+          "Stockage local",
+          "Chaque Mac conserve ses dossiers localement. Le trousseau iCloud ne les synchronise pas. Les données, hypothèses, notes, thèses et analyses IA associées sont transférées. Saisissez votre clé OpenAI sur le deuxième Mac. Conservez le mot de passe d’exportation."
+        ]
+      ]
+    }
+  },
+  "de": {
+    "title": "Ihr Mac-Arbeitsbereich",
+    "kicker": "ARBEITSBEREICH",
+    "sections": [
+      [
+        "Einstellungen und Navigation",
+        "Wählen Sie bei der Anmeldung Sprache, Darstellung und Farbe. Beim ersten Start gilt die macOS-Sprache, sofern sie unterstützt wird, sonst Englisch. Die Pfeile in der Symbolleiste führen durch besuchte Ansichten. Über die Kopfzeile lässt sich das ausgewählte Unternehmen auch bei eingeklappter Liste öffnen."
+      ],
+      [
+        "DCF und Eigentümererträge",
+        "Bei KBC dient der Nettogewinn als Näherung für den Zahlungsstrom an die Aktionäre. Bei Visa bleiben die Veränderungen der Abrechnungssalden außen vor und die gesamten Investitionen werden abgezogen. Die Berechnung steht im Dossier."
+      ],
+      [
+        "Wachstum und Restwert",
+        "Bei Banken und Versicherern sind die Eigenkapitalkosten der Ausgangswert. Sie können einen eigenen Zinssatz eingeben. Zahlungsdienstleister starten mit dem verfügbaren WACC in der Währung der Zahlungsströme. Zurücksetzen stellt die Ausgangsannahmen wieder her."
+      ]
+    ],
+    "captions": [
+      "Analyse · helle Darstellung",
+      "Forschungsdossier · dunkle Darstellung"
+    ],
+    "note": "Englische Bildschirmbeispiele mit fiktiven Daten.",
+    "transfer": {
+      "title": "Auf zwei Macs arbeiten",
+      "sections": [
+        [
+          "Von der Liste zum Dossier",
+          "Ticker einfügen oder eine Textdatei öffnen. Die App ruft die Unternehmen nacheinander ab. In der Seitenleiste ein Ergebnis öffnen, Schnellnotizen erfassen und im Dossier speichern. Ab macOS 15 lässt sich die Beschreibung lokal übersetzen. Im Kursverlauf einen Zeitraum wählen oder Aktien öffnen."
+        ],
+        [
+          "Bewertung prüfen",
+          "Unter Quellen und Annahmen stehen Währung und Datum des Referenzzinses. Für Banken und Versicherer gelten Eigenkapitalkosten. Bei anderen Unternehmen gewichtet der WACC Eigen- und Fremdkapital. Die Zahlungsströme passen zum Bilanzstichtag. Ersatzannahmen sind ausgewiesen."
+        ],
+        [
+          "Dossier übertragen",
+          "Änderungen speichern. Unternehmen für den Export auswählen oder alle markieren, um auch eigenständige KI-Analysen mitzunehmen. Die .ttdossier-Datei mit einem eigenen Passwort von mindestens 12 Zeichen schützen und per AirDrop oder Datenträger übertragen. Auf dem zweiten Mac in Tickertwister Desktop anmelden, die Datei importieren und Übereinstimmungen prüfen. Vorhandene Dossiers werden standardmäßig behalten."
+        ],
+        [
+          "Lokale Speicherung",
+          "Die Daten liegen auf dem jeweiligen Mac. Der iCloud-Schlüsselbund synchronisiert keine Dossiers. Daten, Annahmen, Notizen, Thesen und zugehörige KI-Analysen sind im Export enthalten. Den OpenAI-Schlüssel auf dem zweiten Mac erneut eingeben. Das Exportpasswort sicher aufbewahren."
+        ]
+      ]
+    }
+  },
+  "es": {
+    "title": "Tu espacio Mac",
+    "kicker": "ESPACIO DE TRABAJO",
+    "sections": [
+      [
+        "Preferencias y navegación",
+        "Elija idioma, apariencia y color al iniciar sesión. Al abrir la app por primera vez se usa el idioma de macOS si está disponible o, en su defecto, el inglés. Las flechas recorren las pantallas visitadas. Puede abrir la empresa seleccionada desde la cabecera de la lista, incluso cuando esté plegada."
+      ],
+      [
+        "DCF y ganancias del propietario",
+        "KBC usa el beneficio neto como aproximación al flujo para el accionista. En Visa se excluyen las variaciones de los saldos de liquidación y se restan todas las inversiones. El dossier muestra el cálculo."
+      ],
+      [
+        "Crecimiento y valor terminal",
+        "En bancos y aseguradoras puede sustituir el coste de los fondos propios calculado por su propia tasa. Los proveedores de pagos parten del WACC disponible en la moneda de los flujos. Restablecer recupera los supuestos iniciales."
+      ]
+    ],
+    "captions": [
+      "Análisis · aspecto claro",
+      "Expediente · aspecto oscuro"
+    ],
+    "note": "Ejemplos en inglés con datos ficticios.",
+    "transfer": {
+      "title": "Investigar en dos Mac",
+      "sections": [
+        [
+          "De la lista al expediente",
+          "Pegue símbolos o abra un archivo de texto. La aplicación los consulta uno a uno. Abra el resultado, escriba en Notas rápidas y guárdelo en el expediente. Desde macOS 15 puede traducir la descripción en el Mac. Elija un período en el historial de cotizaciones o abra Bolsa."
+        ],
+        [
+          "Revisar la valoración",
+          "Las fuentes muestran la moneda y la fecha del tipo de referencia. Bancos y aseguradoras usan el coste de los fondos propios. Para otras empresas el WACC pondera deuda y fondos propios y alinea los flujos con el cierre del balance. Revise los supuestos de sustitución."
+        ],
+        [
+          "Transferir el expediente",
+          "Guarde los cambios. Seleccione las empresas que desea exportar, o todas para incluir los análisis de IA independientes. Proteja el archivo .ttdossier con una contraseña independiente de al menos 12 caracteres. Transfiéralo por AirDrop o en un disco externo. En Tickertwister Desktop del otro Mac, inicie sesión, importe y revise las coincidencias. Por defecto se conservan los expedientes existentes."
+        ],
+        [
+          "Almacenamiento local",
+          "Los expedientes se guardan en cada Mac. El llavero de iCloud no los sincroniza. La exportación incluye datos, supuestos, notas, tesis y análisis de IA asociados. Introduzca su clave OpenAI en el otro Mac. Guarde la contraseña de exportación."
+        ]
+      ]
+    }
+  },
+  "it": {
+    "title": "Il tuo spazio Mac",
+    "kicker": "AREA DI LAVORO",
+    "sections": [
+      [
+        "Preferenze e navigazione",
+        "Scegli lingua, aspetto e colore già prima di accedere. Al primo avvio viene usata la lingua di macOS se supportata, altrimenti l’inglese. Le frecce ti riportano alle schermate visitate. Puoi aprire la società selezionata dall’intestazione dell’elenco anche quando è chiuso."
+      ],
+      [
+        "DCF e utili del proprietario",
+        "Per KBC l’utile netto approssima il flusso per gli azionisti. Per Visa sono esclusi i movimenti dei saldi di regolamento e si deducono tutti gli investimenti. Il dossier riporta il calcolo."
+      ],
+      [
+        "Crescita e valore terminale",
+        "Per banche e assicurazioni puoi sostituire il costo del capitale proprio calcolato con un tasso personale. I prestatori di servizi di pagamento partono dal WACC disponibile nella valuta dei flussi. Il ripristino riapplica le ipotesi iniziali."
+      ]
+    ],
+    "captions": [
+      "Analisi · aspetto chiaro",
+      "Dossier di ricerca · aspetto scuro"
+    ],
+    "note": "Esempi in inglese con dati fittizi.",
+    "transfer": {
+      "title": "La ricerca su due Mac",
+      "sections": [
+        [
+          "Dalla lista al dossier",
+          "Incolla i simboli o apri un file di testo. Le analisi procedono una alla volta. Apri un risultato, scrivi in Note rapide e salva nel dossier. Da macOS 15 puoi tradurre la descrizione sul Mac. Scegli il periodo nello storico delle quotazioni o apri Borsa."
+        ],
+        [
+          "Verificare la valutazione",
+          "Le fonti riportano valuta e data del tasso di riferimento. Banche e assicurazioni usano il costo del capitale proprio. Per le altre aziende il WACC pondera capitale proprio e debito e allinea i flussi alla data del bilancio. Controlla le eventuali stime sostitutive."
+        ],
+        [
+          "Trasferire il dossier",
+          "Salva le modifiche. Seleziona le aziende da esportare o tutte per includere anche le analisi IA indipendenti. Proteggi il file .ttdossier con una password separata di almeno 12 caratteri. Trasferiscilo con AirDrop o un disco esterno. Accedi a Tickertwister Desktop sull’altro Mac, importa il file e controlla le corrispondenze. Per impostazione iniziale sono conservati i dossier già presenti."
+        ],
+        [
+          "Archivio locale",
+          "Ogni Mac conserva i propri dossier. Il portachiavi iCloud non li sincronizza. Il trasferimento include dati, ipotesi, appunti, tesi e analisi IA associate. Inserisci di nuovo la chiave OpenAI sull’altro Mac e conserva la password del file."
+        ]
+      ]
+    }
+  },
+  "pt": {
+    "title": "O seu espaço Mac",
+    "kicker": "ESPAÇO DE TRABALHO",
+    "sections": [
+      [
+        "Preferências e navegação",
+        "Escolha o idioma, o aspeto e a cor antes de iniciar sessão. No primeiro arranque é usado o idioma do macOS, se disponível, ou o inglês. As setas permitem regressar aos ecrãs visitados. Pode abrir a empresa selecionada no cabeçalho da lista, mesmo quando esta está recolhida."
+      ],
+      [
+        "DCF e lucros do proprietário",
+        "O lucro líquido da KBC aproxima o fluxo para os acionistas. Para a Visa excluem-se as variações dos saldos de liquidação e deduz-se o investimento total. O dossiê apresenta o cálculo."
+      ],
+      [
+        "Crescimento e valor terminal",
+        "Nos bancos e seguradoras pode substituir o custo dos capitais próprios calculado por uma taxa pessoal. Os prestadores de serviços de pagamento partem do WACC disponível na moeda dos fluxos. A reposição recupera os pressupostos iniciais."
+      ]
+    ],
+    "captions": [
+      "Análise · aspeto claro",
+      "Dossiê de investigação · aspeto escuro"
+    ],
+    "note": "Exemplos em inglês com dados fictícios.",
+    "transfer": {
+      "title": "Investigar em dois Mac",
+      "sections": [
+        [
+          "Da lista ao dossiê",
+          "Cole os símbolos ou abra um ficheiro de texto. A aplicação consulta um de cada vez. Abra o resultado, escreva em Notas rápidas e guarde-o no dossiê. A partir do macOS 15 pode traduzir a descrição no Mac. Escolha um período no histórico de cotações ou abra a Bolsa."
+        ],
+        [
+          "Rever a avaliação",
+          "As fontes mostram a moeda e a data da taxa de referência. Os bancos e as seguradoras usam o custo dos capitais próprios. Nas outras empresas o WACC pondera a dívida e os capitais próprios e alinha os fluxos com a data do balanço. Confira os pressupostos de substituição."
+        ],
+        [
+          "Transferir o dossiê",
+          "Guarde as alterações. Selecione as empresas para exportar ou marque todas para incluir análises de IA independentes. Proteja o ficheiro .ttdossier com uma palavra-passe própria de pelo menos 12 carateres. Transfira-o por AirDrop ou num disco externo. Inicie sessão na Tickertwister Desktop no outro Mac, importe o ficheiro e reveja as correspondências. Por predefinição, os dossiês existentes são preservados."
+        ],
+        [
+          "Armazenamento local",
+          "Os dossiês estão em cada Mac. O porta-chaves iCloud não os sincroniza. A exportação inclui dados, pressupostos, notas, teses e análises de IA associadas. Introduza a chave OpenAI no outro Mac e guarde a palavra-passe de exportação."
+        ]
+      ]
+    }
+  }
+}

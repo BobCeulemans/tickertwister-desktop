@@ -21,6 +21,9 @@ research.json
 research-backup*.json
 ai-archive*.json
 *.tickertwister
+*.ttdossier
+*.provisionprofile
+*.mobileprovision
 *.log
 *.p8
 *-notary-logs/

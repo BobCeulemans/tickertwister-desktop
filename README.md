@@ -2,7 +2,7 @@
 
 # Tickertwister Desktop - Financial Research Studio
 
-**The Value Investor’s Notebook · v1.0.4**
+**The Value Investor’s Notebook · v1.1.0**
 
 A macOS desktop app for a first, evidence-based look at a listed company. Explore financial statements, 39 transparent analysis criteria, valuation scenarios and your own investment thesis in a private research workspace.
 
@@ -16,10 +16,10 @@ Built by **Bob Ceulemans**. Free software under **AGPL-3.0-only**.
 
 - Fetch annual statements with yfinance and inspect up to four fiscal years in the original 39-criterion model, with data coverage and editable weights.
 - Explore profitability, cash conversion, debt, historical trends and additional Buffett & Clark-inspired financial relationships, with visible formulas.
-- Adjust FCFE multiple, DCF and Gordon Growth assumptions; compare scenarios and test growth/rate sensitivity.
+- Adjust owner-earnings DCF and optional dividend-based Gordon Growth assumptions; inspect currency-matched ten-year government yields, net debt, scenarios and sensitivity.
 - Keep investment theses, research status and saved analyses; compare one to four companies using the available common periods or a clearly labelled longer-history window.
-- Generate local rule-based interpretations, or request optional AI-AIC interpretation through your own paid OpenAI API account.
-- Use local password-protected profiles, encrypted profile dossiers and an optional macOS Keychain entry for your API key.
+- Request optional AI-AIC interpretation through your own paid OpenAI API account.
+- Use encrypted local profiles, transfer selected research between Macs in a separately password-protected .ttdossier file, and optionally store your API key in macOS Keychain.
 - Print company and research reports with your chosen AI appendices.
 - Choose Dutch, English, French, German, Spanish, Italian or Portuguese. App language and AI output language are independent. Optionally retain English financial terminology.
 
@@ -27,9 +27,9 @@ A score is a screening model, not a probability of investment success. Missing d
 
 ## Install
 
-The supported desktop build is for **Apple Silicon Macs, macOS 14 or later**. Download the DMG from this repository’s Releases, open it and drag **Tickertwister Desktop.app** into **Applications**. The disk image also contains a Documentation folder with licenses, source and all seven guides. Python and Node are bundled or build-time tools; end users do not install them.
+Download the [Tickertwister Desktop v1.1.0 release](https://github.com/BobCeulemans/tickertwister-desktop/releases/tag/v1.1.0) for **Apple Silicon, macOS 14 or later**. Choose the notarized disk image and drag **Tickertwister Desktop.app** into Applications. The **Documentatie** folder includes seven guides, licenses and the corresponding source archive. The app bundles its own financial engine.
 
-For v1.0.4, choose the release DMG marked **notarized**. Publication of that installer requires Developer ID signing, Apple's acceptance and stapled tickets for both the app and DMG. Check the release notes and SHA-256 checksum for the exact asset. A normal first-open confirmation can still appear; do not disable Gatekeeper. Earlier v1.0.1/v1.0.3 releases and ordinary local/CI builds are **not notarized**. See [NOTARIZATION.md](docs/NOTARIZATION.md) for the maintainer workflow. Intel, Windows and Linux desktop binaries are not provided.
+The GitHub release lists the SHA-256 checksum for the distributed disk image. The signing identity for the direct distribution is **Developer ID Application: Bob Ceulemans**. The [signing and notarization guide](docs/NOTARIZATION.md) describes the maintainer checks.
 
 Yahoo access needs an internet connection. Saved dossiers and local calculations can be used offline. AI is optional, requires a separate API account/key and may incur charges; a ChatGPT subscription does not supply API credit. Nothing requests AI automatically when you change a language or model.
 
