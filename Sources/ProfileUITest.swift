@@ -39,12 +39,12 @@ extension AppDelegate {
         let phase=profilePhase;profilePhase+=1
         switch phase {
         case 0:
-            profileTestScript("await pause(600);document.querySelector('.profile-button').click();await pause(100);return !!document.querySelector('.profile-overlay');"){value in
+            profileTestScript("await pause(600);if(!document.querySelector('.profile-overlay'))document.querySelector('.sidebar-profile').click();await pause(100);return !!document.querySelector('.profile-overlay');"){value in
                 profileResults["accountPanel"]=value;self.fillTestProfileDialog("QA Alice")
-                self.webView.evaluateJavaScript("document.querySelector('.profile-overlay .primary').click()",completionHandler:nil)
+                self.webView.evaluateJavaScript("document.querySelector('.profile-actions > .primary').click()",completionHandler:nil)
             }
         case 1:
-            profileTestScript("await pause(500);window.dispatchEvent(new CustomEvent('desktop-open-report',{detail:window.__studioFixture}));await pause(200);document.querySelector('[data-action=research-toggle]').click();await pause(150);document.querySelector('[data-action=desk-pin]').click();await pause(150);document.querySelector('.thesis-editor').open=true;const area=document.querySelector('[data-note=thesis]');Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value').set.call(area,'PRIVATE PROFILE UI TEST');area.dispatchEvent(new Event('input',{bubbles:true}));await pause(150);document.querySelector('[data-action=thesis-save]').click();await pause(300);return document.querySelector('.profile-button').textContent;"){value in
+            profileTestScript("await pause(500);window.dispatchEvent(new CustomEvent('desktop-open-report',{detail:window.__studioFixture}));await pause(200);document.querySelector('[data-action=desk-pin]').click();await pause(400);document.querySelector('[data-action=research-toggle]').click();await pause(150);document.querySelector('.thesis-editor').open=true;const area=document.querySelector('[data-note=thesis]');Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value').set.call(area,'PRIVATE PROFILE UI TEST');area.dispatchEvent(new Event('input',{bubbles:true}));await pause(150);document.querySelector('[data-action=thesis-save]').click();await pause(300);return document.querySelector('.sidebar-profile').textContent;"){value in
                 profileResults["createdAlice"]=value
                 do {
                     let data=try Data(contentsOf:self.profiles.privateURL("research.json"))
@@ -52,23 +52,23 @@ extension AppDelegate {
                     try self.profiles.saveAPIKey("sk-test-not-a-real-key-501")
                     profileResults["keychainSaved"]=true
                 }catch{profileResults["keychainOrSaveError"]=error.localizedDescription}
-                self.webView.evaluateJavaScript("document.querySelector('.profile-button').click();setTimeout(()=>document.querySelector('.profile-overlay .primary').click(),100)",completionHandler:nil)
+                self.webView.evaluateJavaScript("document.querySelector('.sidebar-profile').click();setTimeout(()=>document.querySelector('.profile-actions > .primary').click(),100)",completionHandler:nil)
             }
         case 2:
             profileTestScript("await pause(500);return !document.querySelector('header') && !!document.querySelector('.profile-overlay');"){value in
                 profileResults["lockedHidesApp"]=value;self.fillTestProfileDialog("QA Bob")
-                self.webView.evaluateJavaScript("document.querySelector('.profile-overlay .primary').click()",completionHandler:nil)
+                self.webView.evaluateJavaScript("document.querySelector('.profile-actions > .primary').click()",completionHandler:nil)
             }
         case 3:
-            profileTestScript("await pause(500);document.querySelector('[data-action=research-toggle]').click();await pause(200);return {name:document.querySelector('.profile-button').textContent,companies:document.querySelectorAll('.watchlist article').length,privateNoteVisible:document.body.textContent.includes('PRIVATE PROFILE UI TEST')};"){value in
+            profileTestScript("await pause(500);document.querySelector('[data-action=research-toggle]').click();await pause(200);return {name:document.querySelector('.sidebar-profile').textContent,companies:document.querySelectorAll('.watchlist article').length,privateNoteVisible:document.body.textContent.includes('PRIVATE PROFILE UI TEST')};"){value in
                 profileResults["bobIsolation"]=value
                 do{profileResults["bobHasNoKey"]=try self.profiles.loadAPIKey()==nil}catch{profileResults["keychainError"]=error.localizedDescription}
-                self.webView.evaluateJavaScript("document.querySelector('.profile-button').click();setTimeout(()=>document.querySelector('.profile-overlay .primary').click(),100)",completionHandler:nil)
+                self.webView.evaluateJavaScript("document.querySelector('.sidebar-profile').click();setTimeout(()=>document.querySelector('.profile-actions > .primary').click(),100)",completionHandler:nil)
             }
         case 4:
             profileTestScript("await pause(400);return document.querySelectorAll('.account-option').length;"){value in
                 profileResults["accountCount"]=value;self.fillTestProfileDialog("QA Alice")
-                self.webView.evaluateJavaScript("document.querySelector('.account-option').click()",completionHandler:nil)
+                self.webView.evaluateJavaScript("[...document.querySelectorAll('.account-option')].find(b=>b.textContent.includes('QA Alice')).click()",completionHandler:nil)
             }
         case 5:
             profileTestScript("await pause(500);document.querySelector('[data-action=research-toggle]').click();await pause(200);document.querySelector('.thesis-editor').open=true;return document.querySelector('[data-note=thesis]').value;"){value in

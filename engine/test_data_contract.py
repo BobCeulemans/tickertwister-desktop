@@ -27,7 +27,7 @@ def synthetic_frames():
 
 
 def test_frozen_v102_field_names_and_statement_bindings():
-    assert {k:list(v) for k,v in MAP.items()}==CONTRACT['appFields']
+    assert {k:list(MAP[k]) for k in CONTRACT['appFields']}==CONTRACT['appFields']
     assert {k:list(v) for k,v in ALIASES.items()}==CONTRACT['legacyAliases']
     for key,(s,*names) in CONTRACT['appFields'].items():
         # Legacy optional field absent from both versions: keep missing; do not
@@ -36,6 +36,19 @@ def test_frozen_v102_field_names_and_statement_bindings():
             assert names==['LongTermDebtCurrent']
             continue
         assert any(n in fundamentals_keys[STATEMENTS[s]] for n in names),key
+
+
+def test_optional_valuation_fields_use_real_yahoo_balance_names():
+    expected = {
+        'longDebtAndLeases': 'LongTermDebtAndCapitalLeaseObligation',
+        'currentDebtAndLeases': 'CurrentDebtAndCapitalLeaseObligation',
+    }
+    assert set(MAP)-set(CONTRACT['appFields']) == set(expected) | {'workingCapitalCashEffect'}
+    assert MAP['workingCapitalCashEffect'] == (2, 'ChangeInWorkingCapital')
+    assert 'ChangeInWorkingCapital' in fundamentals_keys['cash-flow']
+    for field, name in expected.items():
+        assert MAP[field] == (1, name)
+        assert name in fundamentals_keys['balance-sheet']
 
 
 @pytest.mark.parametrize('quarterly',[False,True])
@@ -100,7 +113,7 @@ def test_all_39_criteria_and_eps_remain_attached_to_their_fiscal_dates():
     assert reordered['years']==baseline['years']
     assert reordered['originalHistories']==baseline['originalHistories']
     assert reordered['score']==baseline['score']
-    assert reordered['originalValuation']==baseline['originalValuation']
+    assert 'originalValuation' not in reordered
 
 
 def test_diluted_eps_missing_one_fiscal_period_is_not_shifted():

@@ -58,12 +58,46 @@ import Foundation
   do{_ = try changed.accounts();fatalError("malformed account path accepted")}catch{}
   try Data(index.utf8).write(to:store.index,options:.atomic)
   try check(changed.accounts().count==2)
+  // Changes are made only to synthetic profiles below. Simulate Keychain cleanup without accessing it.
+  let lifecycleRoot = root.appendingPathComponent("lifecycle")
+  var removedKeys = [String]()
+  let lifecycle = ProfileStore(root: lifecycleRoot, removeAccountKey: { removedKeys.append($0) })
+  let credential = "local test password only"
+  try lifecycle.create("First", credential)
+  let first = lifecycle.active!
+  let file = try lifecycle.privateURL("research.json")
+  try lifecycle.write(original, to: file)
+  try lifecycle.renameActive(to: " Renamed ", password: credential)
+  try check(lifecycle.active?.name == "Renamed" && lifecycle.active?.id == first.id)
+  try check(lifecycle.read(file) == original)
+  do { try lifecycle.renameActive(to: "?", password: credential); fatalError("invalid name accepted") } catch {}
+  lifecycle.lock()
+  try lifecycle.create("Other", credential)
+  let other = lifecycle.active!
+  do { try lifecycle.renameActive(to: "rENamed", password: credential); fatalError("duplicate rename accepted") } catch {}
+  do { try lifecycle.deleteActive(password: "incorrect"); fatalError("deleted with incorrect password") } catch {}
+  try check(lifecycle.accounts().count == 2 && removedKeys.isEmpty)
+  let pending = lifecycleRoot.appendingPathComponent(".removing-" + first.id)
+  try FileManager.default.moveItem(at: lifecycle.directory(first), to: pending)
+  let reopened = ProfileStore(root: lifecycleRoot, removeAccountKey: { removedKeys.append($0) })
+  try reopened.login(first.id, credential)
+  try check(reopened.active?.name == "Renamed" && reopened.read(file) == original)
+  let deferred = ProfileStore(root: lifecycleRoot, removeAccountKey: { _ in throw lifecycle.failure("TEST_KEYCHAIN_LOCKED") })
+  try deferred.login(first.id, credential)
+  try deferred.deleteActive(password: credential)
+  try check(deferred.active == nil && deferred.accounts().map(\.id) == [other.id])
+  try check(FileManager.default.fileExists(atPath: pending.path))
+  let cleaned = ProfileStore(root: lifecycleRoot, removeAccountKey: { removedKeys.append($0) })
+  try check(removedKeys == [first.id] && !FileManager.default.fileExists(atPath: pending.path))
+  try cleaned.login(other.id, credential)
+  try cleaned.deleteActive(password: credential)
+  try check(cleaned.accounts().isEmpty && removedKeys == [first.id, other.id])
   // Optional isolated Keychain integration. Only this random account item is touched.
   if CommandLine.arguments.contains("--keychain") {
    try changed.saveAPIKey("sk-test-not-a-real-api-key")
    try check(changed.loadAPIKey()=="sk-test-not-a-real-api-key")
    try changed.forgetAPIKey();try check(changed.loadAPIKey()==nil)
   }
-  print("PASS: strict path identifiers, account-index validation, encryption, locked access, wrong password, relaunch, password change, profile isolation, tamper detection, associated context, atomic migration rollback, legacy preservation" )
+  print("PASS: strict path identifiers, account-index validation, encryption, locked access, wrong password, relaunch, password change, profile isolation, tamper detection, associated context, atomic migration rollback, legacy preservation, authenticated rename and removal, recovery and isolated Keychain cleanup" )
  }
 }

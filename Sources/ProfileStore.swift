@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright ©2026 Bob Ceulemans
 import Foundation
+import Darwin
 import CryptoKit
 import Security
 import CommonCrypto
@@ -10,7 +11,7 @@ import CommonCrypto
 final class ProfileStore {
     struct Account: Codable {
         let id: String
-        let name: String
+        var name: String
         var salt: Data
         var wrappedKey: Data
         var rounds: UInt32
@@ -21,7 +22,12 @@ final class ProfileStore {
     private var attempts=0
     private var nextAttempt=Date.distantPast
     static let magic=Data("TTVAULT1".utf8)
-    init(root: URL) { self.root=root }
+    private let removeAccountKey: (String) throws -> Void
+    init(root: URL, removeAccountKey: @escaping (String) throws -> Void = ProfileStore.deleteKeychainItem) {
+        self.root = root
+        self.removeAccountKey = removeAccountKey
+        recoverInterruptedRemovals()
+    }
     var index: URL { root.appendingPathComponent("accounts.json") }
     static func isValidID(_ value:String) -> Bool {
         // Foundation may accept a UUID prefix before a NUL. Require the entire
@@ -62,29 +68,50 @@ final class ProfileStore {
         let wrapped=try AES.GCM.seal(key.withUnsafeBytes{Data($0)},using:derived,authenticating:Data(id.utf8)).combined!
         return (Account(id:id,name:name,salt:salt,wrappedKey:wrapped,rounds:600000),key)
     }
-    func create(_ name:String,_ password:String,legacyFiles:[(URL,String)]=[]) throws {
-        var list=try accounts()
-        guard list.count<30,!list.contains(where:{$0.name.caseInsensitiveCompare(name.trimmingCharacters(in:.whitespacesAndNewlines)) == .orderedSame}) else{throw failure("ACCOUNT_EXISTS_OR_LIMIT")}
-        let (account,newKey)=try makeAccount(name,password)
-        let previous=active,previousKey=key
-        try FileManager.default.createDirectory(at:directory(account),withIntermediateDirectories:true,attributes:[.posixPermissions:0o700])
-        active=account;key=newKey
-        do {
-            // Copy and verify before committing the account index. Original files remain untouched.
-            for (source,relative) in legacyFiles {
-                let data=try Data(contentsOf:source)
-                let destination=directory(account).appendingPathComponent(relative)
-                try write(data,to:destination)
-                guard try read(destination)==data else{throw failure("MIGRATION_VERIFICATION_FAILED")}
-            }
-            list.append(account)
-            try writeIndex(list)
-        } catch {active=previous;key=previousKey;try? FileManager.default.removeItem(at:directory(account));throw error}
+    // Different preview bundles can share this profile directory. Serialize changes to the index
+    // and recovery so a second launch cannot restore a vault while the first launch is deleting it.
+    private func withIndexLock(_ operation: () throws -> Void) throws {
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
+        let lockFile = root.appendingPathComponent(".accounts.lock")
+        let descriptor = Darwin.open(lockFile.path, O_RDWR | O_CREAT | O_CLOEXEC | O_NOFOLLOW, 0o600)
+        guard descriptor >= 0 else { throw failure("ACCOUNT_INDEX_WRITE_FAILED") }
+        defer { Darwin.close(descriptor) }
+        guard flock(descriptor, LOCK_EX) == 0 else { throw failure("ACCOUNT_INDEX_WRITE_FAILED") }
+        try operation()
     }
+
+    func create(_ name:String,_ password:String,legacyFiles:[(URL,String)]=[]) throws {
+        try withIndexLock {
+            var list=try accounts()
+            guard list.count<30,!list.contains(where:{$0.name.caseInsensitiveCompare(name.trimmingCharacters(in:.whitespacesAndNewlines)) == .orderedSame}) else{throw failure("ACCOUNT_EXISTS_OR_LIMIT")}
+            let (account,newKey)=try makeAccount(name,password)
+            let previous=active,previousKey=key
+            try FileManager.default.createDirectory(at:directory(account),withIntermediateDirectories:true,attributes:[.posixPermissions:0o700])
+            active=account;key=newKey
+            do {
+                // Copy and verify before committing the account index. Original files remain untouched.
+                for (source,relative) in legacyFiles {
+                    let data=try Data(contentsOf:source)
+                    let destination=directory(account).appendingPathComponent(relative)
+                    try write(data,to:destination)
+                    guard try read(destination)==data else{throw failure("MIGRATION_VERIFICATION_FAILED")}
+                }
+                list.append(account)
+                try writeIndex(list)
+            } catch {active=previous;key=previousKey;try? FileManager.default.removeItem(at:directory(account));throw error}
+        }
+    }
+
     func writeIndex(_ list:[Account]) throws {
         try FileManager.default.createDirectory(at:root,withIntermediateDirectories:true,attributes:[.posixPermissions:0o700])
-        try JSONEncoder().encode(list).write(to:index,options:.atomic)
-        try FileManager.default.setAttributes([.posixPermissions:0o600],ofItemAtPath:index.path)
+        // Set permissions before the atomic rename. An error must mean the old index is still in place.
+        let temporary = root.appendingPathComponent(".index-" + UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: temporary) }
+        let data = try JSONEncoder().encode(list)
+        guard FileManager.default.createFile(atPath: temporary.path, contents: data, attributes: [.posixPermissions: 0o600]) else {
+            throw failure("ACCOUNT_INDEX_WRITE_FAILED")
+        }
+        guard Darwin.rename(temporary.path, index.path) == 0 else { throw POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO) }
     }
     func login(_ id:String,_ password:String) throws {
         guard Date()>=nextAttempt else{throw failure("LOGIN_WAIT")}
@@ -97,12 +124,82 @@ final class ProfileStore {
         }catch{attempts+=1;nextAttempt=Date().addingTimeInterval(min(30,Double(attempts*2)));throw failure("LOGIN_FAILED")}
     }
     func changePassword(_ password:String) throws {
-        guard var account=active,let key=key,password.count>=12,password.utf8.count<=1024 else{throw failure("USE_12_CHARACTER_PASSWORD")}
-        account.salt=try random(32)
-        let derived=try derive(password,account.salt,account.rounds)
-        account.wrappedKey=try AES.GCM.seal(key.withUnsafeBytes{Data($0)},using:derived,authenticating:Data(account.id.utf8)).combined!
-        let list=try accounts().map{$0.id==account.id ? account:$0}
-        try writeIndex(list);active=account
+        try withIndexLock {
+            guard var account=active,let key=key,password.count>=12,password.utf8.count<=1024 else{throw failure("USE_12_CHARACTER_PASSWORD")}
+            account.salt=try random(32)
+            let derived=try derive(password,account.salt,account.rounds)
+            account.wrappedKey=try AES.GCM.seal(key.withUnsafeBytes{Data($0)},using:derived,authenticating:Data(account.id.utf8)).combined!
+            let list=try accounts().map{$0.id==account.id ? account:$0}
+            try writeIndex(list);active=account
+        }
+    }
+
+    func renameActive(to proposedName: String, password: String) throws {
+        try withIndexLock {
+            guard let current = active else { throw failure("PROFILE_LOCKED") }
+            try login(current.id, password)
+            let name = proposedName.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard (2...40).contains(name.count), !name.unicodeScalars.contains(where: CharacterSet.controlCharacters.contains) else {
+                throw failure("INVALID_ACCOUNT_NAME")
+            }
+            var list = try accounts()
+            guard let position = list.firstIndex(where: { $0.id == current.id }) else { throw failure("LOGIN_FAILED") }
+            guard !list.contains(where: { $0.id != current.id && $0.name.caseInsensitiveCompare(name) == .orderedSame }) else {
+                throw failure("ACCOUNT_EXISTS_OR_LIMIT")
+            }
+            list[position].name = name
+            try writeIndex(list)
+            active = list[position]
+        }
+    }
+
+    func deleteActive(password: String) throws {
+        try withIndexLock {
+            guard let current = active else { throw failure("PROFILE_LOCKED") }
+            try login(current.id, password)
+            let remaining = try accounts().filter { $0.id != current.id }
+            let vault = directory(current)
+            let pending = root.appendingPathComponent(".removing-" + current.id, isDirectory: true)
+            try FileManager.default.moveItem(at: vault, to: pending)
+            do {
+                try writeIndex(remaining)
+            } catch {
+                try FileManager.default.moveItem(at: pending, to: vault)
+                throw error
+            }
+            lock()
+            // The account and its wrapped vault key are gone. Keep the pending folder for a retry
+            // if the Keychain is locked or the encrypted files cannot be removed at this moment.
+            try? finishRemoval(current.id, pending)
+        }
+    }
+
+    private func finishRemoval(_ id: String, _ pending: URL) throws {
+        try removeAccountKey(id)
+        try FileManager.default.removeItem(at: pending)
+    }
+
+    private func recoverInterruptedRemovals() {
+        let manager = FileManager.default
+        let prefix = ".removing-"
+        guard let names = try? manager.contentsOfDirectory(atPath: root.path),
+              names.contains(where: { $0.hasPrefix(prefix) }) else { return }
+        try? withIndexLock {
+            guard manager.fileExists(atPath: index.path) else { return }
+            let list = try accounts()
+            for item in try manager.contentsOfDirectory(atPath: root.path) where item.hasPrefix(prefix) {
+                let id = String(item.dropFirst(prefix.count))
+                guard Self.isValidID(id) else { continue }
+                let folder = root.appendingPathComponent(item)
+                if let account = list.first(where: { $0.id == id }) {
+                    if !manager.fileExists(atPath: directory(account).path) {
+                        try? manager.moveItem(at: folder, to: directory(account))
+                    }
+                } else {
+                    try? finishRemoval(id, folder)
+                }
+            }
+        }
     }
     func lock(){key=nil;active=nil}
     func seal(_ data:Data,context:String) throws -> Data {
@@ -120,9 +217,18 @@ final class ProfileStore {
         try FileManager.default.setAttributes([.posixPermissions:0o600],ofItemAtPath:url.path)
     }
     func read(_ url:URL) throws -> Data {try unseal(Data(contentsOf:url),context:url.lastPathComponent)}
+    private static func keychainQuery(_ accountID: String) -> [String:Any] {
+        [kSecClass as String:kSecClassGenericPassword,kSecAttrService as String:"be.bobceulemans.tickertwister.openai.v5",kSecAttrAccount as String:accountID,kSecAttrSynchronizable as String:false]
+    }
+    private static func deleteKeychainItem(_ accountID: String) throws {
+        let status = SecItemDelete(keychainQuery(accountID) as CFDictionary)
+        guard status == errSecSuccess || status == errSecItemNotFound else {
+            throw NSError(domain: "Profile", code: 1, userInfo: [NSLocalizedDescriptionKey:"KEYCHAIN_DELETE_FAILED"])
+        }
+    }
     func keychainQuery() throws -> [String:Any] {
         guard let active=active,key != nil else{throw failure("PROFILE_LOCKED")}
-        return [kSecClass as String:kSecClassGenericPassword,kSecAttrService as String:"be.bobceulemans.tickertwister.openai.v5",kSecAttrAccount as String:active.id,kSecAttrSynchronizable as String:false]
+        return Self.keychainQuery(active.id)
     }
     func saveAPIKey(_ value:String) throws {
         let query=try keychainQuery(),data=try seal(Data(value.utf8),context:"openai-api-key")
@@ -143,7 +249,7 @@ final class ProfileStore {
         return value
     }
     func forgetAPIKey() throws {
-        let status=SecItemDelete(try keychainQuery() as CFDictionary)
-        guard status==errSecSuccess || status==errSecItemNotFound else{throw failure("KEYCHAIN_DELETE_FAILED")}
+        guard let active = active, key != nil else { throw failure("PROFILE_LOCKED") }
+        try Self.deleteKeychainItem(active.id)
     }
 }

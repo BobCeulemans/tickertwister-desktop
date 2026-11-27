@@ -10,8 +10,26 @@ const emit=()=>listeners.forEach(f=>f());
 export function rememberRecord(raw,error=''){
  const r={...readRecord(raw),persisted:!error};state={...state,records:[r,...state.records.filter(x=>x.id!==r.id)],error};emit();return r;
 }
-export async function loadArchive(){if(pending)return pending;pending=nativeCall('ai-archive-list',{}).then(({records,invalid})=>{const good=[];let bad=invalid||0;for(const raw of records){try{good.push(readRecord(raw));}catch{bad++;}}
- const merged=new Map([...good,...state.records].map(r=>[r.id,r]));state={...state,records:[...merged.values()].sort((a,b)=>b.createdAt.localeCompare(a.createdAt)),error:[...merged.values()].some(r=>!r.persisted)?'ARCHIVE_SAVE_FAILED':bad?'ARCHIVE_PARTIAL':'',loaded:true};emit();}).catch(()=>{state={...state,error:'ARCHIVE_READ_FAILED',loaded:true};emit();}).finally(()=>{pending=null;});return pending;}
+export async function loadArchive(){
+ if(pending)return pending;
+ const before=state.records;
+ pending=nativeCall('ai-archive-list',{}).then(({records,invalid})=>{
+  const merged=new Map();let bad=invalid||0;
+  for(const raw of records){try{const r=readRecord(raw);merged.set(r.id,r);}catch{bad++;}}
+  // Keep in-flight results and unsaved answers. Disk is authoritative for all older records.
+  for(const r of state.records)if(!r.persisted||!before.includes(r))merged.set(r.id,r);
+  const fresh=[...merged.values()].sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+  state={...state,records:fresh,error:bad?'ARCHIVE_PARTIAL':fresh.some(r=>!r.persisted)?'ARCHIVE_SAVE_FAILED':'',loaded:true};emit();return state;
+ }).catch(()=>{state={...state,error:'ARCHIVE_READ_FAILED',loaded:true};emit();return state;}).finally(()=>{pending=null;});
+ return pending;
+}
+export async function deleteRecord(id){
+ await nativeCall('ai-archive-delete',{recordID:id});
+ if(pending)await pending;
+ state={...state,records:state.records.filter(r=>r.id!==id)};
+ selectAIPrint(id,false);
+ await loadArchive();
+}
 export async function retrySave(record){await nativeCall('ai-archive-save',{record:{id:record.id,input:record.input,language:record.language,response:record.response,createdAt:record.createdAt,translationOf:record.translationOf||null,settings:record.settings||null}});const records=state.records.map(r=>r.id===record.id?{...r,persisted:true}:r);state={...state,records,error:records.some(r=>!r.persisted)?'ARCHIVE_SAVE_FAILED':''};emit();}
 export function useAIArchive(){useEffect(()=>{if(!state.loaded)loadArchive();window.addEventListener('ai-archive-refresh',loadArchive);return()=>window.removeEventListener('ai-archive-refresh',loadArchive);},[]);return useSyncExternalStore(f=>{listeners.add(f);return()=>listeners.delete(f);},()=>state);}
 

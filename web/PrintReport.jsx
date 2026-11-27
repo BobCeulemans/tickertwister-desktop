@@ -1,17 +1,18 @@
+import ValuationPrint from './ValuationPrint.jsx';
 import CurrencyNote from './CurrencyNote.jsx';
 import {metrics,periods} from './comparison.mjs';
-import {notePages,shortAmount,marketValue} from './presentation.mjs';
+import {notePages} from './presentation.mjs';
 import {dateLabel} from './presentation.mjs';
 import AIPrint from './AIPrint.jsx';
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright ©2026 Bob Ceulemans
 import {personalScore} from './weights.mjs';
 import {diagnostics} from './research.mjs';
-import {businessExcerpt,cashFlowExplanation} from './models.mjs';
-export default function PrintReport({notes,report,multipleValue,scenario,options,multipleInputs,t,number,percent,compact,Chart}){
- const personal=personalScore(report,options.scoreWeights||{});
+import {businessExcerpt} from './models.mjs';
+export default function PrintReport({notes,report,valuationValue,options,valuationInputs,t,number,percent,compact,Chart}){
+ const personal=personalScore(report,options.scoreWeights,options.scoreOverrides);
  const latest=periods(report).get('FY:'+report.years.at(-1).end),score=report.score,missing=score.criteria.filter(c=>c.factor===null);
- const money=[['revenue','Revenue'],['income','Net income'],['cfo','Operating cash flow'],['fcfe','FCFE'],['equity','Book value'],['debt','Total debt']];
+ const money=[['revenue','Revenue'],['income','Net income'],['cfo','Operating cash flow'],['fcf','Free cash flow'],['equity','Book value'],['debt','Total debt']];
  const ratios=[['roe','Return on equity','%'],['roa','Return on assets','%'],['grossMargin','Gross margin','%'],['netMargin','Net margin','%'],['currentRatio','Current ratio','×'],['quickRatio','Quick ratio','×'],['debtEquity','Debt / equity','%'],['interestCoverage','Interest coverage','×']];
  const noteText=notes?[['thesis','My investment thesis'],['risks','What could go wrong?'],['disconfirm','What would disprove my thesis?'],['nextStep','My next research question']].filter(([k])=>notes[k]?.trim()).map(([k,l])=>t(l)+'\n'+notes[k]).join('\n\n'):'';
  const notesPages=notePages(noteText||t("No personal notes for this company yet."));
@@ -21,7 +22,8 @@ export default function PrintReport({notes,report,multipleValue,scenario,options
  <section className="print-page">{heading(1)}<h1>{report.name}</h1><div className="print-meta">{t("Company screening")} · {dateLabel(report.years[0].end,t.language)} — {dateLabel(latest.end,t.language)}<br/>{report.source||'SEC EDGAR'} · {t("Retrieved")}: {dateLabel(report.fetchedAt,t.language)}{report.savedAt?' · '+t("Saved snapshot"):''}</div>
  <h2>{t("Business at a glance")}</h2><p>{businessExcerpt(report.summary)||t("No business description available.")}</p>
  <div className="print-score"><div><span>{t("Quality score")}</span><strong>{number(personal.custom?personal.value:score.value)} / 100</strong></div><div><span>{t("Data coverage")}</span><strong>{score.available} / {score.total}</strong></div><div><span>{t("Current price")}</span><strong>{number(report.quote?.price)} {report.quote?.currency||''}</strong></div></div>
- <div className="print-valuation"><h2>{t("What is the business worth to you?")}</h2><div>{t("FCFE multiple model")} · {t("ten years")}</div><strong>{multipleValue.error?'—':number(multipleValue.perShare)+' '+report.currency} {t("per share")}</strong><p>{t("Margin of safety")}: {percent(multipleValue.margin)} · {t("Price timestamp")}: {dateLabel(report.quote?.at,t.language)}</p><p>{t("Current price")}: {number(report.quote?.price)} {report.quote?.currency} · {t("Outstanding shares")}: {shortAmount(report.valuationShares,number,t)}<br/>{t("Market cap")}: {shortAmount(marketValue(report),number,t)} {report.quote?.currency} · {t("Model business value")}: {shortAmount(multipleValue.total,number,t)} {report.currency}</p><CurrencyNote report={report} value={multipleValue.perShare} t={t} number={number}/><p className="print-note">{cashFlowExplanation(report,t)}</p><p>{t("Model cash flow")}: {multipleInputs.cashFlow?number(Number(multipleInputs.cashFlow)):'—'} {t("million")} {report.currency} · {t("growth")}: {number(Number(multipleInputs.growth))}% · {t("required return")}: {number(Number(multipleInputs.rate))}% · {t("terminal multiple")}: {multipleInputs.multiple}×</p><p>{multipleValue.error?t("No valid valuation with these data/assumptions."):t("Model value using the selected assumptions, not a price target. Margin of safety = 1 − price / model value. Across currencies, a margin requires recent FX and a confirmed share basis.")}</p></div>
+ <h2>{t("What is the business worth to you?")}</h2><ValuationPrint report={report} method={options.method} inputs={valuationInputs} value={valuationValue} t={t} number={number} percent={percent}/><CurrencyNote report={report} value={valuationValue.perShare} t={t} number={number}/>
+
  {personal.custom&&<p className="print-note">{t("Personal score: ")}{number(personal.value)}/100 · {t("Default score: ")}{number(score.value)}/100</p>}<h2>{t("Key figures and financial health")}</h2><div className="print-columns"><table><caption>{dateLabel(latest.end,t.language)} · {t("amounts in million")} {report.currency}</caption><tbody>{money.map(([k,l])=><tr key={k}><th>{t.term(l)}</th><td>{number(latest[k]===null||latest[k]===undefined?null:latest[k]/1e6)}</td></tr>)}</tbody></table><table><caption>{t("Key ratios")} · {dateLabel(latest.end,t.language)}</caption><tbody>{ratios.map(([k,l,u])=><tr key={k}><th>{t.term(l)}</th><td>{u==='%'?percent(latest[k]):number(latest[k])+(latest[k]!=null?' ×':'')}</td></tr>)}</tbody></table></div>
  <p className="print-note">{t("The score uses the selected personal weights or default weights. Missing criteria are excluded. Coverage is not a weighted percentage.")} {missing.length?t("Missing: ")+missing.slice(0,4).map(c=>t.term(c.label)).join(', ')+(missing.length>4?' …':''):''} {report.stale?t("Note: the latest fiscal year ended over 18 months ago."):''}</p>{foot}</section>
  <section className="print-page">{heading(2)}<h1>{t("Trends and research signals")}</h1><div className="chart-grid"><Chart title={t("Revenue and earnings")} fields={[["revenue","Revenue"],["income","Net income"]]}/><Chart title={t("Cash flow generation")} fields={[["cfo","Operating cash flow"],["fcf","Free cash flow"]]}/><Chart title={t("Equity and debt")} fields={[["equity","Book value"],["debt","Total debt"]]}/><Chart title={t("Profit margins")} unit="%" fields={[["grossMargin","Gross margin"],["netMargin","Net margin"]]}/></div>

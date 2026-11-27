@@ -1,6 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import AppKit
 
+extension NSTextField {
+    func useWorkspaceInputColors() {
+        // Keep AppKit's field editor, insertion point and secure-text selection on a light surface.
+        appearance = NSAppearance(named: .aqua)
+        backgroundColor = NSColor(srgbRed: 238/255, green: 234/255, blue: 228/255, alpha: 1)
+        textColor = .labelColor
+        drawsBackground = true
+    }
+}
+
 extension AppDelegate {
     func profileStatus() throws -> [String:Any] {
         let list=usesProfiles ? try profiles.accounts():[]
@@ -21,10 +31,41 @@ extension AppDelegate {
                 aiKey=nil;profiles.lock();pendingOpen=nil
                 reply(id,true,["done":true]);webView.reload();return
             }
+            if action=="profile-rename" || action=="profile-delete" {
+                guard let account=profiles.active else{throw profiles.failure("PROFILE_LOCKED")}
+                let deleting=action=="profile-delete"
+                let dialog=NSAlert()
+                dialog.messageText=Localization.text(deleting ? "Delete account":"Rename account",language)
+                dialog.informativeText=account.name+"\n"+Localization.text(deleting ? "This permanently removes this account, its local dossier, AI archive and saved API key. Enter your current password to confirm.":"Enter the new username and your current password.",language)
+                let view=NSView(frame:NSRect(x:0,y:0,width:380,height:deleting ? 34:70))
+                let name=NSTextField(frame:NSRect(x:0,y:39,width:380,height:26))
+                name.placeholderString=Localization.text("Username",language);name.stringValue=account.name
+                if !deleting{view.addSubview(name)}
+                let password=NSSecureTextField(frame:NSRect(x:0,y:5,width:380,height:26))
+                password.placeholderString=Localization.text("Current password",language)
+                [name,password].forEach { $0.useWorkspaceInputColors() }
+                view.addSubview(password);dialog.accessoryView=view
+                dialog.alertStyle=deleting ? .warning:.informational
+                let submit=dialog.addButton(withTitle:dialog.messageText)
+                let cancel=dialog.addButton(withTitle:Localization.text("Cancel",language))
+                if deleting {submit.keyEquivalent="";cancel.keyEquivalent="\r";submit.hasDestructiveAction=true}
+                dialog.window.initialFirstResponder=deleting ? password:name
+                defer{password.stringValue=""}
+                guard dialog.runModal()==NSApplication.ModalResponse.alertFirstButtonReturn else{reply(id,true,["cancelled":true]);return}
+                if deleting {
+                    try profiles.deleteActive(password:password.stringValue)
+                    aiKey=nil;pendingOpen=nil;researchDirty=false
+                    let keyPrefix="tt-profile:"+account.id+":"
+                    webView.callAsyncJavaScript("for(const key of Object.keys(localStorage))if(key.startsWith(prefix))localStorage.removeItem(key)",arguments:["prefix":keyPrefix],in:nil,in:.page){_ in self.webView.reload()}
+                }else{
+                    try profiles.renameActive(to:name.stringValue,password:password.stringValue)
+                    reply(id,true,try profileStatus());return
+                }
+                reply(id,true,["done":true]);return
+            }
             let alert=NSAlert()
             let creating=action=="profile-create",changing=action=="profile-password"
             guard creating || changing || action=="profile-login" else{throw profiles.failure("INVALID_PROFILE_ACTION")}
-            if creating {guard profiles.active==nil else{throw profiles.failure(text("Vergrendel eerst het huidige account.","Lock the current account first."))}}
             if changing {guard profiles.active != nil else{throw profiles.failure("PROFILE_LOCKED")}}
             alert.messageText=text(creating ? "Lokaal account maken":changing ? "Wachtwoord wijzigen":"Account ontgrendelen",creating ? "Create local account":changing ? "Change password":"Unlock account")
             alert.informativeText=text("Alleen op deze Mac. Het wachtwoord vergrendelt je versleutelde dossier en API-sleutel. Geen e-mail, cloudaccount of wachtwoordherstel. Bewaar je wachtwoord veilig. Minimaal 12 tekens. Voor dit lokale account is geen website-URL nodig. Een eventuele URL-vraag komt van je wachtwoordbeheerder.","Only on this Mac. The password locks your encrypted dossier and API key. No email, cloud account or password recovery. Keep your password safe. At least 12 characters. This local account needs no website URL. Any URL prompt comes from your password manager.")
@@ -37,6 +78,7 @@ extension AppDelegate {
             let first=try profiles.accounts().isEmpty
             if creating {view.addSubview(name);view.addSubview(confirm);if first{takeLegacy.state = .on;view.addSubview(takeLegacy)}}
             if changing {view.addSubview(confirm);view.addSubview(repeatNew)}
+            [name,password,confirm,repeatNew].forEach { $0.useWorkspaceInputColors() }
             view.addSubview(password);alert.accessoryView=view
             alert.addButton(withTitle:text(creating ? "Maak account":changing ? "Wijzig wachtwoord":"Ontgrendel",creating ? "Create account":changing ? "Change password":"Unlock"));alert.addButton(withTitle:text("Annuleer","Cancel"))
             alert.window.initialFirstResponder=creating ? name:password
@@ -59,6 +101,7 @@ extension AppDelegate {
                 guard let account=profiles.active,confirm.stringValue==repeatNew.stringValue else{throw profiles.failure(text("Wachtwoorden verschillen.","Passwords do not match."))}
                 try profiles.login(account.id,password.stringValue)
                 try profiles.changePassword(confirm.stringValue)
+                aiKey=nil;reply(id,true,try profileStatus());return
             }else{
                 guard let account=body["account"] as? String else{throw profiles.failure("LOGIN_FAILED")}
                 try profiles.login(account,password.stringValue)

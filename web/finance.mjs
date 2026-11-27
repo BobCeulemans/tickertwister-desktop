@@ -1,4 +1,3 @@
-import {comparablePrice,dividendInStatementCurrency} from './currency.mjs';
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright ©2026 Bob Ceulemans
 /** Tickertwister Sites · inspired by Bob Ceulemans' Apache-2.0 analysis rules.
@@ -88,25 +87,4 @@ export function qualityScore(years){
  });
  const available=criteria.filter(c=>c.factor!==null),weight=available.reduce((a,c)=>a+c.weight,0),points=available.reduce((a,c)=>a+c.points,0);
  return {value:weight?100*points/weight:null,points,weight,totalWeight:criteria.reduce((a,c)=>a+c.weight,0),available:available.length,total:criteria.length,coverage:weight/criteria.reduce((a,c)=>a+c.weight,0),criteria};
-}
-export function valuation(report,options={}){
- const r=report.years.at(-1), {rate=.10,growth=.05,terminal=.025,method='dcf'}=options;
- if(!['dcf','gordon'].includes(method))throw new Error('INVALID_MODEL');
- if(![rate,growth,terminal].every(finite)||rate<=0||rate>0.5||growth<=-1||terminal<0||terminal>.1||rate<=terminal)throw new Error('INVALID_ASSUMPTIONS');
- if(report.schema==='yahoo39-v1'&&(!report.currency||report.currency==='onbekend'))return {error:'CURRENCY_MISMATCH'};
- const shares=report.valuationShares??r.shares,price=finite(options.price)&&options.price>0?options.price:comparablePrice(report);
- if(method==='gordon'){
-  const dividend=dividendInStatementCurrency(report,report.dividendPerShare??r.dps);
-  if(dividend===null&&report.dividendCurrency&&report.dividendCurrency!==report.currency)return {error:'CURRENCY_MISMATCH'};
-  if(!(dividend>0))return {error:'NO_DIVIDEND'};
-  const perShare=dividend*(1+terminal)/(rate-terminal);
-  return {method,perShare,total:shares>0?perShare*shares:null,margin:price>0?1-price/perShare:null,price,rows:[],base:dividend,terminalWeight:1};
- }
- // Yahoo uses reported FCFE; legacy SEC reports use the original zero-net-borrowing proxy.
- const base=options.cashFlow ?? (report.schema==='yahoo39-v1'?r.fcfe:r.fcf);
- if(!(finite(base)&&base>0&&shares>0))return {error:'NO_CASHFLOW'};
- const rows=Array.from({length:10},(_,i)=>{const year=i+1,flow=base*Math.pow(1+growth,year);return {year,flow,pv:flow/Math.pow(1+rate,year)};});
- const tv=rows.at(-1).flow*(1+terminal)/(rate-terminal)/Math.pow(1+rate,10),pv=rows.reduce((a,x)=>a+x.pv,0),total=pv+tv,perShare=total/shares;
- if(![total,perShare,tv].every(finite))throw new Error('INVALID_ASSUMPTIONS');
- return {method,base,total,perShare,price,margin:price>0?1-price/perShare:null,rows,terminalPV:tv,terminalWeight:tv/total,shares};
 }

@@ -6,7 +6,7 @@ import PDFKit
 import UniformTypeIdentifiers
 
 // Tickertwister Desktop: local interface and calculations, HTTPS-only data access.
-final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler, WKNavigationDelegate, WKUIDelegate, NSWindowDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler, WKNavigationDelegate, WKUIDelegate, NSWindowDelegate, NSMenuItemValidation {
     func aiArchiveURL() throws -> URL {
         let base=try researchURL()
         let dir=base.deletingPathExtension().appendingPathExtension("ai-archive")
@@ -27,7 +27,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
     var profileTesting:Bool {testing && CommandLine.arguments.contains("--profile-test")}
     var usesProfiles:Bool {!testing || profileTesting}
     var supportDirectory:URL {
-        if profileTesting,let output=testOutput{return URL(fileURLWithPath:output+".profile-data",isDirectory:true)}
+        if testing,let output=testOutput{return URL(fileURLWithPath:output+".profile-data",isDirectory:true)}
         return FileManager.default.urls(for:.applicationSupportDirectory,in:.userDomainMask)[0].appendingPathComponent("Tickertwister",isDirectory:true)
     }
     lazy var profiles=ProfileStore(root:supportDirectory.appendingPathComponent("Profiles",isDirectory:true))
@@ -63,7 +63,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
             let alert=NSAlert();alert.messageText="OpenAI API · AI-AIC"
             alert.informativeText=text("Enter your own API key. This paid request sends the displayed financial data to OpenAI. Optionally select Save in Keychain. The key is additionally encrypted for this account. Without an account it stays in memory only.")
             let accessory=NSView(frame:NSRect(x:0,y:0,width:400,height:70))
-            let field=NSSecureTextField(frame:NSRect(x:0,y:38,width:400,height:28));field.placeholderString="OpenAI API key";accessory.addSubview(field)
+            let field=NSSecureTextField(frame:NSRect(x:0,y:38,width:400,height:28));field.placeholderString="OpenAI API key";field.useWorkspaceInputColors();accessory.addSubview(field)
             let remember=NSButton(checkboxWithTitle:text("Save in macOS Keychain"),target:nil,action:nil);remember.frame=NSRect(x:0,y:0,width:400,height:28);remember.isEnabled=profiles.active != nil;accessory.addSubview(remember);alert.accessoryView=accessory
             alert.addButton(withTitle:text("Use key"));alert.addButton(withTitle:text("Cancel"))
             alert.window.initialFirstResponder=field
@@ -140,6 +140,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
         webRoot = Bundle.main.resourceURL!.appendingPathComponent("Web", isDirectory: true)
         let controller = WKUserContentController()
         controller.add(self, name: "desktop")
+        if let symbol = NSImage(systemSymbolName: "note.text", accessibilityDescription: nil)?.withSymbolConfiguration(.init(pointSize: 32, weight: .regular)),
+           let tiff = symbol.tiffRepresentation,
+           let png = NSBitmapImageRep(data: tiff)?.representation(using: .png, properties: [:]) {
+            let script = "window.__ttNoteSymbol='data:image/png;base64," + png.base64EncodedString() + "';"
+            controller.addUserScript(WKUserScript(source: script, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        }
+        controller.addUserScript(WKUserScript(source:"window.__ttSystemLanguage='\(Localization.systemLanguage)';",injectionTime:.atDocumentStart,forMainFrameOnly:true))
         if let zoneData = try? JSONEncoder().encode(TimeZone.autoupdatingCurrent.identifier), let zone = String(data:zoneData,encoding:.utf8) { controller.addUserScript(WKUserScript(source:"window.__ttTimeZone=\(zone);",injectionTime:.atDocumentStart,forMainFrameOnly:true)) }
         if testing && !profileTesting {controller.addUserScript(WKUserScript(source:"window.__tickertwisterTestTicker='AAPL';",injectionTime:.atDocumentStart,forMainFrameOnly:true))}
         if testing,let i=args.firstIndex(of:"--studio-fixture"),args.count>i+1,let fixture=try? Data(contentsOf:URL(fileURLWithPath:args[i+1])) {
@@ -183,27 +190,50 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
         let url=URL(fileURLWithPath:path)
         if ready { openReport(url) } else { pendingOpen=url }
     }
+    var uiCanSave=false
+    var uiCanPrint=false
+    var uiHasAnalysis=false
+    var uiBusy=false
     func buildMenu() {
         let bar=NSMenu()
-        let appItem=NSMenuItem();let appMenu=NSMenu();appItem.submenu=appMenu;bar.addItem(appItem)
-        appMenu.addItem(withTitle:Localization.text("About Tickertwister Desktop"),action:#selector(about),keyEquivalent:"").target=self
-        appMenu.addItem(.separator())
-        appMenu.addItem(withTitle:Localization.text("Hide Tickertwister"),action:#selector(NSApplication.hide(_:)),keyEquivalent:"h")
-        appMenu.addItem(withTitle:Localization.text("Quit Tickertwister"),action:#selector(NSApplication.terminate(_:)),keyEquivalent:"q")
-        let fileItem=NSMenuItem(title:Localization.text("File"),action:nil,keyEquivalent:"");let file=NSMenu(title:Localization.text("File"));fileItem.submenu=file;bar.addItem(fileItem)
-        for (title,action,key) in [(Localization.text("New analysis"),#selector(newAnalysis),"n"),(Localization.text("Open analysis…"),#selector(openDialog),"o"),(Localization.text("Save analysis"),#selector(saveAnalysis),"s"),(Localization.text("Print / save as PDF…"),#selector(printReport),"p")] {
-            file.addItem(withTitle:title,action:action,keyEquivalent:key).target=self
+        func menu(_ title:String)->NSMenu {let item=NSMenuItem(title:Localization.text(title),action:nil,keyEquivalent:"");let menu=NSMenu(title:Localization.text(title));item.submenu=menu;bar.addItem(item);return menu}
+        func item(_ menu:NSMenu,_ title:String,_ action:Selector,_ key:String="",_ shift:Bool=false) {let i=menu.addItem(withTitle:Localization.text(title),action:action,keyEquivalent:key);i.target=self;i.keyEquivalentModifierMask=shift ? [.command,.shift] : [.command]}
+        let app=menu("Tickertwister Desktop")
+        item(app,"About Tickertwister Desktop",#selector(about));app.addItem(.separator())
+        item(app,"Preferences…",#selector(showPreferences),",");item(app,"Local account…",#selector(showAccount));app.addItem(.separator())
+        app.addItem(withTitle:Localization.text("Hide Tickertwister"),action:#selector(NSApplication.hide(_:)),keyEquivalent:"h")
+        app.addItem(withTitle:Localization.text("Quit Tickertwister"),action:#selector(NSApplication.terminate(_:)),keyEquivalent:"q")
+        let file=menu("File")
+        item(file,"New analysis",#selector(newAnalysis),"n");item(file,"Open analysis…",#selector(openDialog),"o");item(file,"Save analysis or research changes",#selector(saveAnalysis),"s");file.addItem(.separator());item(file,"Print / save as PDF…",#selector(printReport),"p")
+        let edit=menu("Edit")
+        for (title,selector,key) in [("Undo","undo:","z"),("Cut","cut:","x"),("Copy","copy:","c"),("Paste","paste:","v"),("Select all","selectAll:","a")] {edit.addItem(withTitle:Localization.text(title),action:NSSelectorFromString(selector),keyEquivalent:key)}
+        let redo=NSMenuItem(title:Localization.text("Redo"),action:NSSelectorFromString("redo:"),keyEquivalent:"z");redo.keyEquivalentModifierMask=[.command,.shift];edit.insertItem(redo,at:1)
+        edit.addItem(.separator());item(edit,"Find in this view…",#selector(findInPage),"f")
+        let view=menu("View")
+        for (index,pair) in [("Analysis","overview"),("Research dossier","research"),("AI archive","archive")].enumerated() {let i=view.addItem(withTitle:Localization.text(pair.0),action:#selector(navigateMenu(_:)),keyEquivalent:String(index+1));i.representedObject=pair.1;i.target=self}
+        view.addItem(.separator());item(view,"Expand all sections",#selector(expandSections));item(view,"Collapse all sections",#selector(collapseSections))
+        let window=menu("Window");NSApp.windowsMenu=window
+        window.addItem(withTitle:Localization.text("Minimize"),action:#selector(NSWindow.performMiniaturize(_:)),keyEquivalent:"m")
+        window.addItem(withTitle:Localization.text("Zoom"),action:#selector(NSWindow.performZoom(_:)),keyEquivalent:"")
+        let full=window.addItem(withTitle:Localization.text("Toggle full screen"),action:#selector(NSWindow.toggleFullScreen(_:)),keyEquivalent:"f");full.keyEquivalentModifierMask=[.command,.control]
+        let help=menu("Help");NSApp.helpMenu=help
+        for (code,name) in [("nl","Nederlands"),("en","English"),("fr","Français"),("de","Deutsch"),("es","Español"),("it","Italiano"),("pt","Português")] {let i=help.addItem(withTitle:"📖 "+name,action:#selector(showLocalizedHelp(_:)),keyEquivalent:"");i.representedObject=code;i.target=self}
+        item(help,"License and source",#selector(showLicense));NSApp.mainMenu=bar
+    }
+    @objc func showPreferences(){dispatch("desktop-preferences")}
+    @objc func showAccount(){dispatch("profile-panel")}
+    @objc func navigateMenu(_ item:NSMenuItem){if let view=item.representedObject as? String {dispatch("desktop-navigate",view)}}
+    @objc func expandSections(){dispatch("desktop-expand",true)}
+    @objc func collapseSections(){dispatch("desktop-expand",false)}
+    func validateMenuItem(_ item:NSMenuItem)->Bool {
+        let locked=usesProfiles && profiles.active==nil
+        switch item.action {
+        case #selector(saveAnalysis):return !locked && uiCanSave && !uiBusy
+        case #selector(printReport):return !locked && uiCanPrint && !uiBusy
+        case #selector(expandSections),#selector(collapseSections):return !locked && uiHasAnalysis
+        case #selector(newAnalysis),#selector(openDialog),#selector(navigateMenu(_:)),#selector(findInPage):return !locked && !uiBusy
+        default:return true
         }
-        let editItem=NSMenuItem(title:Localization.text("Edit"),action:nil,keyEquivalent:"");let edit=NSMenu(title:Localization.text("Edit"));editItem.submenu=edit;bar.addItem(editItem)
-        for (title,selector,key) in [(Localization.text("Undo"),"undo:","z"),(Localization.text("Cut"),"cut:","x"),(Localization.text("Copy"),"copy:","c"),(Localization.text("Paste"),"paste:","v"),(Localization.text("Select all"),"selectAll:","a")] { edit.addItem(withTitle:title,action:NSSelectorFromString(selector),keyEquivalent:key) }
-        edit.addItem(withTitle:Localization.text("Find in this view…"),action:#selector(findInPage),keyEquivalent:"f").target=self
-        let helpItem=NSMenuItem(title:Localization.text("Help"),action:nil,keyEquivalent:"");let help=NSMenu(title:Localization.text("Help"));helpItem.submenu=help;bar.addItem(helpItem)
-        for (code,name) in [("nl","Nederlands"),("en","English"),("fr","Français"),("de","Deutsch"),("es","Español"),("it","Italiano"),("pt","Português")] {
-            let item=help.addItem(withTitle:"📖 "+name,action:#selector(showLocalizedHelp(_:)),keyEquivalent:"")
-            item.representedObject=code;item.target=self
-        }
-        help.addItem(withTitle:Localization.text("License and source"),action:#selector(showLicense),keyEquivalent:"").target=self
-        NSApp.mainMenu=bar
     }
     @objc func about(){
         let style=NSMutableParagraphStyle();style.alignment = .center;style.paragraphSpacing=12
@@ -250,7 +280,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
             if let output=printOutput {
                 let success=self.printData.write(to:URL(fileURLWithPath:output+".pdf"),atomically:true)
                 FileHandle.standardError.write(Data("Print self-test: \(success), pages: \(document.pageCount)\n".utf8))
-                self.webView.callAsyncJavaScript("document.querySelector('.brand').click();await new Promise(r=>setTimeout(r,100));return {home:!!document.querySelector('.hero'),deskHidden:document.querySelector('#research-desk')?.getBoundingClientRect().height===0,scrollTop:window.scrollY};",arguments:[:],in:nil,in:.page){result in
+                self.webView.callAsyncJavaScript("document.querySelector('.mac-brand').click();await new Promise(r=>setTimeout(r,100));return {home:!!document.querySelector('.focus-home'),deskHidden:document.querySelector('#research-desk')?.getBoundingClientRect().height===0,scrollTop:window.scrollY};",arguments:[:],in:nil,in:.page){result in
                     if case .success(let object)=result,let data=try? JSONSerialization.data(withJSONObject:object){try? data.write(to:URL(fileURLWithPath:output+".reset.json"))}
                     NSApp.terminate(nil)
                 }
@@ -358,22 +388,34 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
         guard message.frameInfo.isMainFrame,message.webView===webView,
               message.frameInfo.request.url?.isFileURL==true,
               let body=message.body as? [String:Any],let id=body["id"] as? Int,let action=body["action"] as? String else{return}
+        if action=="set-language" {
+            if let language=body["language"] as? String,Localization.languages.contains(language),language != Localization.current {
+                Localization.current=language
+                if !testing && profiles.active==nil {UserDefaults.standard.set(language,forKey:"appLanguage")}
+                buildMenu()
+            }
+            reply(id,true,["done":true]);return
+        }
         if action.hasPrefix("profile-"){profileAction(action,body,id);return}
         if usesProfiles {
             do {if !(try profiles.accounts()).isEmpty && profiles.active==nil {reply(id,false,["error":"PROFILE_LOCKED"]);return}}
             catch{reply(id,false,["error":"ACCOUNT_INDEX_INVALID"]);return}
         }
+        if ["research-load","research-save","ai-archive-list","ai-archive-save","ai-archive-delete","research-import-apply"].contains(action) {
+            do { try recoverResearchTransfer() } catch { reply(id, false, ["error":"TRANSFER_RECOVERY_FAILED"]); return }
+        }
         switch action {
-        case "set-language":
-            if let language=body["language"] as? String,Localization.languages.contains(language){Localization.current=language;UserDefaults.standard.set(language,forKey:"appLanguage");buildMenu()}
-            reply(id,true,["done":true])
+        case "research-export", "research-import-open", "research-import-apply", "ai-archive-delete": transferAction(action,body,id)
+        case "translate-company": translateBusiness(body,id:id)
+        case "price-history", "open-stocks": marketTool(action,body:body,id:id)
+        case "open-ticker-list": tickerFile(id)
         case "ai-interpret": aiInterpret(body,id)
         case "ai-archive-list":
             do {
                 let urls=try FileManager.default.contentsOfDirectory(at:aiArchiveURL(),includingPropertiesForKeys:[.fileSizeKey]).filter{$0.pathExtension=="json"}
                 var records=[[String:Any]]();var invalid=0
                 for url in urls {
-                    guard let size=try? url.resourceValues(forKeys:[.fileSizeKey]).fileSize,size<250000,
+                    guard let size=try? url.resourceValues(forKeys:[.fileSizeKey]).fileSize,size<250100,
                           let data=try? readPrivate(url),let record=(try? JSONSerialization.jsonObject(with:data)) as? [String:Any] else{invalid+=1;continue}
                     records.append(record)
                 }
@@ -387,13 +429,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
         case "company-logo":
             guard let website=body["website"] as? String else{reply(id,false,["error":"NO_LOGO"]);return}
             loadCompanyIcon(website,id:id)
+        case "ui-state":
+            uiCanSave=body["canSave"] as? Bool ?? false;uiCanPrint=body["canPrint"] as? Bool ?? false;uiHasAnalysis=body["hasAnalysis"] as? Bool ?? false;uiBusy=body["busy"] as? Bool ?? false
+            reply(id,true,["done":true])
         case "research-dirty": researchDirty=body["dirty"] as? Bool ?? false;reply(id,true,["done":true])
         case "research-load":
             do {
                 let url=try researchURL()
                 if FileManager.default.fileExists(atPath:url.path){
                     let attrs=try FileManager.default.attributesOfItem(atPath:url.path)
-                    guard ((attrs[.size] as? NSNumber)?.intValue ?? Int.max)<5_000_000 else{reply(id,false,["error":"INVALID_DESK"]);return}
+                    guard ((attrs[.size] as? NSNumber)?.intValue ?? Int.max)<5_000_100 else{reply(id,false,["error":"INVALID_DESK"]);return}
                     guard let content=String(data:try readPrivate(url),encoding:.utf8) else{throw profiles.failure("INVALID_DESK")}
                     reply(id,true,["content":content])
                 }else{reply(id,true,["content":NSNull()])}
@@ -520,45 +565,52 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
     func testStudio(_ output:String){
         let script="""
         const pause=ms=>new Promise(r=>setTimeout(r,ms));
-        const expand=[...document.querySelectorAll('header button')].find(b=>/Alles openvouwen|Expand all/.test(b.textContent));expand.click();await pause(100);expand.click();await pause(100);
+        const expand=[...document.querySelectorAll('header .mac-tool')].find(b=>["Expand all","Alles aufklappen","Expandir todo","Tout déplier","Espandi tutto","Alles openvouwen","Expandir tudo"].includes(b.title));expand.click();await pause(100);expand.click();await pause(100);
         const editor=document.querySelector('.weight-editor');editor.closest('.work-fold').open=true;
         const collapsedWeightHeight=editor.getBoundingClientRect().height;
         editor.querySelector('summary').click();await pause(100);const weightOpensOnce=editor.open;
         editor.querySelector('summary').click();await pause(100);const weightClosesOnce=!editor.open&&editor.getBoundingClientRect().height<150;
         editor.closest('.work-fold').open=false;
-        document.querySelector('[data-action="research-toggle"]').click();await pause(250);
         const loadedEntries=document.querySelectorAll('.watchlist article').length;
         const weight=document.querySelectorAll('.weight-editor input[type=number]')[4];Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(weight,'2');weight.dispatchEvent(new Event('input',{bubbles:true}));await pause(150);
-        document.querySelector('[data-action="desk-pin"]').click();await pause(250);
+        document.querySelector('[data-action="desk-pin"]').click();await pause(400);document.querySelector('[data-action="research-toggle"]').click();await pause(150);
         document.querySelector('.thesis-editor').open=true;
         const area=document.querySelector('[data-note="thesis"]');
         Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value').set.call(area,window.__longNotes?Array.from({length:150},(_,i)=>'Research note '+i+': cash generation and pricing power.').join(' '):'Test thesis: cash generation and pricing power.');
         area.dispatchEvent(new Event('input',{bubbles:true}));await pause(250);
         const status=document.querySelector('.thesis-editor .inputs select');status.value='candidate';status.dispatchEvent(new Event('change',{bubbles:true}));await pause(150);
         document.querySelector('[data-action="thesis-save"]').click();await pause(500);
-        window.dispatchEvent(new CustomEvent('desktop-open-report',{detail:window.__studioFixture}));await pause(250);document.querySelector('[data-action="research-toggle"]').click();await pause(150);const w2=document.querySelectorAll('.weight-editor input[type=number]')[4];Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(w2,'2');w2.dispatchEvent(new Event('input',{bubbles:true}));await pause(150);
-        document.querySelector('[data-action="desk-pin"]').click();await pause(250);
-        document.querySelector('[data-action="desk-save"]').click();await pause(500);
+        window.dispatchEvent(new CustomEvent('desktop-open-report',{detail:window.__studioFixture}));await pause(250);const w2=document.querySelectorAll('.weight-editor input[type=number]')[4];Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(w2,'2');w2.dispatchEvent(new Event('input',{bubbles:true}));await pause(150);
+        document.querySelector('[data-action="desk-pin"]').click();await pause(400);document.querySelector('[data-action="research-toggle"]').click();await pause(150);
+        document.querySelector('.company-collection').open=true;
         document.querySelector('.watch-remove').click();await pause(80);document.querySelector('.watch-confirm button').click();await pause(80);const cancelKeptCompany=document.querySelectorAll('.watchlist article').length===2;
-        document.querySelector('.watch-remove').click();await pause(80);document.querySelectorAll('.watch-confirm button')[1].click();await pause(100);
-        document.querySelector('.desk-savebar button:not(.primary)').click();await pause(100);
-        const undoRestoredCompany=document.querySelectorAll('.watchlist article').length===2;
-        document.querySelectorAll('.watchlist input[type="checkbox"]').forEach(el=>{if(el.checked)el.click();});await pause(150);
-        const activeAnalysisAvailable=!!document.querySelector('[data-action="interpret"]')&&!!document.querySelector('[data-action="ai-toggle"]');
+        const companyOrder=()=>[...document.querySelectorAll('.watch-open strong')].map(el=>el.textContent);
+        const originalOrder=companyOrder();
+        for(const symbol of originalOrder){
+            const remove=document.querySelector('.watch-remove');
+            if(!remove||remove.disabled)throw Error('The next company cannot be removed before saving');
+            remove.click();await pause(80);document.querySelectorAll('.watch-confirm button')[1].click();await pause(100);
+        }
+        if(companyOrder().length!==0)throw Error('A confirmed company remained in the list');
+        for(const symbol of [...originalOrder].reverse()){
+            const undo=document.querySelector('.desk-savebar button:not(.primary)');
+            if(!undo||!undo.textContent.endsWith(symbol))throw Error('Missing undo for '+symbol);
+            undo.click();await pause(100);
+        }
+        const undoRestoredCompany=JSON.stringify(companyOrder())===JSON.stringify(originalOrder);
+        if(!undoRestoredCompany)throw Error('Undo did not restore the original list');
+        document.querySelector('.company-collection').open=true;
+        document.querySelectorAll('.watchlist .compare-toggle input').forEach(el=>{if(el.checked)el.click();});await pause(150);
+        const activeAnalysisAvailable=!!document.querySelector('[data-action="ai-toggle"]');
 
-        document.querySelectorAll('.watchlist input[type="checkbox"]').forEach(el=>{if(!el.checked)el.click();});await pause(100);
+        document.querySelectorAll('.watchlist .compare-toggle input').forEach(el=>{if(!el.checked)el.click();});await pause(100);
         document.querySelector('[data-action="desk-save"]').click();await pause(300);
-        document.querySelector('[data-action="interpret"]').click();await pause(100);
-        const interpreted=!!document.querySelector('.interpretation-studio .interpretation-text');
-        document.querySelector('[data-action="interpret"]').click();await pause(100);const toggleClosed=!document.querySelector('.interpretation-text');document.querySelector('[data-action="interpret"]').click();await pause(100);
         document.querySelector('[data-action="list-view"]').click();await pause(100);const listView=!!document.querySelector('.watchlist-list');
         const chooser=document.querySelector('.period-select select');chooser.value=chooser.options[chooser.options.length-1].value;chooser.dispatchEvent(new Event('change',{bubbles:true}));await pause(100);
-        const clearsStale=!document.querySelector('.interpretation-studio .interpretation-text');
-        document.querySelector('[data-action="interpret"]').click();await pause(100);
-        document.querySelector('#comparison').scrollIntoView();await pause(700);
-        
-        document.querySelector('.interpretation-choices>button:last-child').click();await pause(100);
-        const aiConsentRequired=document.querySelector('.ai-aic .primary').disabled;const outputLanguage=document.querySelector('.ai-controls>label select:last-child');const languageSelect=[...document.querySelectorAll('.ai-controls select')].find(s=>[...s.options].some(o=>o.value==='nl'));const languageRequired=languageSelect.value==='auto';languageSelect.value='nl';languageSelect.dispatchEvent(new Event('change',{bubbles:true}));await pause(100);
+        document.querySelector('#comparison').scrollIntoView();await pause(150);
+        const aiToggle=document.querySelector('[data-action="ai-toggle"]');aiToggle.click();await pause(100);
+        const aiOpened=!!document.querySelector('.ai-controls');aiToggle.click();await pause(100);const toggleClosed=!document.querySelector('.ai-controls');aiToggle.click();await pause(100);
+        const aiConsentRequired=document.querySelector('.ai-controls .primary').disabled;const languageSelect=[...document.querySelectorAll('.ai-controls select')].find(s=>[...s.options].some(o=>o.value==='nl'));const languageRequired=languageSelect.value==='auto';languageSelect.value='nl';languageSelect.dispatchEvent(new Event('change',{bubbles:true}));await pause(100);
         const modelSelect=document.querySelector('.ai-controls select');
         const defaultModel=modelSelect.value;
         document.querySelector('.ai-consent input').click();await pause(50);
@@ -572,30 +624,44 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
         const rec={id:crypto.randomUUID(),input:aiInput,language:'nl',createdAt:new Date().toISOString(),response:{status:'completed',model:'local-test-fixture',usage:{input_tokens:0,output_tokens:0},output:[{content:[{type:'output_text',text:JSON.stringify(sections)}]}]}};
         window.webkit.messageHandlers.desktop.postMessage({id:-402,action:'ai-archive-save',record:rec});await pause(300);
         window.dispatchEvent(new Event('ai-archive-refresh'));await pause(300);
-        const printBeforeSelection=document.querySelectorAll('#company-print .print-page').length;
+        const printBeforeSelection=document.querySelectorAll('#research-print .print-page').length;
         document.querySelectorAll('.ai-print-choice input').forEach(el=>{if(!el.checked)el.click();});await pause(150);
-        const printAfterSelection=document.querySelectorAll('#company-print .print-page').length;
-        const checkboxes=[...document.querySelectorAll('.watchlist input[type="checkbox"]')];if(checkboxes[1]?.checked)checkboxes[1].click();await pause(150);
-        const singleCompanyAI=!!document.querySelector('.ai-aic')&&!!document.querySelector('[data-action="interpret"]');
+        const printAfterSelection=document.querySelectorAll('#research-print .print-page').length;
+        const checkboxes=[...document.querySelectorAll('.watchlist .compare-toggle input')];if(checkboxes[1]?.checked)checkboxes[1].click();await pause(150);
+        const singleCompanyAI=!!document.querySelector('.ai-aic')&&!!document.querySelector('[data-action="ai-toggle"]');
         if(checkboxes[1]&&!checkboxes[1].checked)checkboxes[1].click();await pause(150);
         const aiPersisted=!!document.querySelector('.ai-result');
-        const lang=document.querySelector('.language select');const oldLang=lang.value;lang.value=oldLang==='nl'?'en':'nl';lang.dispatchEvent(new Event('change',{bubbles:true}));await pause(200);
+        const lang=document.querySelector('[data-preference="language"]');const oldLang=lang.value;lang.value=oldLang==='nl'?'en':'nl';lang.dispatchEvent(new Event('change',{bubbles:true}));await pause(200);
         const aiSurvivesLanguage=!!document.querySelector('.ai-result');
         lang.value=oldLang;lang.dispatchEvent(new Event('change',{bubbles:true}));await pause(200);
-        const aiPrintPages=document.querySelectorAll('#company-print .print-page').length;
+        const aiPrintPages=document.querySelectorAll('#research-print .print-page').length;
         const bookChildren=document.querySelector('#comparison').querySelectorAll(':scope>details').length;
         const aiNoNotes=!document.querySelector('.ai-input').textContent.includes('Test thesis');
         const thesisTitle=document.querySelector('.thesis-editor>summary').textContent;
         const companyTitle=document.querySelector('.thesis-editor h3').textContent;
+        document.querySelector('[data-action="view-selected-analysis"]').click();await pause(150);
         const prominentScore=document.querySelector('.score-kpi>strong').textContent;
         const originalScore=document.querySelector('.score-kpi .personal-score').textContent;
-        document.querySelector('[data-action="research-toggle"]').click();await pause(100);const statementFold=document.querySelector('.statements').closest('.work-fold');statementFold.open=true;await pause(80);const statementTables=[...document.querySelectorAll('.statement-table')];const colEdges=statementTables.map(tb=>[...tb.querySelector('tbody tr').children].map(td=>td.getBoundingClientRect().right));const alignedColumns=colEdges[0].every((x,i)=>Math.abs(x-colEdges[1][i])<1);statementFold.open=false;document.querySelector('[data-action="research-toggle"]').click();await pause(100);
-        const autoButton=document.querySelector('[data-action="interpret"]');if(autoButton.getAttribute('aria-expanded')!=='true')autoButton.click();await pause(100);
-        const controls=document.querySelector('.ai-controls').getBoundingClientRect(),automatic=document.querySelector('.automatic-column').getBoundingClientRect(),fullResult=document.querySelector('.ai-result').getBoundingClientRect();const twoColumns=controls.left>automatic.left&&Math.abs(controls.width-automatic.width)<30;const fullWidthResult=fullResult.width>controls.width*1.8;
+        const analysisStats={
+            historicalRows:document.querySelector('.criterion-history tbody')?.rows.length,
+            criterionSeries:document.querySelectorAll('.criterion-history').length,
+            personalScoreVisible:!!document.querySelector('.personal-score'),
+            weightInputs:document.querySelectorAll('.weight-editor input[type=number]').length,
+            labOrder:[...document.querySelectorAll('.work-fold>summary')].map(el=>el.textContent),
+            folds:document.querySelectorAll('.work-fold').length,
+            closedFolds:document.querySelectorAll('.work-fold:not([open])').length,
+            matrixMoved:document.querySelector('#valuation .heatmap')!==null,
+            ratioDates:[...document.querySelectorAll('.ratios thead th')].map(n=>n.textContent),
+            scenarios:document.querySelectorAll('.scenario').length,
+            qualityChecks:document.querySelectorAll('.quality-item').length,
+            heatmapCells:document.querySelectorAll('.heatmap td button').length
+        };
+        const statementFold=document.querySelector('.statements').closest('.work-fold');statementFold.open=true;await pause(80);const statementTables=[...document.querySelectorAll('.statement-table')];const colEdges=statementTables.map(tb=>[...tb.querySelector('tbody tr').children].map(td=>td.getBoundingClientRect().right));const alignedColumns=!document.querySelector('.analysis-view').hidden&&colEdges[0][0]>0&&colEdges[0].every((x,i)=>Math.abs(x-colEdges[1][i])<1);statementFold.open=false;document.querySelector('[data-action="research-toggle"]').click();await pause(100);
+        const aiOnly=!!document.querySelector('.ai-only-column')&&!document.querySelector('.automatic-column');
         document.querySelector('.interpretation-studio').scrollIntoView();await pause(700);
-        const collectionFirst=!!(document.querySelector('.company-collection').compareDocumentPosition(document.querySelector('.thesis-editor'))&Node.DOCUMENT_POSITION_FOLLOWING);const settingsVisible=!!document.querySelector('.ai-settings')&&!document.querySelector('.ai-advanced');const disclaimerClosed=!document.querySelector('.ai-disclaimer').open;const separateView=document.querySelector('.analysis-view').hidden&&!document.querySelector('header .section-nav');const independentLanguage=languageSelect.value==='nl';const iconLoaded=document.querySelector('.app-mark').tagName.toLowerCase()==='svg';
+        const collectionFirst=!!(document.querySelector('.company-collection').compareDocumentPosition(document.querySelector('.thesis-editor'))&Node.DOCUMENT_POSITION_FOLLOWING);const settingsVisible=!!document.querySelector('.ai-settings')&&!document.querySelector('.ai-advanced');const disclaimerClosed=!document.querySelector('.ai-disclaimer').open;const separateView=document.querySelector('.analysis-view').hidden&&!document.querySelector('header .section-nav');const independentLanguage=languageSelect.value==='nl';const iconLoaded=!!document.querySelector('.mac-brand svg');
         if(window.__collectionTest){document.querySelector('.thesis-editor').open=true;document.querySelector('.thesis-editor').scrollIntoView();await pause(600);}
-        return {activeAnalysisAvailable,collectionFirst,settingsVisible,disclaimerClosed,separateView,languageRequired,independentLanguage,iconLoaded,defaultModel,modelChangeResetsConsent,selectedModel,validModels,selectionTint,alignedColumns,twoColumns,fullWidthResult,toggleClosed,listView,analysisOutsideComparison:!document.querySelector('#comparison .interpretation-studio'),historicalRows:document.querySelector('.history-series tbody')?.rows.length,shareCountRows:[...document.querySelectorAll('.value-panel dt')].filter(el=>/uitstaande|outstanding/.test(el.textContent)).length,collapsedWeightHeight,weightOpensOnce,weightClosesOnce,criterionSeries:document.querySelectorAll('.criterion-series').length,printBeforeSelection,printAfterSelection,singleCompanyAI,aiPersisted,aiSurvivesLanguage,aiPrintPages,bookChildren,aiConsentRequired,aiNoNotes,thesisTitle,companyTitle,prominentScore,originalScore,cancelKeptCompany,undoRestoredCompany,personalScoreVisible:!!document.querySelector('.personal-score'),nearSave:!!document.querySelector('[data-action="thesis-save"]'),comparisonFold:document.querySelector('#comparison').tagName,historyGrowth:!!document.querySelector('.historical-growth'),weightInputs:document.querySelectorAll('.weight-editor input[type=number]').length,labOrder:[...document.querySelectorAll('.work-fold>summary')].map(el=>el.textContent),theme:document.documentElement.dataset.theme,candidateBadge:!!document.querySelector('.status-candidate'),folds:document.querySelectorAll('.work-fold').length,closedFolds:document.querySelectorAll('.work-fold:not([open])').length,toolbarFixed:document.querySelector('header .report-toolbar')!==null,matrixMoved:document.querySelector('#valuation .heatmap')!==null,dossierPages:document.querySelectorAll('#research-print .print-page').length,interpreted,clearsStale,headerTop:document.querySelector('header').getBoundingClientRect().top,headerPosition:getComputedStyle(document.querySelector('header')).position,period:chooser.value,ratioDates:[...document.querySelectorAll('.ratios thead th')].map(n=>n.textContent),loadedEntries,entries:document.querySelectorAll('.watchlist article').length,comparisonColumns:document.querySelector('.comparison table')?.querySelectorAll('thead th').length,scenarios:document.querySelectorAll('.scenario').length,qualityChecks:document.querySelectorAll('.quality-item').length,heatmapCells:document.querySelectorAll('.heatmap td button').length,saved:document.querySelector('.desk-actions [role="status"]').textContent};
+        return {...analysisStats,activeAnalysisAvailable,collectionFirst,settingsVisible,disclaimerClosed,separateView,languageRequired,independentLanguage,iconLoaded,defaultModel,modelChangeResetsConsent,selectedModel,validModels,selectionTint,alignedColumns,aiOnly,aiOpened,toggleClosed,listView,analysisOutsideComparison:!document.querySelector('#comparison .interpretation-studio'),collapsedWeightHeight,weightOpensOnce,weightClosesOnce,printBeforeSelection,printAfterSelection,singleCompanyAI,aiPersisted,aiSurvivesLanguage,aiPrintPages,bookChildren,aiConsentRequired,aiNoNotes,thesisTitle,companyTitle,prominentScore,originalScore,cancelKeptCompany,undoRestoredCompany,nearSave:!!document.querySelector('[data-action="thesis-save"]'),comparisonFold:document.querySelector('#comparison').tagName,theme:document.documentElement.dataset.theme,candidateBadge:!!document.querySelector('.status-candidate'),toolbarFixed:document.querySelector('header .mac-tools')!==null,dossierPages:document.querySelectorAll('#research-print .print-page').length,headerTop:document.querySelector('header').getBoundingClientRect().top,headerPosition:getComputedStyle(document.querySelector('header')).position,period:chooser.value,loadedEntries,entries:document.querySelectorAll('.watchlist article').length,comparisonColumns:document.querySelector('.comparison table')?.querySelectorAll('thead th').length,saved:document.querySelector('.desk-actions [role="status"]').textContent};
         """
         webView.callAsyncJavaScript(script,arguments:[:],in:nil,in:.page){result in
             if case .success(let object)=result,let data=try? JSONSerialization.data(withJSONObject:object){try? data.write(to:URL(fileURLWithPath:output+".studio.json"))}
@@ -603,7 +669,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
             let config=WKSnapshotConfiguration();config.rect=self.webView.bounds
             self.webView.takeSnapshot(with:config){image,_ in
                 if let image=image,let tiff=image.tiffRepresentation,let bmp=NSBitmapImageRep(data:tiff),let png=bmp.representation(using:.png,properties:[:]){try? png.write(to:URL(fileURLWithPath:output+".desk.png"))}
-                self.webView.evaluateJavaScript("document.querySelector('[data-action=research-toggle]').click()")
+                self.webView.evaluateJavaScript("document.querySelector('[data-action=view-selected-analysis]').click()")
                 self.webView.evaluateJavaScript(CommandLine.arguments.contains("--criteria-test") ? "const card=document.querySelector('.score-details');card.closest('.work-fold').open=true;[...card.querySelectorAll('.compact-disclosures>details')].slice(4,10).forEach(d=>d.open=true);card.querySelectorAll('.compact-disclosures>details')[4].scrollIntoView()" : "document.getElementById('lab').closest('details').open=true;document.getElementById('lab').scrollIntoView()") {_,_ in
                     DispatchQueue.main.asyncAfter(deadline:.now()+0.5){
                         self.webView.takeSnapshot(with:config){image,_ in
@@ -617,13 +683,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
     }
     func testRefinements(_ output:String,_ stage:Int){
         let stages:[(String,String)]=[
-          ("value", "if(document.querySelector('.analysis-view').hidden)document.querySelector('[data-action=research-toggle]').click();await pause(100);document.querySelector('#valuation').scrollIntoView();return {fallback:document.querySelector('#valuation').textContent.includes('FCF'),value:document.querySelector('.value-panel>strong').textContent,step:[...document.querySelectorAll('#valuation input')].map(x=>x.step)};"),
+          ("value", "if(document.querySelector('.analysis-view').hidden)document.querySelector('[data-action=view-selected-analysis]').click();await pause(100);document.querySelector('#valuation').scrollIntoView();return {fallback:document.querySelector('#valuation').textContent.includes('FCF'),value:document.querySelector('#valuation .big-value')?.textContent||'',step:[...document.querySelectorAll('#valuation input')].map(x=>x.step)};"),
           ("criteria", "const el=document.querySelector('.score-details');el.closest('.work-fold').open=true;el.querySelectorAll('.compact-disclosures>details').forEach(d=>d.open=false);el.scrollIntoView();const ds=[...el.querySelectorAll('.compact-disclosures>details')];return {count:ds.length,columns:getComputedStyle(el.querySelector('.compact-disclosures')).gridTemplateColumns};"),
-          ("history", "const el=document.querySelector('.history-series');el.closest('.work-fold').open=true;el.scrollIntoView();return {columns:getComputedStyle(el.querySelector('.compact-disclosures')).gridTemplateColumns};"),
-          ("search", "document.dispatchEvent(new KeyboardEvent('keydown',{key:'f',metaKey:true,bubbles:true}));await pause(100);const input=document.querySelector('.find-panel input');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,'voorraaddagen');input.dispatchEvent(new Event('input',{bubbles:true}));await pause(150);input.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));await pause(150);return {found:!!document.querySelector('.find-target'),findOpen:!!input,visible:document.querySelector('.find-target')?.getBoundingClientRect().height>0};"),
+          ("history", "const el=document.querySelector('.criterion-history');const card=el.closest('details');card.closest('.work-fold').open=true;card.open=true;card.scrollIntoView();return {columns:el.tHead.rows[0].cells.length};"),
+          ("search", "document.dispatchEvent(new KeyboardEvent('keydown',{key:'f',metaKey:true,bubbles:true}));await pause(100);const input=document.querySelector('.find-panel input');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(input,document.querySelector('.score-details .compact-disclosures summary>span').textContent);input.dispatchEvent(new Event('input',{bubbles:true}));await pause(150);input.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));await pause(150);return {found:!!document.querySelector('.find-target'),findOpen:!!input,visible:document.querySelector('.find-target')?.getBoundingClientRect().height>0};"),
           ("thesis", "document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));document.querySelector('[data-action=research-toggle]').click();await pause(150);const el=document.querySelector('.thesis-editor');el.open=true;el.scrollIntoView();const fields=[...el.querySelectorAll('textarea')].map(a=>a.getBoundingClientRect());const date=el.querySelector('input[type=date]');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(date,'2026-12-01');date.dispatchEvent(new Event('input',{bubbles:true}));await pause(100);const time=el.querySelector('input[type=time]');Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(time,'14:35');time.dispatchEvent(new Event('input',{bubbles:true}));await pause(100);document.querySelector('[data-action=thesis-save]').click();await pause(250);return {twoColumns:fields[0].left===fields[1].left&&fields[2].left>fields[0].left,large:fields.every(x=>x.height>=170),date:date.value,time:time.value,removedDuplicate:!el.querySelector('.remove-company')};")
         ]
-        if stage>=stages.count{webView.evaluateJavaScript("document.querySelector('[data-action=research-toggle]').click()"){_,_ in self.saveSmokePDF(output)};return}
+        if stage>=stages.count{if CommandLine.arguments.contains("--dossier-test"){self.saveSmokePDF(output);return};webView.evaluateJavaScript("document.querySelector('[data-action=view-selected-analysis]').click()"){_,_ in self.saveSmokePDF(output)};return}
         let item=stages[stage]
         webView.callAsyncJavaScript("const pause=ms=>new Promise(r=>setTimeout(r,ms));"+item.1,arguments:[:],in:nil,in:.page){result in
             if case .success(let object)=result,let data=try? JSONSerialization.data(withJSONObject:object){try? data.write(to:URL(fileURLWithPath:output+"."+item.0+".json"))}
@@ -651,12 +717,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
         set.call(growth,'27.1');growth.dispatchEvent(new Event('input',{bubbles:true}));await pause(150);
         result.growthAccepted=!document.querySelector('#valuation .error')&&growth.value==='27.1';
         set.call(growth,original);growth.dispatchEvent(new Event('input',{bubbles:true}));await pause(150);
-        const nav=document.querySelector('header>nav'),toolbar=document.querySelector('.context-toolbar');
+        const nav=document.querySelector('.mac-sidebar'),toolbar=document.querySelector('.mac-tools');
         const bounds=e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height,right:r.right,bottom:r.bottom}};
         result.header=bounds(document.querySelector('header'));result.nav=bounds(nav);result.toolbar=bounds(toolbar);
         result.viewport=innerWidth;result.noHorizontalOverflow=document.documentElement.scrollWidth<=innerWidth;
-        result.sameRibbon=Math.abs(document.querySelector('.section-nav').getBoundingClientRect().y-document.querySelector('.report-toolbar').getBoundingClientRect().y)<8;
-        result.iconLabels=[...document.querySelectorAll('header .icon-action')].every(x=>x.title&&x.getAttribute('aria-label'));
+        result.sameRibbon=[...toolbar.querySelectorAll('button')].every(el=>Math.abs(el.getBoundingClientRect().y-toolbar.querySelector('button').getBoundingClientRect().y)<8);
+        result.iconLabels=[...document.querySelectorAll('header .mac-tool')].every(x=>x.title&&x.getAttribute('aria-label'));
         window.scrollTo(0,0);return result;
         """
         webView.callAsyncJavaScript(script,arguments:[:],in:nil,in:.page){result in
@@ -668,8 +734,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
             }}
         }
     }
+    func testFeedback(_ output:String,_ stage:Int=0){
+        guard let flag=CommandLine.arguments.firstIndex(of:"--feedback-stages"),flag+1<CommandLine.arguments.count,
+              let data=try? Data(contentsOf:URL(fileURLWithPath:CommandLine.arguments[flag+1])),
+              let stages=(try? JSONSerialization.jsonObject(with:data)) as? [[String:String]],stage<stages.count else {saveSmokePDF(output);return}
+        let item=stages[stage],name=item["name"] ?? String(stage)
+        let script="const pause=ms=>new Promise(r=>setTimeout(r,ms));"+(item["script"] ?? "return {};")
+        webView.callAsyncJavaScript(script,arguments:[:],in:nil,in:.page){result in
+            let object:Any
+            switch result {case .success(let value):object=value;case .failure(let error):object=["error":error.localizedDescription]}
+            if let data=try? JSONSerialization.data(withJSONObject:object,options:[.prettyPrinted,.sortedKeys]){try? data.write(to:URL(fileURLWithPath:output+"."+name+".json"))}
+            DispatchQueue.main.asyncAfter(deadline:.now()+0.3){self.webView.takeSnapshot(with:nil){image,_ in
+                if let tiff=image?.tiffRepresentation,let bmp=NSBitmapImageRep(data:tiff),let png=bmp.representation(using:.png,properties:[:]){try? png.write(to:URL(fileURLWithPath:output+"."+name+".png"))}
+                self.testFeedback(output,stage+1)
+            }}
+        }
+    }
     func checkSmoke(){
-        webView.evaluateJavaScript("JSON.stringify({title:document.title,charts:document.querySelectorAll('.work-fold .chart-grid .chart svg').length,criteria:document.querySelectorAll('.score-details .compact-disclosures>details').length,profile:!!document.querySelector('.company-profile p')?.textContent,sections:Array.from(document.querySelectorAll('main > section h2')).map(e=>e.textContent),printPages:document.querySelectorAll('#company-print .print-page').length,score:document.querySelector('.score-kpi strong')?.textContent,error:document.querySelector('.error')?.textContent,body:document.body.innerText.slice(0,500)})") {[weak self] result,error in
+        webView.evaluateJavaScript("JSON.stringify({title:document.title,charts:document.querySelectorAll('.work-fold .chart-grid .chart svg').length,criteria:document.querySelectorAll('.score-details .compact-disclosures:not(.additional-histories)>details').length,profile:!!document.querySelector('.company-profile p')?.textContent,sections:Array.from(document.querySelectorAll('main > section h2')).map(e=>e.textContent),printPages:document.querySelectorAll('#company-print .print-page').length,score:document.querySelector('.score-kpi strong')?.textContent,error:document.querySelector('.error')?.textContent,body:document.body.innerText.slice(0,500)})") {[weak self] result,error in
             guard let self=self else{return}
             let text=result as? String ?? "{}"
             let data=text.data(using:.utf8)!
@@ -679,7 +761,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, WKScriptMessageHandler
                     let config=WKSnapshotConfiguration();config.rect=self.webView.bounds
                     self.webView.takeSnapshot(with:config){image,_ in
                         if let image=image,let tiff=image.tiffRepresentation,let bmp=NSBitmapImageRep(data:tiff),let png=bmp.representation(using:.png,properties:[:]) {try? png.write(to:URL(fileURLWithPath:output+".png"))}
-                        if CommandLine.arguments.contains("--controls-test"){self.testControls(output)}else if CommandLine.arguments.contains("--studio-test"){self.testStudio(output)}else{self.saveSmokePDF(output)}
+                        if CommandLine.arguments.contains("--feedback-stages"){self.testFeedback(output)}else if CommandLine.arguments.contains("--controls-test"){self.testControls(output)}else if CommandLine.arguments.contains("--studio-test"){self.testStudio(output)}else{self.saveSmokePDF(output)}
                     }
                 }else{NSApp.terminate(nil)}
             }else{DispatchQueue.main.asyncAfter(deadline:.now()+1){self.checkSmoke()}}

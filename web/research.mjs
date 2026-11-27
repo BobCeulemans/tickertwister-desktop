@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Copyright ©2026 Bob Ceulemans
-import {decimalInput} from './presentation.mjs';
 import {finite,cagr} from './finance.mjs';
-import {multipleValuation} from './models.mjs';
 import {parseSaved} from './saved.mjs';
 export const emptyDesk=()=>({format:'tickertwister-research',version:1,entries:[]});
 export const emptyNotes=()=>({status:'research',reviewDate:'',thesis:'',risks:'',disconfirm:'',nextStep:''});
@@ -18,24 +16,6 @@ export function parseDesk(input){
   return {saved,notes:{...notes,status:notes.status==='pass'?'hard':notes.status}};
  });
  return {...emptyDesk(),entries};
-}
-export function sensitivity(report,inputs){
- if(multipleValuation(report,inputs).error)return null;
- const rates=[-4,-2,0,2,4].map(d=>Number(inputs.rate)+d),growths=[-6,-3,0,3,6].map(d=>Number(inputs.growth)+d);
- return {rates,growths,rows:growths.map(g=>rates.map(r=>multipleValuation(report,{...inputs,rate:String(r),growth:String(g)})))};
-}
-export function impliedGrowth(report,inputs,target){
- if(!finite(target)||target<=0)return {error:'NO_PRICE'};
- if(multipleValuation(report,inputs).error)return {error:'NO_MODEL'};
- let lo=-99,hi=100;
- const price=g=>multipleValuation(report,{...inputs,growth:String(g)}).perShare;
- if(!finite(price(lo))||!finite(price(hi))||target<price(lo)||target>price(hi))return {error:'OUTSIDE_RANGE'};
- for(let n=0;n<90;n++){const mid=(lo+hi)/2;if(price(mid)<target)lo=mid;else hi=mid;}
- return {growth:(lo+hi)/200,perShare:price((lo+hi)/2)};
-}
-export function scenariosFrom(inputs){
- const adjust=(growth,rate,multiple,cash)=>({growth:decimalInput(Math.max(-99.9,Number(inputs.growth)+growth)),rate:decimalInput(Math.min(100,Math.max(0,Number(inputs.rate)+rate))),multiple:String(Math.min(100,Math.max(.01,Number(inputs.multiple)*multiple))),cashFlow:inputs.cashFlow===''?'':String(Number((Number(inputs.cashFlow)*cash).toFixed(4)))});
- return [adjust(-5,2,.75,.85),{...inputs},adjust(5,-2,1.25,1.1)];
 }
 export function diagnostics(report){
  const y=report.years.at(-1),p=report.years.at(-2),checks=[];
@@ -55,5 +35,8 @@ export function diagnostics(report){
 export function comparison(report){const y=report.years.at(-1);return {score:report.score.value,coverage:report.score.coverage,roe:y.roe,margin:y.netMargin,liquidity:y.currentRatio,debt:y.debtEquity,conversion:y.cashConversion,growth:cagr(report.years,'revenue')};}
 
 export function selectedAIReports(entries,currentReport,options={}){
- return entries.map(e=>({...e.saved.report,aiWeights:(currentReport?.symbol===e.saved.report.symbol?options.scoreWeights:e.saved.options.scoreWeights)||{}}));
+ return entries.map(entry=>{
+  const selected=currentReport?.symbol===entry.saved.report.symbol?options:entry.saved.options;
+  return {...entry.saved.report,aiWeights:selected.scoreWeights||{},aiOverrides:selected.scoreOverrides||[]};
+ });
 }

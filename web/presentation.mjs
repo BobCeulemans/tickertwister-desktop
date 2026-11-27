@@ -9,7 +9,6 @@ export function notePages(text,columns=85,lines=32){
  const wrapped=[];for(const paragraph of String(text||'').split('\n')){let rest=paragraph;while(rest.length>columns){let cut=rest.lastIndexOf(' ',columns);if(cut<1)cut=columns;wrapped.push(rest.slice(0,cut));rest=rest.slice(cut);if(rest.startsWith(' '))rest=rest.slice(1);}wrapped.push(rest);}
  const pages=[];for(let i=0;i<wrapped.length;i+=lines)pages.push(wrapped.slice(i,i+lines).join('\n'));return pages;
 }
-export function roundedAssumptions(value){return {...value,rate:decimalInput(value.rate),growth:decimalInput(value.growth)};}
 
 export function dateLabel(value,language=globalThis.document?.documentElement?.lang||'nl'){return formatDate(value,language);}
 

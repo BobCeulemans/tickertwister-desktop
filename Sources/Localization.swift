@@ -3,7 +3,12 @@ import Foundation
 // Shared, editable catalogs. Language changes never touch financial data or secrets.
 enum Localization {
     static let languages=["nl","en","fr","de","es","it","pt"]
-    static var current=UserDefaults.standard.string(forKey:"appLanguage") ?? "nl"
+    static let systemLanguage: String = {
+        let preferred=Locale.preferredLanguages.first ?? "en"
+        let code=preferred.lowercased().components(separatedBy:CharacterSet(charactersIn:"-_")).first ?? ""
+        return languages.contains(code) ? code:"en"
+    }()
+    static var current=UserDefaults.standard.string(forKey:"appLanguage").flatMap{languages.contains($0) ? $0:nil} ?? systemLanguage
     static let catalogs:[String:[String:String]]=Dictionary(uniqueKeysWithValues:languages.map { code in
         let url=Bundle.main.resourceURL?.appendingPathComponent("Locales/\(code).json")
         let data=url.flatMap {try? Data(contentsOf:$0)}

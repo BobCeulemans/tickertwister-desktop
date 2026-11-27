@@ -23,6 +23,14 @@ def test_untrusted_or_untimestamped_signature_rejected(metadata):
         notarize.signature_team(metadata)
 
 
+def test_different_holder_in_same_team_is_rejected():
+    identity = 'Developer ID Application: Correct Holder (TEST123456)'
+    metadata = 'Authority=Developer ID Application: Former Holder (TEST123456)\nTeamIdentifier=TEST123456\nTimestamp=today\n'
+    with pytest.raises(ValueError, match='selected Developer ID'):
+        notarize.signature_team(metadata, identity)
+    assert notarize.signature_team(metadata.replace('Former Holder', 'Correct Holder'), identity) == 'TEST123456'
+
+
 @pytest.mark.parametrize('status,code', [('Invalid', 0), ('In Progress', 1), ('Accepted', 1)])
 def test_apple_rejection_or_timeout_does_not_staple_or_retry(tmp_path, monkeypatch, status, code):
     response = subprocess.CompletedProcess([], code, json.dumps({'id': 'test-id', 'status': status}), '')

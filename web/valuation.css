@@ -1,0 +1,31 @@
+@media screen {
+  .primary-valuation .value-box.valuation-summary {padding:18px 20px;}
+  .primary-valuation .valuation-summary .big-value {margin:14px 0;}
+  .primary-valuation .valuation-summary dl {grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);}
+  .primary-valuation .valuation-summary dt,.primary-valuation .valuation-summary dd {padding:6px 0;}
+  .primary-valuation .valuation-summary p {margin:10px 0 0;font-size:11px;}
+  .primary-valuation details.valuation-assumptions {margin:12px 0;border:1px solid var(--line);border-radius:8px;padding:0 12px;}
+  .primary-valuation details.valuation-assumptions>summary {font-size:1rem;font-weight:650;padding:12px 0;color:var(--ink);}
+  .primary-valuation .valuation-steps {display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px 10px;padding:0 0 12px;border-bottom:1px solid var(--line);}
+  .primary-valuation .valuation-steps dd {margin:0;text-align:right;font-variant-numeric:tabular-nums;}
+}
+
+@media screen {
+  .primary-valuation .wacc-reference {display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 12px;}
+  .primary-valuation .wacc-reference strong {font-variant-numeric:tabular-nums;}
+  :is(.lab-formulas,.valuation-formulas) dl {margin:0;padding:0 12px;background:var(--mac-soft);border-radius:8px;}
+  :is(.lab-formulas,.valuation-formulas) dl>div {display:grid;gap:5px;padding:12px 0;}
+  :is(.lab-formulas,.valuation-formulas) dl>div+div {border-top:1px solid var(--line);}
+  :is(.lab-formulas,.valuation-formulas) dt {font:600 12px/1.45 -apple-system,BlinkMacSystemFont,sans-serif;color:var(--muted);}
+  :is(.lab-formulas,.valuation-formulas) dd {margin:0;color:var(--ink);font:16px/1.5 ui-serif,Georgia,serif;overflow-wrap:anywhere;}
+  .lab-formulas math {font-size:1.1em;math-style:normal;}
+  .cashflow-projection table :is(td,th):not(:first-child) {text-align:right;}
+  .primary-valuation>.cashflow-projection {margin-top:18px;}
+  .primary-valuation .growth-comparison th {white-space:normal;}
+  @media(min-width:850px){
+    .lab-formulas dl>div {grid-template-columns:minmax(10rem,.85fr) minmax(0,1.5fr);align-items:center;gap:16px;}
+  }
+  .primary-valuation details.valuation-assumptions {margin-top:0;}
+  .primary-valuation .valuation-wacc td:last-child {text-align:left;white-space:normal;}
+  .primary-valuation .valuation-imputation {border-left:2px solid var(--line);padding-left:10px;}
+}

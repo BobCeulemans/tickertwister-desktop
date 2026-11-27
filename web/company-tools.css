@@ -1,0 +1,9 @@
+.description-source,.price-actions,.price-values,.price-axis{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.price-history .price-actions,.price-axis{justify-content:space-between}
+.price-history .price-actions{margin:.7rem 0}
+.price-actions [role=group]{display:flex;flex-wrap:wrap;gap:.25rem}
+.company-profile .description-source button,.price-history button{min-height:26px;padding:.24rem .55rem;font-size:.8rem}
+.price-plot{max-width:850px;margin:1rem auto;color:var(--ink)}
+.price-plot svg{display:block;width:100%;max-height:220px}
+.price-plot .price-values{justify-content:space-between}
+.price-axis,.price-plot small,.description-source small,.price-history>small{color:var(--muted);font-size:.79rem}

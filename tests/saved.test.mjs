@@ -37,3 +37,64 @@ test('FX snapshot survives export and malformed conversion metadata is rejected'
  for(const invalid of [{...fx,rate:0},{...fx,at:'invalid'},{...fx,to:'invalid'}])assert.throws(()=>parseSaved({...saved,report:{...saved.report,fx:invalid}}),/INVALID_SAVED/);
  assert.throws(()=>parseSaved({...saved,report:{...saved.report,quoteBasis:{...quoteBasis,ordinaryPerQuote:0}}}),/INVALID_SAVED/);
 });
+
+import {defaultValuation,valuationScenarios} from '../web/valuation.mjs';
+import {restoreValuation,refreshedValuationOptions} from '../web/saved.mjs';
+test('owner earnings inputs, share overrides and all three scenarios round-trip independently',()=>{
+ const inputs={...defaultValuation(r),ownerEarnings:'200',netDebt:'115.4',shares:'812838',growth:'9',rate:'6.88'};
+ const scenarios=valuationScenarios(inputs);
+ scenarios[1]={...scenarios[1],growth:'7.5'};
+ const snapshot=makeSaved(r,{method:'dcf',valuationInputs:inputs,valuationScenarios:scenarios});
+ const saved=parseSaved(JSON.stringify(snapshot));
+ assert.deepEqual(restoreValuation(saved.report,saved.options),{inputs,scenarios,legacy:false});
+ assert.throws(()=>parseSaved({...saved,options:{...saved.options,valuationInputs:{...inputs,ownerEarnings:'invalid'}}}),/INVALID_SAVED/);
+});
+test('legacy free cash flow and growth do not turn into owner earnings assumptions',()=>{
+ const legacy={basis:'enterprise',cashFlow:'500',expansionCapex:'25',interestAdjustment:'2',
+  rate:'4.8',growth:'40',terminal:'1',netDebt:'115.4',years:'12',dividend:'1'};
+ const saved=parseSaved(makeSaved(r,{...options,valuationInputs:legacy}));
+ const restored=restoreValuation(saved.report,saved.options);
+ assert.equal(restored.legacy,true);assert.equal(restored.inputs.ownerEarnings,'');assert.equal(restored.inputs.growth,'');
+ assert.equal(restored.inputs.rate,'6');assert.equal(restored.inputs.terminal,'1');assert.equal(restored.inputs.netDebt,'115.4');
+ assert.equal(restored.inputs.years,'10');assert.deepEqual(saved.options.valuationInputs,legacy);
+});
+test('refresh updates sourced defaults and retains explicit main and scenario edits',()=>{
+ const original={...r,valuationShares:80,valuationData:{netDebt:4e6}};
+ const inputs={...defaultValuation(original),rate:'4.88',growth:'9',ownerEarnings:'200'};
+ const scenarios=valuationScenarios(inputs);
+ scenarios[2]={...scenarios[2],growth:'15'};
+ const saved=makeSaved(original,{method:'dcf',valuationInputs:inputs,valuationScenarios:scenarios});
+ const refreshed=refreshedValuationOptions(saved,{...original,valuationShares:90,valuationData:{netDebt:6e6}});
+ assert.equal(refreshed.valuationInputs.netDebt,'6');assert.equal(refreshed.valuationInputs.shares,'90');
+ assert.equal(refreshed.valuationInputs.rate,'6');assert.equal(refreshed.valuationScenarios[2].growth,'15');
+ assert.equal(refreshed.valuationScenarios[0].netDebt,'6');
+});
+
+test('review 2 snapshots keep their saved 15% scenario while review 3 defaults use the 10% cap',()=>{
+ const report={...r,valuationShares:100,years:[
+  {...r.years[0],end:'2021-12-31',income:100,da:5,capex:10,workingCapitalCashEffect:0},
+  {...r.years[0],end:'2025-12-31',income:250,da:5,capex:10,workingCapitalCashEffect:0}]};
+ const current=defaultValuation(report),previous={...current,growth:'15'};
+ const snapshot=parseSaved(makeSaved(report,{method:'dcf',valuationInputs:previous,valuationScenarios:valuationScenarios(previous)}));
+ const restored=restoreValuation(snapshot.report,snapshot.options);
+ assert.equal(current.growth,'10');assert.equal(restored.inputs.growth,'15');assert.equal(restored.scenarios[1].growth,'15');
+});
+
+test('opening an old snapshot raises rates below its floor in the working copy only',()=>{
+ const last={...r,fetchedAt:'2026-11-21',treasury:{yield:7.1,date:'2026-11-20'}};
+ const old={...defaultValuation(last),rate:'4.88'};
+ const options={valuationInputs:old,valuationScenarios:valuationScenarios(old)};
+ const restored=restoreValuation(last,options);
+ assert.equal(restored.inputs.rate,'7.1');assert.ok(restored.legacy);
+ assert.ok(restored.scenarios.every(s=>Number(s.rate)>=7.1));
+ assert.equal(options.valuationInputs.rate,'4.88');
+});
+
+test('a scratchpad is optional, bounded, and retained in a refreshed snapshot',()=>{
+ const old=makeSaved(r,{...options});
+ assert.equal(parseSaved(old).options.scratchpad,undefined);
+ const snapshot=makeSaved(r,{method:'dcf',valuationInputs:defaultValuation(r),scratchpad:'Check next report.'});
+ assert.equal(parseSaved(JSON.stringify(snapshot)).options.scratchpad,'Check next report.');
+ assert.equal(refreshedValuationOptions(snapshot,r).scratchpad,'Check next report.');
+ for(const invalid of [{text:'test'},'x'.repeat(12001)])assert.throws(()=>parseSaved({...snapshot,options:{...snapshot.options,scratchpad:invalid}}),/INVALID_SAVED/);
+});

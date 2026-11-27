@@ -256,7 +256,7 @@ class FinAnalysis(OriginalAnalysisRules):
             return {'error': 'Koersvergelijking niet beschikbaar; de fundamentele analyse blijft beschikbaar.'}
 
     def score(self):
-        self.report()
+        self.financial_report()
         return self.fundamentals['score'][2]
 
     def rank(self):
@@ -271,6 +271,10 @@ class FinAnalysis(OriginalAnalysisRules):
         return dict(score=report["score"], available=report["available"], total=report["total"], valuation=report["valuation"])
 
     def report(self):
+        # Keep the original Python API for callers of the migrated FinAnalysis class.
+        return {**self.financial_report(), 'valuation': self.valuation()}
+
+    def financial_report(self):
         if hasattr(self, "_report"): return self._report
         sections = []
         for name in ANALYSIS_METHODS:
@@ -290,7 +294,7 @@ class FinAnalysis(OriginalAnalysisRules):
         self._report = dict(symbol=self.ticker,name=self.data.get('longName',self.ticker),summary=self.data.get('longBusinessSummary',''),
             currency=self.data.get('financialCurrency','onbekend'),score=score,points=points,weight=weight,
             available=sum(s['available'] for s in sections),total=len(sections),sections=sections,histories=histories,
-            valuation=self.valuation(),performance=self.performance(),tables=tables,
+            performance=self.performance(),tables=tables,
             snapshot=[dict(key=key, label=value[1], value=self.data[key]) for key,value in vars(Dictionary).items() if isinstance(value,tuple) and key in self.data and key not in ('longBusinessSummary','longName') and isinstance(self.data[key],(str,int,float))],warnings=self.source.warnings,fetched_at=self.source.fetched_at)
         return self._report
 

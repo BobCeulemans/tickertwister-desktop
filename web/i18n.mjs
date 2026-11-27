@@ -12,6 +12,17 @@ export const LANGUAGES=[{code:'nl',name:'Nederlands',locale:'nl-BE',english:'Dut
 export const languageCodes=LANGUAGES.map(l=>l.code);
 export const languageInfo=code=>LANGUAGES.find(l=>l.code===code)||LANGUAGES[1];
 export const catalogs={en,nl,fr,de,es,it,pt};
-export function translator(code='en',englishTerms=false){const language=languageInfo(code).code,dict=catalogs[language];const t=(key,legacyEnglish)=>{const id=legacyEnglish??key;return dict[id]||en[id]||(language==='nl'&&legacyEnglish?key:id)||'';};t.language=language;t.prose=value=>{const text=String(value||'');if(dict[text])return dict[text];const keys=financialKeys.filter(k=>k.length>3).sort((a,b)=>b.length-a.length);const escape=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return text.replace(new RegExp(keys.map(escape).join('|'),'gi'),m=>englishTerms?m:t(keys.find(k=>k.toLowerCase()===m.toLowerCase())||m));};t.term=(key,legacyDutch)=>englishTerms?key:t(legacyDutch||key,key);return t;}
+const financialSet=new Set(financialKeys);
+const financialLookup=new Map(financialKeys.map(k=>[k.toLowerCase(),k]));
+const escapeRegex=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+const financialPattern=new RegExp('(?<![\\p{L}\\p{N}_])(?:'+[...financialKeys].filter(k=>k.length>3).sort((a,b)=>b.length-a.length).map(escapeRegex).join('|')+')(?![\\p{L}\\p{N}_])','giu');
+export function translator(code='en',englishTerms=false){
+ const language=languageInfo(code).code,dict=catalogs[language];
+ const t=(key,legacyEnglish)=>{const id=legacyEnglish??key;if(englishTerms&&financialSet.has(id))return en[id]||id;return dict[id]||en[id]||(language==='nl'&&legacyEnglish?key:id)||'';};
+ t.language=language;
+ t.prose=value=>{const text=String(value||'');if(financialSet.has(text))return t(text);if(dict[text])return dict[text];return text.replace(financialPattern,m=>englishTerms?m:t(financialLookup.get(m.toLowerCase())||m));};
+ t.term=(key,legacyDutch)=>englishTerms?(en[key]||key):t(legacyDutch||key,key);
+ return t;
+}
 export function formatDate(value,code){const s=String(value||''),m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(!m)return '—';const d=new Date(Date.UTC(+m[1],+m[2]-1,+m[3]));if(!Number.isFinite(d.getTime()))return '—';return new Intl.DateTimeFormat(languageInfo(code).locale,{day:'2-digit',month:'2-digit',year:'numeric',timeZone:'UTC'}).format(d);}
 export const outputLanguage=(choice,appLanguage)=>languageCodes.includes(choice)?choice:languageInfo(appLanguage).code;
